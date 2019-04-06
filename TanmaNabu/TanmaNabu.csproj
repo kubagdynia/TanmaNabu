@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Folder Include="Core\Map\" />
-    <Folder Include="Core\Managers\" />
     <Folder Include="Core\Extensions\" />
     <Folder Include="Core\Exceptions\" />
     <Folder Include="Core\Entitas\" />
