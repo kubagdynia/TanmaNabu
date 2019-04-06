@@ -22,7 +22,6 @@
     <Folder Include="Core\Entitas\" />
     <Folder Include="Core\Animation\" />
     <Folder Include="Core\Settings\" />
-    <Folder Include="Core\TiledSharp\" />
     <Folder Include="GameLogic\" />
     <Folder Include="States\" />
   </ItemGroup>
