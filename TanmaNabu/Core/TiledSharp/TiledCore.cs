@@ -49,11 +49,14 @@ namespace TiledSharp
                         xDoc = XDocument.Load(reader);
                     }
                 }
-                TmxDirectory = String.Empty;
+                TmxDirectory = string.Empty;
             }
             else
             {
-                // TODO: Check for existence of file
+                if (!File.Exists(filepath))
+                {
+                    throw new FileNotFoundException($"Resource file {Path.GetFileName(filepath)} not found", filepath);
+                }
 
                 xDoc = XDocument.Load(filepath);
                 TmxDirectory = Path.GetDirectoryName(filepath);
@@ -94,7 +97,7 @@ namespace TiledSharp
             // For pathological cases, insert underscores to ensure uniqueness
             while (Contains(name))
             {
-                name = name + String.Concat(Enumerable.Repeat("_", dupes)) + count.ToString();
+                name = name + string.Concat(Enumerable.Repeat("_", dupes)) + count.ToString();
                 dupes++;
             }
 

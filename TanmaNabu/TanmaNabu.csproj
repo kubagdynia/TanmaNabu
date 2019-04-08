@@ -15,12 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Core\Map\" />
-    <Folder Include="Core\Extensions\" />
-    <Folder Include="Core\Exceptions\" />
     <Folder Include="Core\Entitas\" />
-    <Folder Include="Core\Animation\" />
-    <Folder Include="Core\Settings\" />
     <Folder Include="GameLogic\" />
     <Folder Include="States\" />
   </ItemGroup>
@@ -29,11 +24,31 @@
     <CSFMLFiles Include="../ExtLibs/SFML.Net/lib-x64/*.*">
       <InProject>false</InProject>
     </CSFMLFiles>
+	<MapsFiles Include="../Resources/Maps/*.*">
+      <InProject>false</InProject>
+    </MapsFiles>
+	<TilesetsFiles Include="../Resources/Tilesets/*.*">
+      <InProject>false</InProject>
+    </TilesetsFiles>
+    <FontsFiles Include="../Resources/Fonts/*.*">
+      <InProject>false</InProject>
+    </FontsFiles>
+	<TexturesFiles Include="../Resources/Textures/*.*">
+      <InProject>false</InProject>
+    </TexturesFiles>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2-beta1" />
   </ItemGroup>
   
   <!-- Copying resources files -->
   <Target Name="CopyFiles" AfterTargets="AfterBuild">
     <Copy SourceFiles="@(CSFMLFiles)" DestinationFolder="$(OutDir)/res/dll" SkipUnchangedFiles="true" />
+	<Copy SourceFiles="@(MapsFiles)" DestinationFolder="$(OutDir)/res/maps" SkipUnchangedFiles="true" />
+	<Copy SourceFiles="@(TilesetsFiles)" DestinationFolder="$(OutDir)/res/tilesets" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(FontsFiles)" DestinationFolder="$(OutDir)/res/fonts" SkipUnchangedFiles="true" />
+	<Copy SourceFiles="@(TexturesFiles)" DestinationFolder="$(OutDir)/res/textures" SkipUnchangedFiles="true" />
   </Target>
 
 </Project>

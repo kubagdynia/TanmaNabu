@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="37">
+ <tileset firstgid="1" name="jungle_tileset" tilewidth="16" tileheight="16" tilecount="462" columns="22">
+  <image source="jungle_tileset.png" width="352" height="336"/>
+ </tileset>
+ <group id="1" name="Background">
+  <layer id="2" name="Background Back" width="50" height="50">
+   <data encoding="base64" compression="zlib">
+   eJzdmM1OFEEQx3uiXkQx3uSmfATBhIugfERYokfBw0LCE6gH40e8qgeDmvgIqM8hvIEhRt7AT3wDP+PF6jCV/U9R1d0zO7tsOPwyu0tvT/2mqqt7WcucWzuEXCXuEveI+8QD4loPzWch7/GQeEY8h+sdMS71as232gGPdZj/BfGSeEW8hutTMS71as3XCY8NmP8NccbpbCjxxK7WfJ3wsOLuJIfFw9Mpj6/EH+It8KWGeEeJ8zlj8LnvG3X2LXb4TPTT+5+uxTtX9NwUnszvgPMVYj6nAS6+b3AfrMPHz7lN/CL6siIf6bNPOd7zgyt6MifzsZpLk1ghLuQuC67VN7gPep9p1x6cixPKWvlBDNLnQ9me5zdgV7z3Y73LllGX7LMq7sE+7XpwLrRaPu7nJ2ayPc8BMQZr3o/1Ljt5js4GcqRRhwfnwtfyBDEF+ZdxL+ZjmIZw+e72avJS1sqRr8u/JZyq8B5es8cE5B8/s0AXhHPk83OqZH7acfExX8xjG8tzIZ9/FRdeS5yfOl14v+D32/DsJ/O42GE+EctF5gf7ILNJXKe/LxHLWasW5TjPliv20f5M90C0eFdcsZdKF23fky7DdB2B/cr39Jv0/hZxO2vVotbnd+A17xecG+/FvZFj1DywbzYNF2bB2XmZJebEfvWIeEw8yd/vuv17Wh/0kr6suF9g75UxThgOqS5lap3rwfIP8c/Z+yDGGJobzx6S0Hqp0+N0tj8XWox+7iM09ihxTDhzPVprP7ReGOyNVTxkjYU8YnM1A3mRTuiFDuNuf/1az69szZapERw/7uy+hl64R6XmoozbqLhvyj3YA59rrBfMV/CQDOYMRZ5tWQ85NtQLLA95tgsxnTOT4BGrLa5z3Ns5lkWYg/cozaPhimfS1LMEe8wqObGeoeUSe+ZyDTdd/NyG359M8NByYsWl1ZdcSzEHvAfGPQWvVxQXzCfi4x8mlokb4h7W+pQemsO4uI/mgB7W+GbiPFr8MZfYGuZnP5AT6gvW7926wP4ceyZyz+C/xxxCnHPhXipjTDkzxND2DCumUFw4fs4Ve1Dse3JvreITOrvImDguLSb2leNj30OPqj64Z2gel42YtP3KGitdBhVCvTLFB9dGNzwsYvtk7CxS1UPWiFZ/dXo0Ijnh/m95LBEjAReui3YcPNhPy7rg2gjlrp16SQXvh/tEzEU6eLDnYm/vtofmpPUyeRa19o066j6V2P4S+60a2jfqqPsy4HpL+T0lz5xaLrpRSylO6CM9Yme6btVSCrxPpfQkeX7qFQf0iP1G76VnX8bDg/33oNeBhfxtqHlgTnrRY9il/bZFj9C54yAdtP/TSRf06LX1oZ2jEetc2yt19R+C3k7D
+  </data>
+  </layer>
+  <layer id="3" name="Background Front" width="50" height="50">
+   <data encoding="base64" compression="zlib">
+   eJztmVlOwzAQQJ27wCXgt6w9ABKLFA4AlLXiA35YzsD2wRfwB6X9glNwD5YrMIhEckexO17GdiQ/aeQ48TZ2MmNPhMhkMlTuCyEGIK9SelX4bY+DF6n9odTHOshGdf1cjJejpn/tjaQ2d3lUILHK0OYK05q4cmBYfiuSHvuO9Q9R/izR9aDSrdLrBj224d4OSM8yjUFtN2Q7eA7XFyCXlmlIFlBe1ucG5BbkzjKlcuRVo39q247t+tDQvg8qPUYWY1j2qI8Liyhvo0t3cpGgzBHKHKP8CbHtN1jz95bbWZmOoM1XJk3mYw+gZYR81033oTY8MdgijjZ9kpq/MQW/g5S9QAmyqXi2ZzmOpYZ7tX/TnU2+QL5Bfiz7DU0p1HPHxWng/lRw7J9d6DjU7XsbRYaDB7Abjwrf0UN5XSwMn0lCYrqf+rTsRzdXXEyBTKN7tr5jzXEsLsyAzGqel2Lc3jf5uSaoMVJ8dtSBY3RNaxACPA7Turj+pDVIGZe5UFG/Y6nEdVygfC+6s82Hr4EwIv/f0RHDzmFf2XZi/vdKkbyP9QPVD6cez9CB/Umb488qvxJrT+Sb1PZEbfDDHKQW86iJea515Rc9eGue
+  </data>
+  </layer>
+ </group>
+ <group id="4" name="Foreground">
+  <layer id="5" name="Foreground Back" width="50" height="50">
+   <data encoding="base64" compression="zlib">
+   eJzt11dOAzEQgOHJrWmhHQAI/QChBjgAdSkHoLcz8MAR+PdtYzlsvDu7Vqz5pP8hInKskbBlEWOMMcYYY0wqpmmGZmmOunG3U9kqrVGP1mmjxd8uzq+uPdqnAzqkI4U1xzFqfgu0SEuB613QJV3RNd2o7LKcb36btEXbtEO7Aes90TO90Cu9lXx/XoZnthzwW0W++R3TgE7olM4qrj2OOjMr8s0vo1u6o3t6qLnX/zQ5s3f6oE/6om/FtV2ZNDezH+fzb421+h3+Bzuj/97mzFKnddY0yd2jj9ZZ0yR3jz5tns9VuXv0yaS987mqTIb36DMJZ427R2MmwZSk8XZckbhvRy19ifd21HQu8d6Omh4l/O1ojDGhQu7hsvd5TCncw7kU7uFcCvdwzu5ho+UPF3GGtw==
+  </data>
+  </layer>
+  <layer id="6" name="Foreground Front" width="50" height="50">
+   <data encoding="base64" compression="zlib">
+   eJztzqENACAQBMH/shFQDfSJQSEJATNjLuc2AgAAONUzYuTvCm4p269r2+sQAAAAAAAAjkynHQLA
+  </data>
+  </layer>
+ </group>
+ <group id="8" name="AlwaysFront">
+  <layer id="9" name="Always Front" width="50" height="50">
+   <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20ON6AAAAAAAAAAAADg3wAnEAAB
+  </data>
+  </layer>
+ </group>
+ <objectgroup id="7" name="Colliders">
+  <object id="1" x="184" y="320" width="32" height="12"/>
+  <object id="5" x="100" y="476" width="32" height="12"/>
+  <object id="6" x="376" y="384" width="32" height="12"/>
+  <object id="7" x="664" y="336" width="32" height="12"/>
+  <object id="8" x="744" y="352" width="32" height="12"/>
+  <object id="9" x="760" y="480" width="32" height="12"/>
+  <object id="10" x="360" y="608" width="32" height="12"/>
+  <object id="11" x="72" y="768" width="32" height="12"/>
+  <object id="12" x="228" y="704" width="24" height="12"/>
+  <object id="13" x="228" y="384" width="24" height="12"/>
+  <object id="14" x="388" y="240" width="24" height="12"/>
+  <object id="15" x="564" y="464" width="24" height="16"/>
+  <object id="16" x="164" y="496" width="24" height="16"/>
+  <object id="17" x="0" y="392" width="36" height="4"/>
+  <object id="19" x="36" y="392" width="4" height="28"/>
+  <object id="21" x="36" y="420" width="16" height="4"/>
+  <object id="22" x="52" y="424" width="4" height="32"/>
+  <object id="23" x="28" y="456" width="24" height="4"/>
+  <object id="24" x="48" y="128" width="64" height="28"/>
+  <object id="25" x="112" y="156" width="64" height="28"/>
+  <object id="26" x="176" y="144" width="112" height="28"/>
+  <object id="27" x="508" y="256" width="60" height="28"/>
+  <object id="28" x="600" y="256" width="184" height="28"/>
+  <object id="29" x="784" y="240" width="16" height="28"/>
+  <object id="31" x="24" y="456" width="4" height="8"/>
+  <object id="32" x="16" y="464" width="12" height="4"/>
+  <object id="33" x="12" y="464" width="4" height="12"/>
+  <object id="34" x="0" y="472" width="12" height="4"/>
+ </objectgroup>
+ <objectgroup id="10" name="Entities">
+  <object id="35" name="Player" type="Sara" x="272" y="256" width="32" height="32">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="IsPlayer" type="bool" value="true"/>
+    <property name="MovementSpeed" type="int" value="5"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="36" name="Ghost 1" type="Ghost" x="296" y="356" width="32" height="32">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="11" name="Objects"/>
+</map>
