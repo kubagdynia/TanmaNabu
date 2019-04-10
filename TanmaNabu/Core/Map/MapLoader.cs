@@ -3,9 +3,11 @@ using SFML.System;
 using System;
 using System.IO;
 using System.Linq;
+using TanmaNabu.Core.Animation;
 using TanmaNabu.Core.Extensions;
 using TanmaNabu.Core.Managers;
 using TanmaNabu.Core.Map.Exceptions;
+using TanmaNabu.Settings;
 using TiledSharp;
 
 namespace TanmaNabu.Core.Map
@@ -236,7 +238,63 @@ namespace TanmaNabu.Core.Map
         {
             if (entityObject.Properties == null) return;
 
+            // Initial State
+            if (GetPropertyValue(entityObject, "InitialState", out string initialState))
+            {
+                if (Enum.TryParse(initialState, true, out AnimationType value))
+                {
+                    mapEntity.InitialState = value;
+                }
+            }
 
+            // Movement Speed
+            if (GetPropertyValue(entityObject, "MovementSpeed", out string movementSpeed))
+            {
+                if (int.TryParse(initialState, out int value))
+                {
+                    mapEntity.MovementSpeed = value;
+                }
+            }
+
+            // Tileset Name
+            if (GetPropertyValue(entityObject, "TilesetName", out string tilesetName))
+            {
+                // Load tileset
+                AssetManager.Instance.Tileset.Load(tilesetName, GameSettings.GetFullPath(
+                    SettingsPropertyType.TilesetsPath, $"{tilesetName}{GameSettings.TilesetFileExtension}"));
+
+                mapEntity.TilesetName = tilesetName;
+            }
+
+            // Object Type
+            if (GetPropertyValue(entityObject, "ObjectType", out string objectType))
+            {
+                mapEntity.ObjectType = objectType;
+            }
+
+            // Is Player
+            if (GetPropertyValue(entityObject, "IsPLayer", out string isPLayer))
+            {
+                if (bool.TryParse(isPLayer, out bool isPlayer))
+                {
+                    mapEntity.IsPlayer = isPlayer;
+                }
+            }
+        }
+
+        private static bool GetPropertyValue(TmxObject entityObject, string propertyName, out string propertyValue)
+        {
+            var initialStateProperty =
+                entityObject.Properties.SingleOrDefault(c => c.Key.Equals(propertyName, StringComparison.OrdinalIgnoreCase));
+
+            if (initialStateProperty.Key == null)
+            {
+                propertyValue = null;
+                return false;
+            }
+
+            propertyValue = initialStateProperty.Value;
+            return true;
         }
 
         private static bool BackgroundTileLayersExists(TmxMap map)

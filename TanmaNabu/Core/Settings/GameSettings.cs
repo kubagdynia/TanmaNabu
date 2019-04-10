@@ -247,7 +247,6 @@ namespace TanmaNabu.Settings
             }
         }
 
-
         private static void MarkToSaveSettings()
         {
             _settingsShouldBeSaved = true;
