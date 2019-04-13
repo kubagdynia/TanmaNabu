@@ -21,6 +21,10 @@ namespace TanmaNabu.Core.Map
 
         public FloatRect MapRec { get; set; }
 
+        public string BackgroundImagePath { get; set; }
+        public string BackgroundMusicPath { get; set; }
+        public string TilesetsPath { get; set; }
+
         private List<MapTileset> _tilesets;
         public List<MapTileset> Tilesets => _tilesets ?? (_tilesets = new List<MapTileset>());
 

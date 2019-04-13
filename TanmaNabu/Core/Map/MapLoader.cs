@@ -14,13 +14,6 @@ namespace TanmaNabu.Core.Map
 {
     public static class MapLoader
     {
-        private const string BackgroundGroupLayerName = "Background";
-        private const string ForegroundGroupLayerName = "Foreground";
-        private const string AlwaysFrontGroupLayerName = "AlwaysFront";
-
-        private const string CollidersLayerName = "Colliders";
-        private const string EntitiesLayerName = "Entities";
-
         public static void LoadMap(string mapResourceName, MapData data)
         {
 #if DEBUG
@@ -49,8 +42,26 @@ namespace TanmaNabu.Core.Map
         {
             data.MapSize = new Vector2i(map.Width, map.Height);
             data.TileSize = new Vector2i(map.TileWidth, map.TileHeight);
+
+            // Background Image Path
+            if (GetMapPropertyValue(map, MapCustomProperties.BackgroundImagePath, out string backgroundImagePath))
+            {
+                data.BackgroundImagePath = backgroundImagePath;
+            }
+
+            // Background Music Path
+            if (GetMapPropertyValue(map, MapCustomProperties.BackgroundMusicPath, out string backgroundMusicPath))
+            {
+                data.BackgroundImagePath = backgroundMusicPath;
+            }
+
+            // Tilesets Path
+            if (GetMapPropertyValue(map, MapCustomProperties.TilesetsPath, out string tilesetsPath))
+            {
+                data.TilesetsPath = tilesetsPath;
+            }
 #if DEBUG
-            "-->Map properties loaded".Log(true);
+                "-->Map properties loaded".Log(true);
 #endif
         }
 
@@ -113,7 +124,7 @@ namespace TanmaNabu.Core.Map
 
         private static void LoadBackgroundLayer(MapData data, TmxGroup group)
         {
-            if (!group.Name.Equals(BackgroundGroupLayerName, StringComparison.InvariantCultureIgnoreCase))
+            if (!group.Name.Equals(MapLayers.Background.ToString() , StringComparison.InvariantCultureIgnoreCase))
             {
                 return;
             }
@@ -131,7 +142,7 @@ namespace TanmaNabu.Core.Map
 
         private static void LoadForegroundLayer(MapData data, TmxGroup group)
         {
-            if (!group.Name.Equals(ForegroundGroupLayerName, StringComparison.InvariantCultureIgnoreCase))
+            if (!group.Name.Equals(MapLayers.Foreground.ToString(), StringComparison.InvariantCultureIgnoreCase))
             {
                 return;
             }
@@ -149,7 +160,7 @@ namespace TanmaNabu.Core.Map
 
         private static void LoadAlwaysFrontLayer(MapData data, TmxGroup group)
         {
-            if (!group.Name.Equals(AlwaysFrontGroupLayerName, StringComparison.InvariantCultureIgnoreCase))
+            if (!group.Name.Equals(MapLayers.AlwaysFront.ToString(), StringComparison.InvariantCultureIgnoreCase))
             {
                 return;
             }
@@ -186,7 +197,7 @@ namespace TanmaNabu.Core.Map
 
         private static void LoadCollidersLayer(MapData data, TmxObjectGroup objectGroup)
         {
-            if (!ObjectGroupExists(objectGroup, CollidersLayerName) || !ObjectGroupHasObjects(objectGroup))
+            if (!ObjectGroupExists(objectGroup, MapLayers.Colliders.ToString()) || !ObjectGroupHasObjects(objectGroup))
             {
                 return;
             }
@@ -211,7 +222,7 @@ namespace TanmaNabu.Core.Map
 
         private static void LoadEntitiesLayer(MapData data, TmxObjectGroup objectGroup)
         {
-            if (!ObjectGroupExists(objectGroup, EntitiesLayerName) || !ObjectGroupHasObjects(objectGroup))
+            if (!ObjectGroupExists(objectGroup, MapLayers.Entities.ToString()) || !ObjectGroupHasObjects(objectGroup))
             {
                 return;
             }
@@ -229,13 +240,13 @@ namespace TanmaNabu.Core.Map
                     Height = (int)entityObject.Height
                 };
 
-                LoadCustomProperties(entityObject, mapEntity);
+                LoadEntityCustomProperties(entityObject, mapEntity);
 
                 data.MapEntities.Add(mapEntity);
             }
         }
 
-        private static void LoadCustomProperties(TmxObject entityObject, MapEntity mapEntity)
+        private static void LoadEntityCustomProperties(TmxObject entityObject, MapEntity mapEntity)
         {
             if (entityObject.Properties == null) return;
 
@@ -285,25 +296,42 @@ namespace TanmaNabu.Core.Map
 
         private static bool GetPropertyValue(TmxObject entityObject, EntityCustomProperties entityCustomProperty, out string propertyValue)
         {
-            var initialStateProperty =
-                entityObject.Properties.SingleOrDefault(c =>
-                {
-                    return c.Key.Equals(entityCustomProperty.ToString(), StringComparison.OrdinalIgnoreCase);
-                });
+            var entityProperty =
+                entityObject.Properties.SingleOrDefault(c => c.Key.EqualsIgnoreCase(entityCustomProperty.ToString()));
 
-            if (initialStateProperty.Key == null)
+            if (entityProperty.Key == null)
             {
                 propertyValue = null;
                 return false;
             }
 
-            propertyValue = initialStateProperty.Value;
+            propertyValue = entityProperty.Value;
+            return true;
+        }
+
+        private static bool GetMapPropertyValue(TmxMap map, MapCustomProperties mapCustomProperty, out string propertyValue)
+        {
+            if (map.Properties == null)
+            {
+                propertyValue = null;
+                return false;
+            }
+
+            var mapProperty = map.Properties.SingleOrDefault(c => c.Key.EqualsIgnoreCase(mapCustomProperty.ToString()));
+
+            if (mapProperty.Key == null)
+            {
+                propertyValue = null;
+                return false;
+            }
+
+            propertyValue = mapProperty.Value;
             return true;
         }
 
         private static bool BackgroundTileLayersExists(TmxMap map)
         {
-            return map.Groups != null && map.Groups.Any(x => x.Name.Equals(BackgroundGroupLayerName, StringComparison.InvariantCultureIgnoreCase));
+            return map.Groups != null && map.Groups.Any(x => x.Name.EqualsIgnoreCase(MapLayers.Background.ToString()));
         }
 
         private static bool TilesetsExists(TmxMap map)
@@ -313,7 +341,7 @@ namespace TanmaNabu.Core.Map
 
         private static bool ObjectGroupExists(TmxObjectGroup objectGroup, string name)
         {
-            return objectGroup != null && string.Equals(objectGroup.Name, name, StringComparison.InvariantCultureIgnoreCase);
+            return objectGroup != null && name.EqualsIgnoreCase(objectGroup.Name);
         }
 
         private static bool ObjectGroupHasObjects(TmxObjectGroup objectGroup)

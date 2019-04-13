@@ -12,5 +12,7 @@ namespace TanmaNabu.Core.Extensions
                 Console.WriteLine();
             }
         }
+
+        public static bool EqualsIgnoreCase(this string str, string value) => str.Equals(value, StringComparison.InvariantCultureIgnoreCase);
     }
 }
