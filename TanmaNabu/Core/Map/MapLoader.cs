@@ -176,6 +176,7 @@ namespace TanmaNabu.Core.Map
                 $"---->{objectGroup.Name}".Log();
 #endif
                 LoadCollidersLayer(data, objectGroup);
+                LoadEntitiesLayer(data, objectGroup);
                 //TODO: load Objects and Entities
             }
 #if DEBUG
@@ -239,7 +240,7 @@ namespace TanmaNabu.Core.Map
             if (entityObject.Properties == null) return;
 
             // Initial State
-            if (GetPropertyValue(entityObject, "InitialState", out string initialState))
+            if (GetPropertyValue(entityObject, EntityCustomProperties.InitialState, out string initialState))
             {
                 if (Enum.TryParse(initialState, true, out AnimationType value))
                 {
@@ -248,16 +249,16 @@ namespace TanmaNabu.Core.Map
             }
 
             // Movement Speed
-            if (GetPropertyValue(entityObject, "MovementSpeed", out string movementSpeed))
+            if (GetPropertyValue(entityObject, EntityCustomProperties.MovementSpeed, out string movementSpeed))
             {
-                if (int.TryParse(initialState, out int value))
+                if (int.TryParse(movementSpeed, out int value))
                 {
                     mapEntity.MovementSpeed = value;
                 }
             }
 
             // Tileset Name
-            if (GetPropertyValue(entityObject, "TilesetName", out string tilesetName))
+            if (GetPropertyValue(entityObject, EntityCustomProperties.TilesetName, out string tilesetName))
             {
                 // Load tileset
                 AssetManager.Instance.Tileset.Load(tilesetName, GameSettings.GetFullPath(
@@ -267,13 +268,13 @@ namespace TanmaNabu.Core.Map
             }
 
             // Object Type
-            if (GetPropertyValue(entityObject, "ObjectType", out string objectType))
+            if (GetPropertyValue(entityObject, EntityCustomProperties.ObjectType, out string objectType))
             {
                 mapEntity.ObjectType = objectType;
             }
 
             // Is Player
-            if (GetPropertyValue(entityObject, "IsPLayer", out string isPLayer))
+            if (GetPropertyValue(entityObject, EntityCustomProperties.IsPlayer, out string isPLayer))
             {
                 if (bool.TryParse(isPLayer, out bool isPlayer))
                 {
@@ -282,10 +283,13 @@ namespace TanmaNabu.Core.Map
             }
         }
 
-        private static bool GetPropertyValue(TmxObject entityObject, string propertyName, out string propertyValue)
+        private static bool GetPropertyValue(TmxObject entityObject, EntityCustomProperties entityCustomProperty, out string propertyValue)
         {
             var initialStateProperty =
-                entityObject.Properties.SingleOrDefault(c => c.Key.Equals(propertyName, StringComparison.OrdinalIgnoreCase));
+                entityObject.Properties.SingleOrDefault(c =>
+                {
+                    return c.Key.Equals(entityCustomProperty.ToString(), StringComparison.OrdinalIgnoreCase);
+                });
 
             if (initialStateProperty.Key == null)
             {
