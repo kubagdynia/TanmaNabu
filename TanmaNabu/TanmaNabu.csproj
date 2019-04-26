@@ -15,6 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Core\Entitas\DataStructures\" />
     <Folder Include="GameLogic\" />
     <Folder Include="States\" />
   </ItemGroup>
