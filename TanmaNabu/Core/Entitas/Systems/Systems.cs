@@ -93,10 +93,8 @@ namespace Entitas
         /// Activates all ReactiveSystems in the systems list.
         public void ActivateReactiveSystems()
         {
-            for (int i = 0; i < _executeSystems.Count; i++)
+            foreach (IExecuteSystem system in _executeSystems)
             {
-                var system = _executeSystems[i];
-
                 if (system is IReactiveSystem reactiveSystem)
                 {
                     reactiveSystem.Activate();
@@ -115,10 +113,8 @@ namespace Entitas
         /// want to reuse your existing system instances.
         public void DeactivateReactiveSystems()
         {
-            for (int i = 0; i < _executeSystems.Count; i++)
+            foreach (IExecuteSystem system in _executeSystems)
             {
-                IExecuteSystem system = _executeSystems[i];
-
                 if (system is IReactiveSystem reactiveSystem)
                 {
                     reactiveSystem.Deactivate();
@@ -134,10 +130,8 @@ namespace Entitas
         /// Clears all ReactiveSystems in the systems list.
         public void ClearReactiveSystems()
         {
-            for (int i = 0; i < _executeSystems.Count; i++)
+            foreach (IExecuteSystem system in _executeSystems)
             {
-                var system = _executeSystems[i];
-
                 if (system is IReactiveSystem reactiveSystem)
                 {
                     reactiveSystem.Clear();

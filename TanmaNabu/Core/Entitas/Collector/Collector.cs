@@ -58,8 +58,8 @@ namespace Entitas
         {
             for (int i = 0; i < _groups.Length; i++)
             {
-                var group = _groups[i];
-                var groupEvent = _groupEvents[i];
+                IGroup<TEntity> group = _groups[i];
+                GroupEvent groupEvent = _groupEvents[i];
                 switch (groupEvent)
                 {
                     case GroupEvent.Added:
@@ -85,7 +85,7 @@ namespace Entitas
         /// Collectors are activated by default.
         public void Deactivate()
         {
-            foreach (var group in _groups)
+            foreach (IGroup<TEntity> group in _groups)
             {
                 group.OnEntityAdded -= _addEntityCache;
                 group.OnEntityRemoved -= _addEntityCache;
@@ -105,7 +105,7 @@ namespace Entitas
         /// Clears all collected entities.
         public void ClearCollectedEntities()
         {
-            foreach (var entity in _collectedEntities)
+            foreach (TEntity entity in _collectedEntities)
             {
                 entity.Release(this);
             }
@@ -114,7 +114,7 @@ namespace Entitas
 
         private void AddEntity(IGroup<TEntity> group, TEntity entity, int index, IComponent component)
         {
-            var added = _collectedEntities.Add(entity);
+            bool added = _collectedEntities.Add(entity);
             if (added)
             {
                 entity.Retain(this);
@@ -136,7 +136,7 @@ namespace Entitas
             _toStringBuilder.Append("Collector(");
 
             const string separator = ", ";
-            var lastSeparator = _groups.Length - 1;
+            int lastSeparator = _groups.Length - 1;
             for (int i = 0; i < _groups.Length; i++)
             {
                 _toStringBuilder.Append(_groups[i]);

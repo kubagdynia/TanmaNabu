@@ -9,9 +9,9 @@ namespace Entitas
     /// of the related gameObject.
     public abstract class ReactiveSystem<TEntity> : IReactiveSystem where TEntity : class, IEntity
     {
-        readonly ICollector<TEntity> _collector;
-        readonly List<TEntity> _buffer;
-        string _toStringCache;
+        private readonly ICollector<TEntity> _collector;
+        private readonly List<TEntity> _buffer;
+        private string _toStringCache;
 
         protected ReactiveSystem(IContext<TEntity> context)
         {
@@ -62,7 +62,7 @@ namespace Entitas
         {
             if (_collector.Count != 0)
             {
-                foreach (var e in _collector.CollectedEntities)
+                foreach (TEntity e in _collector.CollectedEntities)
                 {
                     if (Filter(e))
                     {
@@ -95,7 +95,7 @@ namespace Entitas
         {
             if (_toStringCache == null)
             {
-                _toStringCache = "ReactiveSystem(" + GetType().Name + ")";
+                _toStringCache = $"ReactiveSystem({GetType().Name})";
             }
 
             return _toStringCache;

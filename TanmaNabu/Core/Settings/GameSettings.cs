@@ -185,7 +185,7 @@ namespace TanmaNabu.Settings
             }
         }
 
-        public static string GetExecutePath => Environment.CurrentDirectory;
+        public static string GetExecutePath => Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]); // Environment.CurrentDirectory;
 
         public static string GetFullPath(string itemPath, string value) => Path.Combine(GetExecutePath, itemPath, value);
 

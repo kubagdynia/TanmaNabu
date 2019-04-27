@@ -10,7 +10,7 @@ namespace Entitas
 
         public static IAllOfMatcher<TEntity> AllOf(params int[] indices)
         {
-            var matcher = new Matcher<TEntity>
+            Matcher<TEntity> matcher = new Matcher<TEntity>
             {
                 _allOfIndices = DistinctIndices(indices)
             };
@@ -19,14 +19,14 @@ namespace Entitas
 
         public static IAllOfMatcher<TEntity> AllOf(params IMatcher<TEntity>[] matchers)
         {
-            var allOfMatcher = (Matcher<TEntity>)AllOf(MergeIndices(matchers));
+            Matcher<TEntity> allOfMatcher = (Matcher<TEntity>)AllOf(MergeIndices(matchers));
             SetComponentNames(allOfMatcher, matchers);
             return allOfMatcher;
         }
 
         public static IAnyOfMatcher<TEntity> AnyOf(params int[] indices)
         {
-            var matcher = new Matcher<TEntity>
+            Matcher<TEntity> matcher = new Matcher<TEntity>
             {
                 _anyOfIndices = DistinctIndices(indices)
             };
@@ -35,7 +35,7 @@ namespace Entitas
 
         public static IAnyOfMatcher<TEntity> AnyOf(params IMatcher<TEntity>[] matchers)
         {
-            var anyOfMatcher = (Matcher<TEntity>)AnyOf(MergeIndices(matchers));
+            Matcher<TEntity> anyOfMatcher = (Matcher<TEntity>)AnyOf(MergeIndices(matchers));
             SetComponentNames(anyOfMatcher, matchers);
             return anyOfMatcher;
         }
@@ -55,7 +55,7 @@ namespace Entitas
                 _indexBuffer.AddRange(noneOfIndices);
             }
 
-            var mergedIndices = DistinctIndices(_indexBuffer);
+            int[] mergedIndices = DistinctIndices(_indexBuffer);
 
             _indexBuffer.Clear();
 
@@ -64,10 +64,10 @@ namespace Entitas
 
         private static int[] MergeIndices(IMatcher<TEntity>[] matchers)
         {
-            var indices = new int[matchers.Length];
+            int[] indices = new int[matchers.Length];
             for (int i = 0; i < matchers.Length; i++)
             {
-                var matcher = matchers[i];
+                IMatcher<TEntity> matcher = matchers[i];
                 if (matcher.Indices.Length != 1)
                 {
                     throw new MatcherException(matcher.Indices.Length);
@@ -82,7 +82,7 @@ namespace Entitas
         {
             for (int i = 0; i < matchers.Length; i++)
             {
-                var matcher = matchers[i] as Matcher<TEntity>;
+                Matcher<TEntity> matcher = matchers[i] as Matcher<TEntity>;
                 if (matcher?.componentNames != null)
                 {
                     return matcher.componentNames;
@@ -94,7 +94,7 @@ namespace Entitas
 
         private static void SetComponentNames(Matcher<TEntity> matcher, IMatcher<TEntity>[] matchers)
         {
-            var componentNames = GetComponentNames(matchers);
+            string[] componentNames = GetComponentNames(matchers);
             if (componentNames != null)
             {
                 matcher.componentNames = componentNames;
@@ -103,7 +103,7 @@ namespace Entitas
 
         private static int[] DistinctIndices(IList<int> indices)
         {
-            foreach (var index in indices)
+            foreach (int index in indices)
             {
                 _indexSetBuffer.Add(index);
             }

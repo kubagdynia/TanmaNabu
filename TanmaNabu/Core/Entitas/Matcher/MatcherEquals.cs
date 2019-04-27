@@ -9,15 +9,18 @@
                 return false;
             }
 
-            var matcher = (Matcher<TEntity>)obj;
+            Matcher<TEntity> matcher = (Matcher<TEntity>)obj;
+
             if (!EqualIndices(matcher.AllOfIndices, _allOfIndices))
             {
                 return false;
             }
+
             if (!EqualIndices(matcher.AnyOfIndices, _anyOfIndices))
             {
                 return false;
             }
+
             if (!EqualIndices(matcher.NoneOfIndices, _noneOfIndices))
             {
                 return false;
@@ -61,7 +64,7 @@
         {
             if (!_isHashCached)
             {
-                var hash = GetType().GetHashCode();
+                int hash = GetType().GetHashCode();
                 hash = ApplyHash(hash, _allOfIndices, 3, 53);
                 hash = ApplyHash(hash, _anyOfIndices, 307, 367);
                 hash = ApplyHash(hash, _noneOfIndices, 647, 683);

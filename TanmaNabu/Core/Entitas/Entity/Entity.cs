@@ -102,7 +102,7 @@ namespace Entitas
 
         private ContextInfo CreateDefaultContextInfo()
         {
-            var componentNames = new string[TotalComponents];
+            string[] componentNames = new string[TotalComponents];
             for (int i = 0; i < componentNames.Length; i++)
             {
                 componentNames[i] = i.ToString();
@@ -195,7 +195,7 @@ namespace Entitas
 
         private void ReplaceComponentPrv(int index, IComponent replacement)
         {
-            var previousComponent = _components[index];
+            IComponent previousComponent = _components[index];
             if (replacement != previousComponent)
             {
                 _components[index] = replacement;
@@ -243,7 +243,7 @@ namespace Entitas
 
             for (int i = 0; i < _components.Length; i++)
             {
-                var component = _components[i];
+                IComponent component = _components[i];
                 if (component != null)
                 {
                     _componentBuffer.Add(component);
@@ -313,7 +313,7 @@ namespace Entitas
         public void RemoveAllComponents()
         {
             _toStringCache = null;
-            for (var i = 0; i < _components.Length; i++)
+            for (int i = 0; i < _components.Length; i++)
             {
                 if (_components[i] != null)
                 {
@@ -330,7 +330,7 @@ namespace Entitas
         /// reusable component from the componentPool.
         public Stack<IComponent> GetComponentPool(int index)
         {
-            var componentPool = _componentPools[index];
+            Stack<IComponent> componentPool = _componentPools[index];
             if (componentPool == null)
             {
                 componentPool = new Stack<IComponent>();
@@ -344,7 +344,7 @@ namespace Entitas
         /// for the specified component index.
         public IComponent CreateComponent(int index, Type type)
         {
-            var componentPool = GetComponentPool(index);
+            Stack<IComponent> componentPool = GetComponentPool(index);
             return componentPool.Count > 0
                         ? componentPool.Pop()
                         : (IComponent)Activator.CreateInstance(type);
@@ -354,7 +354,7 @@ namespace Entitas
         /// for the specified component index.
         public T CreateComponent<T>(int index) where T : new()
         {
-            var componentPool = GetComponentPool(index);
+            Stack<IComponent> componentPool = GetComponentPool(index);
             return componentPool.Count > 0 ? (T)componentPool.Pop() : new T();
         }
 
@@ -425,12 +425,12 @@ namespace Entitas
             _toStringBuilder.Append("Entity_").Append(_creationIndex).Append("(");
 
             const string separator = ", ";
-            var components = GetComponents();
-            var lastSeparator = components.Length - 1;
-            for (var i = 0; i < components.Length; i++)
+            IComponent[] components = GetComponents();
+            int lastSeparator = components.Length - 1;
+            for (int i = 0; i < components.Length; i++)
             {
-                var component = components[i];
-                var type = component.GetType();
+                IComponent component = components[i];
+                Type type = component.GetType();
 
                 _toStringCache = null;
 

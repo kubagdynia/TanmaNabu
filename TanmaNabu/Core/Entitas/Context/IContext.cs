@@ -5,7 +5,6 @@ using System.Text;
 namespace Entitas
 {
     public delegate void ContextEntityChanged(IContext context, IEntity entity);
-
     public delegate void ContextGroupChanged(IContext context, IGroup group);
 
     public interface IContext
@@ -33,6 +32,7 @@ namespace Entitas
         void ResetCreationIndex();
         void ClearComponentPool(int index);
         void ClearComponentPools();
+        void RemoveAllEventHandlers();
         void Reset();
     }
 

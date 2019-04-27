@@ -40,14 +40,11 @@ namespace Entitas
             Clear();
         }
 
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         protected void IndexEntities(IGroup<TEntity> group)
         {
-            foreach (var entity in group)
+            foreach (TEntity entity in group)
             {
                 if (IsSingleKey)
                 {
@@ -55,8 +52,8 @@ namespace Entitas
                 }
                 else
                 {
-                    var keys = GetKeys(entity, null);
-                    foreach (var key in keys)
+                    TKey[] keys = GetKeys(entity, null);
+                    foreach (TKey key in keys)
                     {
                         AddEntity(key, entity);
                     }
@@ -72,8 +69,8 @@ namespace Entitas
             }
             else
             {
-                var keys = GetKeys(entity, component);
-                foreach (var key in keys)
+                TKey[] keys = GetKeys(entity, component);
+                foreach (TKey key in keys)
                 {
                     AddEntity(key, entity);
                 }
@@ -88,8 +85,8 @@ namespace Entitas
             }
             else
             {
-                var keys = GetKeys(entity, component);
-                foreach (var key in keys)
+                TKey[] keys = GetKeys(entity, component);
+                foreach (TKey key in keys)
                 {
                     RemoveEntity(key, entity);
                 }

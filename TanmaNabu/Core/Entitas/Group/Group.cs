@@ -39,10 +39,7 @@ namespace Entitas
 
         /// Use context.GetGroup(matcher) to get a group of entities which match
         /// the specified matcher.
-        public Group(IMatcher<TEntity> matcher)
-        {
-            _matcher = matcher;
-        }
+        public Group(IMatcher<TEntity> matcher) => _matcher = matcher;
 
         /// This is used by the context to manage the group.
         public void HandleEntitySilently(TEntity entity)
@@ -101,7 +98,7 @@ namespace Entitas
         {
             if (!entity.IsEnabled) return false;
 
-            var added = _entities.Add(entity);
+            bool added = _entities.Add(entity);
             if (added)
             {
                 _entitiesCache = null;
@@ -122,7 +119,7 @@ namespace Entitas
 
         public bool RemoveEntitySilently(TEntity entity)
         {
-            var removed = _entities.Remove(entity);
+            bool removed = _entities.Remove(entity);
             if (removed)
             {
                 _entitiesCache = null;
@@ -135,7 +132,7 @@ namespace Entitas
 
         public void RemoveEntity(TEntity entity, int index, IComponent component)
         {
-            var removed = _entities.Remove(entity);
+            bool removed = _entities.Remove(entity);
             if (removed)
             {
                 _entitiesCache = null;
@@ -179,10 +176,10 @@ namespace Entitas
         {
             if (_singleEntityCache == null)
             {
-                var c = _entities.Count;
+                int c = _entities.Count;
                 if (c == 1)
                 {
-                    using (var enumerator = _entities.GetEnumerator())
+                    using (HashSet<TEntity>.Enumerator enumerator = _entities.GetEnumerator())
                     {
                         enumerator.MoveNext();
                         _singleEntityCache = enumerator.Current;

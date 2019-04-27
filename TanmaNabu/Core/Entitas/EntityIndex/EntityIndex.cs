@@ -55,9 +55,9 @@ namespace Entitas
 
         protected override void Clear()
         {
-            foreach (var entities in _index.Values)
+            foreach (HashSet<TEntity> entities in _index.Values)
             {
-                foreach (var entity in entities)
+                foreach (TEntity entity in entities)
                 {
                     if (entity.Aerc is SafeAerc safeAerc)
                     {

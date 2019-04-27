@@ -45,10 +45,10 @@ namespace Entitas
             const string separator = ", ";
             sb.Append(prefix);
             sb.Append("(");
-            var lastSeparator = indexArray.Length - 1;
+            int lastSeparator = indexArray.Length - 1;
             for (int i = 0; i < indexArray.Length; i++)
             {
-                var index = indexArray[i];
+                int index = indexArray[i];
                 if (componentNames == null)
                 {
                     sb.Append(index);
