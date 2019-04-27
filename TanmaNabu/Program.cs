@@ -1,4 +1,6 @@
-﻿namespace TanmaNabu
+﻿using TanmaNabu.States;
+
+namespace TanmaNabu
 {
     class Program
     {

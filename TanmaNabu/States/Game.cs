@@ -1,4 +1,5 @@
 ﻿using System;
+using Entitas;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -6,13 +7,18 @@ using TanmaNabu.Core;
 using TanmaNabu.Core.Extensions;
 using TanmaNabu.Core.Managers;
 using TanmaNabu.Core.Map;
+using TanmaNabu.GameLogic;
+using TanmaNabu.GameLogic.Systems;
 using TanmaNabu.Settings;
 
-namespace TanmaNabu
+namespace TanmaNabu.States
 {
     public class Game : BaseGame
     {
         private readonly Map _map;
+
+        protected Contexts Contexts;
+        protected Systems Systems;
 
         public Game()
             : base(new Vector2u(1440, 810), "Tanma Nabu", Color.Black, 60, false, true)
@@ -31,12 +37,19 @@ namespace TanmaNabu
 
         protected override void Initialize()
         {
+            Contexts = Contexts.SharedInstance;
 
+            Systems = CreateSystems(Contexts);
+
+            // Call once on start
+            Systems.Initialize();
         }
 
         protected override void Update(float deltaTime)
         {
-
+            // Call every frame
+            Systems.Execute();
+            Systems.Cleanup();
         }
 
         protected override void Render(float deltaTime)
@@ -58,6 +71,10 @@ namespace TanmaNabu
         protected override void KeyPressed(object sender, KeyEventArgs e)
         {
             base.KeyPressed(sender, e);
+
+            // Create an entity and adding the debug component
+            var entity = Contexts.Game.CreateEntity();
+            entity.AddDebugMessage($"\nDebug message at: {DateTime.Now}");
         }
 
         protected override void KeyReleased(object sender, KeyEventArgs e)
@@ -92,6 +109,7 @@ namespace TanmaNabu
 
         protected override void Quit()
         {
+            Systems.TearDown();
             GameSettings.CleanUp();
 
 #if DEBUG
@@ -102,6 +120,12 @@ namespace TanmaNabu
         protected override void Resize(uint width, uint height)
         {
 
+        }
+
+        private Systems CreateSystems(Contexts contexts)
+        {
+            return new Systems()
+                .Add(new DebugMessageSystem(contexts));
         }
     }
 }

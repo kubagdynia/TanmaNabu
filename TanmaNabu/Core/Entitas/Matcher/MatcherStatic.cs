@@ -83,9 +83,9 @@ namespace Entitas
             for (int i = 0; i < matchers.Length; i++)
             {
                 Matcher<TEntity> matcher = matchers[i] as Matcher<TEntity>;
-                if (matcher?.componentNames != null)
+                if (matcher?.ComponentNames != null)
                 {
-                    return matcher.componentNames;
+                    return matcher.ComponentNames;
                 }
             }
 
@@ -97,7 +97,7 @@ namespace Entitas
             string[] componentNames = GetComponentNames(matchers);
             if (componentNames != null)
             {
-                matcher.componentNames = componentNames;
+                matcher.ComponentNames = componentNames;
             }
         }
 
