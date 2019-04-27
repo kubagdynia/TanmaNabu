@@ -3,19 +3,30 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 using TanmaNabu.Core;
+using TanmaNabu.Core.Extensions;
+using TanmaNabu.Core.Managers;
+using TanmaNabu.Core.Map;
+using TanmaNabu.Settings;
 
 namespace TanmaNabu
 {
     public class Game : BaseGame
     {
+        private readonly Map _map;
+
         public Game()
             : base(new Vector2u(1440, 810), "Tanma Nabu", Color.Black, 60, false, true)
         {
-
+            _map = new Map();
         }
 
         protected override void LoadContent()
         {
+            GameSettings.Load();
+
+            AssetManager.Instance.Map.Load("jungleMap", AssetManager.Instance.GetMapPath("jungle_map.tmx"));
+
+            _map.Load("jungleMap");
         }
 
         protected override void Initialize()
@@ -81,7 +92,11 @@ namespace TanmaNabu
 
         protected override void Quit()
         {
-            Console.WriteLine("Quit Game :(");
+            GameSettings.CleanUp();
+
+#if DEBUG
+            "Quit Game :(".Log();
+#endif
         }
 
         protected override void Resize(uint width, uint height)
