@@ -6,6 +6,10 @@ namespace TanmaNabu.Core.Map
 {
     public class Map
     {
+        private float switchTimeOfTileAnimations = 0.1f; // 100ms
+
+        private float _totalTime;
+
         private ITileMap _backgroundTileMap;
         private ITileMap _foregroundTileMap;
 
@@ -21,6 +25,20 @@ namespace TanmaNabu.Core.Map
             MapLoader.LoadMap(filename, MapData);
 
             LoadTileMaps();
+        }
+
+        public void Update(float deltaTime)
+        {
+            _totalTime += deltaTime;
+
+            if (_totalTime >= switchTimeOfTileAnimations)
+            {
+                _backgroundTileMap.Update(_totalTime);
+                _foregroundTileMap.Update(_totalTime);
+
+                // TODO: Switch background animation frame
+                _totalTime = 0;
+            }
         }
 
         public void SetWorldView(RenderTarget target, Vector2f center)

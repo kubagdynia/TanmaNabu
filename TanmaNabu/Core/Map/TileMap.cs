@@ -82,6 +82,14 @@ namespace TanmaNabu.Core.Map
             }
         }
 
+        public void Update(float deltaTime)
+        {
+            foreach (var mapLayer in _mapLayers)
+            {
+
+            }
+        }
+
         private void DrawVertices(RenderTarget target, RenderStates states, uint tilesCount, Vertex[] vertices, int lineNumber)
         {
             var start = (uint)(lineNumber * _mapData.MapSize.X * TileVertices);

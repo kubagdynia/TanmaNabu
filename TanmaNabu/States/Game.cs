@@ -6,7 +6,6 @@ using SFML.Window;
 using TanmaNabu.Core;
 using TanmaNabu.Core.Extensions;
 using TanmaNabu.Core.Managers;
-using TanmaNabu.Core.Map;
 using TanmaNabu.GameLogic;
 using TanmaNabu.GameLogic.Systems;
 using TanmaNabu.Settings;
@@ -15,15 +14,13 @@ namespace TanmaNabu.States
 {
     public class Game : BaseGame
     {
-        private readonly Map _map;
-
         protected Contexts Contexts;
         protected Systems Systems;
 
         public Game()
             : base(new Vector2u(1440, 810), "Tanma Nabu", Color.Black, 60, false, true)
         {
-            _map = new Map();
+
         }
 
         protected override void LoadContent()
@@ -31,13 +28,13 @@ namespace TanmaNabu.States
             GameSettings.Load();
 
             AssetManager.Instance.Map.Load("jungleMap", AssetManager.Instance.GetMapPath("jungle_map.tmx"));
-
-            _map.Load("jungleMap");
         }
 
         protected override void Initialize()
         {
             Contexts = Contexts.SharedInstance;
+
+            Contexts.GameMap.Load("jungleMap");
 
             Systems = CreateSystems(Contexts);
 
@@ -47,6 +44,9 @@ namespace TanmaNabu.States
 
         protected override void Update(float deltaTime)
         {
+            Contexts.Game.DeltaTime = deltaTime;
+            Contexts.GameMap.Update(deltaTime);
+
             // Call every frame
             Systems.Execute();
             Systems.Cleanup();
@@ -65,7 +65,9 @@ namespace TanmaNabu.States
                 (Window.Size.X / 2) - rectangle.Size.X / 2,
                 (Window.Size.Y / 2) - rectangle.Size.Y / 2);
 
-            Window.Draw(rectangle);
+            //Window.Draw(rectangle);
+            Window.Draw(Contexts.GameMap.GetBackgroundTileMap());
+            Window.Draw(Contexts.GameMap.GetForegroundTileMap());
         }
 
         protected override void KeyPressed(object sender, KeyEventArgs e)

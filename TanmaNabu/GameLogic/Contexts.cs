@@ -1,5 +1,6 @@
 ﻿using Entitas;
 using System;
+using TanmaNabu.Core.Map;
 using TanmaNabu.GameLogic.Game;
 
 namespace TanmaNabu.GameLogic
@@ -22,12 +23,16 @@ namespace TanmaNabu.GameLogic
 
         private static Contexts _sharedInstance;
 
+        public Map GameMap { get; set; }
+
         public GameContext Game { get; set; }
 
         public IContext[] AllContexts => new IContext[] { Game };
 
         public Contexts()
         {
+            GameMap = new Map();
+
             Game = new GameContext();
 
             var postConstructors = System.Linq.Enumerable.Where(
