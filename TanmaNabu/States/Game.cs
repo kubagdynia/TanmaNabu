@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Entitas;
 using SFML.Graphics;
 using SFML.System;
@@ -7,6 +8,7 @@ using TanmaNabu.Core;
 using TanmaNabu.Core.Extensions;
 using TanmaNabu.Core.Managers;
 using TanmaNabu.GameLogic;
+using TanmaNabu.GameLogic.Game;
 using TanmaNabu.GameLogic.Systems;
 using TanmaNabu.Settings;
 
@@ -54,29 +56,51 @@ namespace TanmaNabu.States
 
         protected override void Render(float deltaTime)
         {
-            // Draw green rectangle
-            RectangleShape rectangle = new RectangleShape(new Vector2f(200, 200))
-            {
-                FillColor = Color.Green
-            };
+            var players = Contexts.Game.GetGroup(GameMatcher.Player);
+            var entity = players.GetSingleEntity();
 
-            // Set the rectangle in the center of the screen
-            rectangle.Position = new Vector2f(
-                (Window.Size.X / 2) - rectangle.Size.X / 2,
-                (Window.Size.Y / 2) - rectangle.Size.Y / 2);
+            /* Hack to get rid of the annoying horizontal and vertical
+               lines that are caused by floating point rendering */
+            Vector2f correction = new Vector2f(
+                ((int)(Window.DefaultView.Size.X) % 2 == 0 ? 0 : 1) * 0.5f,
+                ((int)(Window.DefaultView.Size.Y) % 2 == 0 ? 0 : 1) * 0.5f);
 
-            //Window.Draw(rectangle);
+            Contexts.GameMap.SetWorldView(Window, new Vector2f(entity.Position.X + correction.X, entity.Position.Y + correction.Y));
+
             Window.Draw(Contexts.GameMap.GetBackgroundTileMap());
+
+            var entities = Contexts.Game.GetEntities(GameMatcher.Animation);
+            foreach (var objEntity in entities.OrderBy(c => c.Position.Y))
+            {
+                Window.Draw(objEntity.Animation.GetSprite());
+            }
+
             Window.Draw(Contexts.GameMap.GetForegroundTileMap());
+
+#if DEBUG
+            DrawCollisions();
+#endif
+        }
+
+        private void DrawCollisions()
+        {
+            foreach (var item in Contexts.GameMap.MapData.CollidersLayer.Colliders)
+            {
+                var colRectangle = new RectangleShape(new Vector2f(item.Width, item.Height))
+                {
+                    Position = new Vector2f(item.Left, item.Top),
+                    OutlineColor = new Color(255, 0, 0, 200),
+                    OutlineThickness = 2,
+                    FillColor = new Color(255, 0, 0, 50)
+                };
+
+                Window.Draw(colRectangle);
+            }
         }
 
         protected override void KeyPressed(object sender, KeyEventArgs e)
         {
             base.KeyPressed(sender, e);
-
-            // Create an entity and adding the debug component
-            var entity = Contexts.Game.CreateEntity();
-            entity.AddDebugMessage($"\nDebug message at: {DateTime.Now}");
         }
 
         protected override void KeyReleased(object sender, KeyEventArgs e)
@@ -127,7 +151,12 @@ namespace TanmaNabu.States
         private Systems CreateSystems(Contexts contexts)
         {
             return new Systems()
-                .Add(new DebugMessageSystem(contexts));
+                .Add(new InputSystem(contexts))
+                .Add(new DebugMessageSystem(contexts))
+                .Add(new SpawnSystem(contexts))
+                .Add(new PositionSystem(contexts))
+                .Add(new AnimationTypeSystem(contexts))
+                .Add(new AnimationSystem(contexts));
         }
     }
 }

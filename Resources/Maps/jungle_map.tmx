@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="37">
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="175">
  <properties>
   <property name="BackgroundImagePath" value=""/>
   <property name="BackgroundMusicPath" value=""/>
@@ -11,7 +11,7 @@
  <group id="1" name="Background">
   <layer id="2" name="Background Back" width="50" height="50">
    <data encoding="base64" compression="zlib">
-   eJzdmM1OFEEQx3uiXkQx3uSmfATBhIugfERYokfBw0LCE6gH40e8qgeDmvgIqM8hvIEhRt7AT3wDP+PF6jCV/U9R1d0zO7tsOPwyu0tvT/2mqqt7WcucWzuEXCXuEveI+8QD4loPzWch7/GQeEY8h+sdMS71as232gGPdZj/BfGSeEW8hutTMS71as3XCY8NmP8NccbpbCjxxK7WfJ3wsOLuJIfFw9Mpj6/EH+It8KWGeEeJ8zlj8LnvG3X2LXb4TPTT+5+uxTtX9NwUnszvgPMVYj6nAS6+b3AfrMPHz7lN/CL6siIf6bNPOd7zgyt6MifzsZpLk1ghLuQuC67VN7gPep9p1x6cixPKWvlBDNLnQ9me5zdgV7z3Y73LllGX7LMq7sE+7XpwLrRaPu7nJ2ayPc8BMQZr3o/1Ljt5js4GcqRRhwfnwtfyBDEF+ZdxL+ZjmIZw+e72avJS1sqRr8u/JZyq8B5es8cE5B8/s0AXhHPk83OqZH7acfExX8xjG8tzIZ9/FRdeS5yfOl14v+D32/DsJ/O42GE+EctF5gf7ILNJXKe/LxHLWasW5TjPliv20f5M90C0eFdcsZdKF23fky7DdB2B/cr39Jv0/hZxO2vVotbnd+A17xecG+/FvZFj1DywbzYNF2bB2XmZJebEfvWIeEw8yd/vuv17Wh/0kr6suF9g75UxThgOqS5lap3rwfIP8c/Z+yDGGJobzx6S0Hqp0+N0tj8XWox+7iM09ihxTDhzPVprP7ReGOyNVTxkjYU8YnM1A3mRTuiFDuNuf/1az69szZapERw/7uy+hl64R6XmoozbqLhvyj3YA59rrBfMV/CQDOYMRZ5tWQ85NtQLLA95tgsxnTOT4BGrLa5z3Ns5lkWYg/cozaPhimfS1LMEe8wqObGeoeUSe+ZyDTdd/NyG359M8NByYsWl1ZdcSzEHvAfGPQWvVxQXzCfi4x8mlokb4h7W+pQemsO4uI/mgB7W+GbiPFr8MZfYGuZnP5AT6gvW7926wP4ceyZyz+C/xxxCnHPhXipjTDkzxND2DCumUFw4fs4Ve1Dse3JvreITOrvImDguLSb2leNj30OPqj64Z2gel42YtP3KGitdBhVCvTLFB9dGNzwsYvtk7CxS1UPWiFZ/dXo0Ijnh/m95LBEjAReui3YcPNhPy7rg2gjlrp16SQXvh/tEzEU6eLDnYm/vtofmpPUyeRa19o066j6V2P4S+60a2jfqqPsy4HpL+T0lz5xaLrpRSylO6CM9Yme6btVSCrxPpfQkeX7qFQf0iP1G76VnX8bDg/33oNeBhfxtqHlgTnrRY9il/bZFj9C54yAdtP/TSRf06LX1oZ2jEetc2yt19R+C3k7D
+   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
   </data>
   </layer>
   <layer id="3" name="Background Front" width="50" height="50">
@@ -70,7 +70,7 @@
   <object id="34" x="0" y="472" width="12" height="4"/>
  </objectgroup>
  <objectgroup id="10" name="Entities">
-  <object id="35" name="Player" type="Sara" x="272" y="256" width="32" height="32">
+  <object id="35" name="Player" type="Sara" x="520" y="444" width="32" height="32">
    <properties>
     <property name="InitialState" value="WalkDown"/>
     <property name="IsPlayer" type="bool" value="true"/>
@@ -78,7 +78,791 @@
     <property name="TilesetName" value="tileset01"/>
    </properties>
   </object>
-  <object id="36" name="Ghost 1" type="Ghost" x="296" y="356" width="32" height="32">
+  <object id="36" name="Ghost 1" type="Ghost" x="308" y="368" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="37" name="Ghost 1" type="Ghost" x="292" y="332" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="38" name="Ghost 1" type="Ghost" x="324" y="324" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="39" name="Ghost 1" type="Ghost" x="332" y="356" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="40" name="Ghost 1" type="Ghost" x="272" y="360" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="41" name="Ghost 1" type="Ghost" x="72" y="456" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="42" name="Ghost 1" type="Ghost" x="64" y="480" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="43" name="Ghost 1" type="Ghost" x="168" y="288" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="44" name="Ghost 1" type="Ghost" x="228" y="276" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="45" name="Ghost 1" type="Ghost" x="220" y="296" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="46" name="Ghost 1" type="Ghost" x="704" y="316" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="47" name="Ghost 1" type="Ghost" x="728" y="332" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="48" name="Ghost 1" type="Ghost" x="704" y="340" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="49" name="Ghost 1" type="Ghost" x="684" y="352" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="50" name="Ghost 1" type="Ghost" x="776" y="324" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="51" name="Ghost 1" type="Ghost" x="660" y="312" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="52" name="Bat 1" type="Bat" x="684" y="460" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="54" name="Bat 1" type="Bat" x="644" y="448" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="56" name="Bat 1" type="Bat" x="664" y="464" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="57" name="Bat 1" type="Bat" x="716" y="472" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="58" name="Bat 1" type="Bat" x="708" y="440" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="67" name="Bat 1" type="Bat" x="664" y="384" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="68" name="Bat 1" type="Bat" x="652" y="400" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="69" name="Bat 1" type="Bat" x="688" y="392" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="70" name="Bat 1" type="Bat" x="672" y="416" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="71" name="Bat 1" type="Bat" x="724" y="424" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="72" name="Bat 1" type="Bat" x="716" y="392" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="73" name="Bat 1" type="Bat" x="664" y="436" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="74" name="Bat 1" type="Bat" x="636" y="408" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="75" name="Bat 1" type="Bat" x="624" y="424" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="78" name="Bat 1" type="Bat" x="696" y="448" width="16" height="16">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="80" name="Ghost 1" type="Ghost" x="320" y="432" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="81" name="Ghost 1" type="Ghost" x="304" y="396" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="82" name="Ghost 1" type="Ghost" x="336" y="388" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="83" name="Ghost 1" type="Ghost" x="344" y="420" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="84" name="Ghost 1" type="Ghost" x="284" y="424" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="86" name="Ghost 1" type="Ghost" x="224" y="340" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="87" name="Ghost 1" type="Ghost" x="256" y="332" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="88" name="Ghost 1" type="Ghost" x="264" y="364" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="89" name="Ghost 1" type="Ghost" x="204" y="368" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="90" name="Ghost 1" type="Ghost" x="228" y="436" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="91" name="Ghost 1" type="Ghost" x="212" y="400" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="92" name="Ghost 1" type="Ghost" x="244" y="392" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="93" name="Ghost 1" type="Ghost" x="252" y="424" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="94" name="Ghost 1" type="Ghost" x="192" y="428" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="95" name="Ghost 1" type="Ghost" x="156" y="416" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="96" name="Ghost 1" type="Ghost" x="140" y="380" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="97" name="Ghost 1" type="Ghost" x="172" y="372" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="98" name="Ghost 1" type="Ghost" x="180" y="404" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="100" name="Ghost 1" type="Ghost" x="80" y="376" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="101" name="Ghost 1" type="Ghost" x="64" y="340" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="102" name="Ghost 1" type="Ghost" x="96" y="332" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="103" name="Ghost 1" type="Ghost" x="104" y="364" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="104" name="Ghost 1" type="Ghost" x="44" y="368" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="105" name="Ghost 1" type="Ghost" x="68" y="364" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="106" name="Ghost 1" type="Ghost" x="52" y="328" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="107" name="Ghost 1" type="Ghost" x="84" y="320" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="108" name="Ghost 1" type="Ghost" x="92" y="352" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="109" name="Ghost 1" type="Ghost" x="32" y="356" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="110" name="Ghost 1" type="Ghost" x="96" y="392" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="111" name="Ghost 1" type="Ghost" x="80" y="356" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="112" name="Ghost 1" type="Ghost" x="112" y="348" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="113" name="Ghost 1" type="Ghost" x="120" y="380" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="114" name="Ghost 1" type="Ghost" x="60" y="384" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="116" name="Ghost 1" type="Ghost" x="84" y="388" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="118" name="Ghost 1" type="Ghost" x="132" y="408" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="119" name="Ghost 1" type="Ghost" x="64" y="416" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="121" name="Ghost 1" type="Ghost" x="140" y="460" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="122" name="Ghost 1" type="Ghost" x="172" y="452" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="123" name="Ghost 1" type="Ghost" x="188" y="476" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="124" name="Ghost 1" type="Ghost" x="120" y="488" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="125" name="Ghost 1" type="Ghost" x="228" y="512" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="126" name="Ghost 1" type="Ghost" x="212" y="476" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="127" name="Ghost 1" type="Ghost" x="244" y="468" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="128" name="Ghost 1" type="Ghost" x="252" y="500" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="129" name="Ghost 1" type="Ghost" x="192" y="504" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="130" name="Ghost 1" type="Ghost" x="200" y="580" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="131" name="Ghost 1" type="Ghost" x="184" y="544" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="132" name="Ghost 1" type="Ghost" x="216" y="536" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="133" name="Ghost 1" type="Ghost" x="224" y="568" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="134" name="Ghost 1" type="Ghost" x="164" y="572" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="135" name="Ghost 1" type="Ghost" x="156" y="572" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="136" name="Ghost 1" type="Ghost" x="140" y="536" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="137" name="Ghost 1" type="Ghost" x="172" y="528" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="138" name="Ghost 1" type="Ghost" x="180" y="560" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="139" name="Ghost 1" type="Ghost" x="120" y="564" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="140" name="Ghost 1" type="Ghost" x="144" y="568" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="141" name="Ghost 1" type="Ghost" x="128" y="532" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="142" name="Ghost 1" type="Ghost" x="160" y="524" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="143" name="Ghost 1" type="Ghost" x="168" y="556" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="144" name="Ghost 1" type="Ghost" x="108" y="560" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="145" name="Ghost 1" type="Ghost" x="144" y="568" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="146" name="Ghost 1" type="Ghost" x="128" y="532" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="147" name="Ghost 1" type="Ghost" x="160" y="524" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="148" name="Ghost 1" type="Ghost" x="168" y="556" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="149" name="Ghost 1" type="Ghost" x="108" y="560" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="150" name="Ghost 1" type="Ghost" x="256" y="640" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="151" name="Ghost 1" type="Ghost" x="240" y="604" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="152" name="Ghost 1" type="Ghost" x="272" y="596" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="153" name="Ghost 1" type="Ghost" x="280" y="628" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="154" name="Ghost 1" type="Ghost" x="220" y="632" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="155" name="Ghost 1" type="Ghost" x="164" y="664" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="156" name="Ghost 1" type="Ghost" x="148" y="628" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="157" name="Ghost 1" type="Ghost" x="180" y="620" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="158" name="Ghost 1" type="Ghost" x="188" y="652" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="159" name="Ghost 1" type="Ghost" x="128" y="656" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="160" name="Ghost 1" type="Ghost" x="204" y="728" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="161" name="Ghost 1" type="Ghost" x="188" y="692" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="163" name="Ghost 1" type="Ghost" x="228" y="716" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="164" name="Ghost 1" type="Ghost" x="168" y="720" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="165" name="Ghost 1" type="Ghost" x="192" y="712" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="167" name="Ghost 1" type="Ghost" x="216" y="664" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="169" name="Ghost 1" type="Ghost" x="156" y="704" width="20" height="20">
    <properties>
     <property name="InitialState" value="WalkDown"/>
     <property name="MovementSpeed" type="int" value="3"/>

@@ -9,6 +9,8 @@ namespace TanmaNabu.Core.Map
     {
         public int TileWorldDimension { get; } = 2;
 
+        public int SpriteWorldDimension { get; } = 3;
+
         private float _mapZoomFactor = 0.6f;
         public float MapZoomFactor
         {
