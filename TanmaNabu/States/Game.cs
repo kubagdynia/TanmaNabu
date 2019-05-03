@@ -18,9 +18,11 @@ namespace TanmaNabu.States
     {
         protected Contexts Contexts;
         protected Systems Systems;
+        protected Camera Camera;
 
         public Game()
-            : base(new Vector2u(1440, 810), "Tanma Nabu", Color.Black, 60, false, true)
+            : base(new Vector2u(1440, 810), "Tanma Nabu", Color.Black, 60, false, true) // window
+            //: base(new Vector2u(1920, 1080), "Tanma Nabu", Color.Black, 60, true, true) // full screen
         {
 
         }
@@ -42,6 +44,8 @@ namespace TanmaNabu.States
 
             // Call once on start
             Systems.Initialize();
+
+            Camera = new Camera(Window, Contexts);
         }
 
         protected override void Update(float deltaTime)
@@ -54,7 +58,7 @@ namespace TanmaNabu.States
             Systems.Cleanup();
         }
 
-        protected override void Render(float deltaTime)
+        protected override void Render(float deltaTime, Time elapsedTime)
         {
             var players = Contexts.Game.GetGroup(GameMatcher.Player);
             var entity = players.GetSingleEntity();
@@ -65,7 +69,7 @@ namespace TanmaNabu.States
                 ((int)(Window.DefaultView.Size.X) % 2 == 0 ? 0 : 1) * 0.5f,
                 ((int)(Window.DefaultView.Size.Y) % 2 == 0 ? 0 : 1) * 0.5f);
 
-            Contexts.GameMap.SetWorldView(Window, new Vector2f(entity.Position.X + correction.X, entity.Position.Y + correction.Y));
+            Camera.Update(deltaTime, elapsedTime,  entity.Position.X + correction.X, entity.Position.Y + correction.Y);
 
             Window.Draw(Contexts.GameMap.GetBackgroundTileMap());
 

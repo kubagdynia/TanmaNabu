@@ -34,22 +34,24 @@ namespace TanmaNabu.GameLogic.Systems
 
             #region PLAYER
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Left) || Keyboard.IsKeyPressed(Keyboard.Key.Right) ||
-                Keyboard.IsKeyPressed(Keyboard.Key.Up) || Keyboard.IsKeyPressed(Keyboard.Key.Down))
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Left) || Keyboard.IsKeyPressed(Keyboard.Key.A) ||
+                Keyboard.IsKeyPressed(Keyboard.Key.Right) || Keyboard.IsKeyPressed(Keyboard.Key.D) ||
+                Keyboard.IsKeyPressed(Keyboard.Key.Up) || Keyboard.IsKeyPressed(Keyboard.Key.W) ||
+                Keyboard.IsKeyPressed(Keyboard.Key.Down) || Keyboard.IsKeyPressed(Keyboard.Key.S))
             {
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
+                if (Keyboard.IsKeyPressed(Keyboard.Key.Left) || Keyboard.IsKeyPressed(Keyboard.Key.A))
                 {
                     ChangePlayerPosition(-1, 0);
                 }
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
+                if (Keyboard.IsKeyPressed(Keyboard.Key.Right) || Keyboard.IsKeyPressed(Keyboard.Key.D))
                 {
                     ChangePlayerPosition(1, 0);
                 }
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
+                if (Keyboard.IsKeyPressed(Keyboard.Key.Up) || Keyboard.IsKeyPressed(Keyboard.Key.W))
                 {
                     ChangePlayerPosition(0, -1);
                 }
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
+                if (Keyboard.IsKeyPressed(Keyboard.Key.Down) || Keyboard.IsKeyPressed(Keyboard.Key.S))
                 {
                     ChangePlayerPosition(0, 1);
                 }

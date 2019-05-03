@@ -105,7 +105,7 @@ namespace TanmaNabu.Core
                 // clear the window with clear color
                 Window.Clear(_clearColor);
 
-                Render(totalTime / _updateRate);
+                Render(totalTime / _updateRate, Time);
 
                 Window.Display();
             }
@@ -119,7 +119,7 @@ namespace TanmaNabu.Core
 
         protected abstract void Update(float deltaTime);
 
-        protected abstract void Render(float deltaTime);
+        protected abstract void Render(float deltaTime, Time elapsedTime);
 
         protected abstract void Quit();
 

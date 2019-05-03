@@ -130,6 +130,16 @@ namespace SFML.System
         ////////////////////////////////////////////////////////////
         public bool Equals(Vector2f other) => (X == other.X) && (Y == other.Y);
 
+        ///////////////////////////////////////////////////////////
+        /// <summary>
+        /// Compare two vectors and checks if they are equal
+        /// </summary>
+        /// <param name="other">Vector to check</param>
+        /// <param name="tolerance">Tolerance</param>
+        /// <returns>Vectors are equal</returns>
+        ////////////////////////////////////////////////////////////
+        public bool Equals(Vector2f other, float tolerance) => Math.Abs(X - other.X) < tolerance && Math.Abs(Y - other.Y) < tolerance;
+
         ////////////////////////////////////////////////////////////
         /// <summary>
         /// Provide a integer describing the object
