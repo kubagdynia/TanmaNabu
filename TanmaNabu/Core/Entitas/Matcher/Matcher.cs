@@ -18,7 +18,7 @@
         public int[] AnyOfIndices => _anyOfIndices;
         public int[] NoneOfIndices => _noneOfIndices;
 
-        public string[] componentNames { get; set; }
+        public string[] ComponentNames { get; set; }
 
         private int[] _indices;
         private int[] _allOfIndices;

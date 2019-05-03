@@ -20,7 +20,7 @@ namespace Entitas
 
                 if (_allOfIndices != null)
                 {
-                    AppendIndices(_toStringBuilder, "AllOf", _allOfIndices, componentNames);
+                    AppendIndices(_toStringBuilder, "AllOf", _allOfIndices, ComponentNames);
                 }
                 if (_anyOfIndices != null)
                 {
@@ -28,11 +28,11 @@ namespace Entitas
                     {
                         _toStringBuilder.Append(".");
                     }
-                    AppendIndices(_toStringBuilder, "AnyOf", _anyOfIndices, componentNames);
+                    AppendIndices(_toStringBuilder, "AnyOf", _anyOfIndices, ComponentNames);
                 }
                 if (_noneOfIndices != null)
                 {
-                    AppendIndices(_toStringBuilder, ".NoneOf", _noneOfIndices, componentNames);
+                    AppendIndices(_toStringBuilder, ".NoneOf", _noneOfIndices, ComponentNames);
                 }
                 _toStringCache = _toStringBuilder.ToString();
             }

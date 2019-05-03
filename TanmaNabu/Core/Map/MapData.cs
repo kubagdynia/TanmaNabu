@@ -9,6 +9,10 @@ namespace TanmaNabu.Core.Map
     {
         public int TileWorldDimension { get; } = 2;
 
+        public int SpriteWorldDimension { get; } = 3;
+
+        public int CollisionNearbyDistance { get; } = 20;
+
         private float _mapZoomFactor = 0.6f;
         public float MapZoomFactor
         {
@@ -43,7 +47,7 @@ namespace TanmaNabu.Core.Map
         private List<MapEntity> _mapEntities;
         public List<MapEntity> MapEntities => _mapEntities ?? (_mapEntities = new List<MapEntity>());
 
-        public IEnumerable<DataStructures.IntRect> GetCollidersNearby(DataStructures.IntRect target, int distance)
+        public IEnumerable<DataStructures.IntRect> GetCollisionsNearby(DataStructures.IntRect target, int distance)
         {
             foreach (var collider in CollidersLayer.Colliders)
             {

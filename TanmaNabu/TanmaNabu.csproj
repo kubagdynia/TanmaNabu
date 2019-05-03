@@ -13,11 +13,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="GameLogic\" />
-    <Folder Include="States\" />
-  </ItemGroup>
   
   <ItemGroup>
     <CSFMLFiles Include="../ExtLibs/SFML.Net/lib-x64/*.*">
