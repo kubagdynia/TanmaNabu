@@ -12,8 +12,9 @@ namespace TanmaNabu.GameLogic.Game
         public const int Character = 4;
         public const int AnimationType = 5;
         public const int Animation = 6;
+        public const int Collision = 7;
 
-        public const int TotalComponents = 7;
+        public const int TotalComponents = 8;
 
         public static readonly string[] ComponentNames =
         {
@@ -23,7 +24,8 @@ namespace TanmaNabu.GameLogic.Game
             nameof(Movement),
             nameof(Character),
             nameof(AnimationType),
-            nameof(Animation)
+            nameof(Animation),
+            nameof(Collision)
         };
 
         public static readonly Type[] ComponentTypes =
@@ -34,7 +36,8 @@ namespace TanmaNabu.GameLogic.Game
             typeof(MovementComponent),
             typeof(CharacterComponent),
             typeof(AnimationTypeComponent),
-            typeof(AnimationComponent)
+            typeof(AnimationComponent),
+            typeof(CollisionComponent)
         };
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Entitas;
+using SFML.Graphics;
 using SFML.Window;
 using TanmaNabu.Core.Animation;
 using TanmaNabu.GameLogic.Game;
@@ -73,6 +74,24 @@ namespace TanmaNabu.GameLogic.Systems
 
                     x *= entitySpeed;
                     y *= entitySpeed;
+
+                    FloatRect spriteRect = entity.Animation.GetSpriteGlobalBounds();
+                    int tileId = entity.Animation.GetCurrentTiledId();
+
+                    if (entity.HasCollision)
+                    {
+                        var spriteCollisionRect = entity.Collision.GetCollisionRectGlobalBounds(tileId, spriteRect, x, y);
+
+                        var collisions = _contexts.GameMap.MapData.GetCollisionsNearby(spriteCollisionRect, _contexts.GameMap.MapData.CollisionNearbyDistance);
+
+                        foreach (Core.DataStructures.IntRect collsionRect in collisions)
+                        {
+                            if (collsionRect.Intersects(spriteCollisionRect))
+                            {
+                                return;
+                            }
+                        }
+                    }
 
                     entity.ReplacePosition(entity.Position.X + x, entity.Position.Y + y);
                 }

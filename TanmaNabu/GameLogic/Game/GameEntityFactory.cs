@@ -42,6 +42,7 @@ namespace TanmaNabu.GameLogic.Game
 
             entity.AddAnimationType(mapEntity.InitialState);
             entity.AddAnimation(mapEntity.TilesetName, mapEntity.Type, mapData.SpriteWorldDimension);
+            entity.AddCollision(mapEntity.TilesetName, mapEntity.Type, mapData.SpriteWorldDimension);
             entity.AddMovement(mapEntity.MovementSpeed);
             entity.AddCharacter(mapEntity.Type);
         }
