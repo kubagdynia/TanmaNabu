@@ -13,7 +13,7 @@ namespace TanmaNabu.States
         private Vector2f currentPosition;
         private float currentZoomFactor;
 
-        private const float moveSpeed = 0.000005f;
+        private const float moveSpeed = 0.000008f;
 
         public Camera(RenderWindow window, Contexts contexts)
         {
@@ -50,6 +50,13 @@ namespace TanmaNabu.States
             }
 
             currentZoomFactor = contexts.GameMap.MapData.MapZoomFactor;
+
+            // How to fix vertical artifact lines in a vertex array in SFML, WITH pixel perfect zoom/move?
+            // https://stackoverflow.com/questions/55997965/how-to-fix-vertical-artifact-lines-in-a-vertex-array-in-sfml-with-pixel-perfect
+            // https://www.sfml-dev.org/tutorials/2.5/graphics-draw.php#off-screen-drawing
+
+            currentPosition.X = (float)Math.Floor(currentPosition.X);
+            currentPosition.Y = (float)Math.Floor(currentPosition.Y);
 
             view.Center = currentPosition;
 

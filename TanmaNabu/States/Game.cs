@@ -65,11 +65,12 @@ namespace TanmaNabu.States
 
             /* Hack to get rid of the annoying horizontal and vertical
                lines that are caused by floating point rendering */
-            Vector2f correction = new Vector2f(
-                ((int)(Window.DefaultView.Size.X) % 2 == 0 ? 0 : 1) * 0.5f,
-                ((int)(Window.DefaultView.Size.Y) % 2 == 0 ? 0 : 1) * 0.5f);
+            //Vector2f correction = new Vector2f(
+            //    ((int)(Window.DefaultView.Size.X) % 2 == 0 ? 0 : 1) * 0.5f,
+            //    ((int)(Window.DefaultView.Size.Y) % 2 == 0 ? 0 : 1) * 0.5f);
 
-            Camera.Update(deltaTime, elapsedTime,  entity.Position.X + correction.X, entity.Position.Y + correction.Y);
+            //Camera.Update(deltaTime, elapsedTime,  entity.Position.X + correction.X, entity.Position.Y + correction.Y);
+            Camera.Update(deltaTime, elapsedTime, entity.Position.X, entity.Position.Y);
 
             Window.Draw(Contexts.GameMap.GetBackgroundTileMap());
 
@@ -109,7 +110,7 @@ namespace TanmaNabu.States
 
         protected override void KeyReleased(object sender, KeyEventArgs e)
         {
-
+            
         }
 
         protected override void JoystickButtonPressed(object sender, JoystickButtonEventArgs arg)

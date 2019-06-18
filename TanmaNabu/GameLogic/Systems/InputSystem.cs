@@ -30,6 +30,11 @@ namespace TanmaNabu.GameLogic.Systems
                 _contexts.GameMap.MapData.MapZoomFactor += 0.01f;
             }
 
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Home))
+            {
+                _contexts.GameMap.MapData.MapZoomFactor = 1;
+            }
+
             #endregion
 
             #region PLAYER
