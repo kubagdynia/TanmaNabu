@@ -34,7 +34,7 @@ namespace TanmaNabu.States
             AssetManager.Instance.Map.Load("jungleMap", AssetManager.Instance.GetMapPath("jungle_map.tmx"));
         }
 
-        protected override void Initialize()
+        protected override void Initialize(RenderTarget target)
         {
             Contexts = Contexts.SharedInstance;
 
@@ -45,7 +45,7 @@ namespace TanmaNabu.States
             // Call once on start
             Systems.Initialize();
 
-            Camera = new Camera(Window, Contexts);
+            Camera = new Camera(target, Contexts);
         }
 
         protected override void Update(float deltaTime)
@@ -58,36 +58,29 @@ namespace TanmaNabu.States
             Systems.Cleanup();
         }
 
-        protected override void Render(float deltaTime, Time elapsedTime)
+        protected override void Render(RenderTarget target, float deltaTime, Time elapsedTime)
         {
             var players = Contexts.Game.GetGroup(GameMatcher.Player);
             var entity = players.GetSingleEntity();
 
-            /* Hack to get rid of the annoying horizontal and vertical
-               lines that are caused by floating point rendering */
-            //Vector2f correction = new Vector2f(
-            //    ((int)(Window.DefaultView.Size.X) % 2 == 0 ? 0 : 1) * 0.5f,
-            //    ((int)(Window.DefaultView.Size.Y) % 2 == 0 ? 0 : 1) * 0.5f);
-
-            //Camera.Update(deltaTime, elapsedTime,  entity.Position.X + correction.X, entity.Position.Y + correction.Y);
             Camera.Update(deltaTime, elapsedTime, entity.Position.X, entity.Position.Y);
 
-            Window.Draw(Contexts.GameMap.GetBackgroundTileMap());
+            target.Draw(Contexts.GameMap.GetBackgroundTileMap());
 
             var entities = Contexts.Game.GetEntities(GameMatcher.Animation);
             foreach (var objEntity in entities.OrderBy(c => c.Position.Y))
             {
-                Window.Draw(objEntity.Animation.GetSprite());
+                target.Draw(objEntity.Animation.GetSprite());
             }
 
-            Window.Draw(Contexts.GameMap.GetForegroundTileMap());
+            target.Draw(Contexts.GameMap.GetForegroundTileMap());
 
 #if DEBUG
-            DrawCollisions();
+            DrawCollisions(target);
 #endif
         }
 
-        private void DrawCollisions()
+        private void DrawCollisions(RenderTarget target)
         {
             foreach (var item in Contexts.GameMap.MapData.CollidersLayer.Colliders)
             {
@@ -99,7 +92,7 @@ namespace TanmaNabu.States
                     FillColor = new Color(255, 0, 0, 50)
                 };
 
-                Window.Draw(colRectangle);
+                target.Draw(colRectangle);
             }
         }
 

@@ -14,6 +14,9 @@ namespace TanmaNabu.Core
 
         protected readonly RenderWindow Window;
 
+        private RenderTexture _renderTexture;
+        private Sprite _renderSprite;
+
         private Time Time { get; set; }
 
         protected BaseGame(Vector2u windowSize, string windowTitle, Color clearColor, uint framerateLimit = 60,
@@ -27,11 +30,16 @@ namespace TanmaNabu.Core
             if (fullScreen)
             {
                 Window = new RenderWindow(new VideoMode(windowSize.X, windowSize.Y, 32), windowTitle, Styles.Fullscreen);
+
+                _renderTexture = new RenderTexture(windowSize.X, windowSize.Y);
+                _renderSprite = new Sprite(_renderTexture.Texture, new IntRect(0, 0, (int)windowSize.X, (int)windowSize.Y));
             }
             else
             {
                 Window = new RenderWindow(new VideoMode(windowSize.X, windowSize.Y, 32), windowTitle, Styles.Default);
 
+                _renderTexture = new RenderTexture(windowSize.X, windowSize.Y);
+                _renderSprite = new Sprite(_renderTexture.Texture, new IntRect(0, 0, (int)windowSize.X, (int)windowSize.Y));
             }
 
             if (vsync)
@@ -63,7 +71,7 @@ namespace TanmaNabu.Core
         public void Run()
         {
             LoadContent();
-            Initialize();
+            Initialize(_renderTexture);
 
             var clock = new Clock();
 
@@ -103,10 +111,15 @@ namespace TanmaNabu.Core
                 }
 
                 // clear the window with clear color
-                Window.Clear(_clearColor);
+                _renderTexture.Clear(_clearColor);
 
-                Render(totalTime / _updateRate, Time);
+                // call render from the inheriting objects
+                Render(_renderTexture, totalTime / _updateRate, Time);
 
+                _renderTexture.Display();
+
+                // draw it to the window
+                Window.Draw(_renderSprite);
                 Window.Display();
             }
 
@@ -115,11 +128,11 @@ namespace TanmaNabu.Core
 
         protected abstract void LoadContent();
 
-        protected abstract void Initialize();
+        protected abstract void Initialize(RenderTarget target);
 
         protected abstract void Update(float deltaTime);
 
-        protected abstract void Render(float deltaTime, Time elapsedTime);
+        protected abstract void Render(RenderTarget target, float deltaTime, Time elapsedTime);
 
         protected abstract void Quit();
 

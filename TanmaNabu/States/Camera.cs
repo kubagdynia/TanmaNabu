@@ -7,7 +7,7 @@ namespace TanmaNabu.States
 {
     public class Camera
     {
-        protected readonly RenderWindow window;
+        protected readonly RenderTarget renderTarget;
         protected readonly Contexts contexts;
 
         private Vector2f currentPosition;
@@ -15,11 +15,11 @@ namespace TanmaNabu.States
 
         private const float moveSpeed = 0.000008f;
 
-        public Camera(RenderWindow window, Contexts contexts)
+        public Camera(RenderTarget renderTarget, Contexts contexts)
         {
-            this.window = window;
+            this.renderTarget = renderTarget;
             this.contexts = contexts;
-            currentPosition = window.GetView().Center;
+            currentPosition = renderTarget.GetView().Center;
         }
 
         public void Update(float deltaTime, Time elapsedTime, float positionX, float positionY)
@@ -28,17 +28,17 @@ namespace TanmaNabu.States
 
             var view = new View
             {
-                Size = new Vector2f(window.Size.X, window.Size.Y),
+                Size = new Vector2f(renderTarget.Size.X, renderTarget.Size.Y),
                 Viewport = new FloatRect(0f, 0f, 1.0f, 1.0f),
             };
             view.Zoom(contexts.GameMap.MapData.MapZoomFactor);
 
             var targetCenterX = Math.Max(
-                window.Size.X / 2.0f * contexts.GameMap.MapData.MapZoomFactor,
-                Math.Min(contexts.GameMap.MapData.MapRec.Width * contexts.GameMap.MapData.TileWorldDimension - window.Size.X / 2.0f * contexts.GameMap.MapData.MapZoomFactor, positionX));
+                renderTarget.Size.X / 2.0f * contexts.GameMap.MapData.MapZoomFactor,
+                Math.Min(contexts.GameMap.MapData.MapRec.Width * contexts.GameMap.MapData.TileWorldDimension - renderTarget.Size.X / 2.0f * contexts.GameMap.MapData.MapZoomFactor, positionX));
 
-            var targetCenterY = Math.Max(window.Size.Y / 2.0f * contexts.GameMap.MapData.MapZoomFactor,
-                Math.Min(contexts.GameMap.MapData.MapRec.Height * contexts.GameMap.MapData.TileWorldDimension - window.Size.Y / 2.0f * contexts.GameMap.MapData.MapZoomFactor, positionY));
+            var targetCenterY = Math.Max(renderTarget.Size.Y / 2.0f * contexts.GameMap.MapData.MapZoomFactor,
+                Math.Min(contexts.GameMap.MapData.MapRec.Height * contexts.GameMap.MapData.TileWorldDimension - renderTarget.Size.Y / 2.0f * contexts.GameMap.MapData.MapZoomFactor, positionY));
 
             var oldPosition = currentPosition;
 
@@ -60,7 +60,7 @@ namespace TanmaNabu.States
 
             view.Center = currentPosition;
 
-            window.SetView(view);
+            renderTarget.SetView(view);
         }
     }
 
