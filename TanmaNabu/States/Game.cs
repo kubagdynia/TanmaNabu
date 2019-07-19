@@ -10,7 +10,7 @@ using TanmaNabu.Core.Managers;
 using TanmaNabu.GameLogic;
 using TanmaNabu.GameLogic.Game;
 using TanmaNabu.GameLogic.Systems;
-using TanmaNabu.Settings;
+using TanmaNabu.Core.Settings;
 
 namespace TanmaNabu.States
 {
@@ -58,12 +58,12 @@ namespace TanmaNabu.States
             Systems.Cleanup();
         }
 
-        protected override void Render(RenderTarget target, float deltaTime, Time elapsedTime)
+        protected override void Render(RenderTarget target, float deltaTime, GameTime gameTime)
         {
             var players = Contexts.Game.GetGroup(GameMatcher.Player);
             var entity = players.GetSingleEntity();
 
-            Camera.Update(deltaTime, elapsedTime, entity.Position.X, entity.Position.Y);
+            Camera.Update(deltaTime, gameTime, entity.Position.X, entity.Position.Y);
 
             target.Draw(Contexts.GameMap.GetBackgroundTileMap());
 
@@ -143,7 +143,7 @@ namespace TanmaNabu.States
 
         protected override void Resize(uint width, uint height)
         {
-
+            
         }
 
         private Systems CreateSystems(Contexts contexts)

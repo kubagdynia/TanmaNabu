@@ -7,7 +7,7 @@ using TanmaNabu.Core.Animation;
 using TanmaNabu.Core.Extensions;
 using TanmaNabu.Core.Managers;
 using TanmaNabu.Core.Map.Exceptions;
-using TanmaNabu.Settings;
+using TanmaNabu.Core.Settings;
 using TiledSharp;
 
 namespace TanmaNabu.Core.Map

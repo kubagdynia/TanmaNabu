@@ -1,6 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 using System;
+using TanmaNabu.Core;
 using TanmaNabu.GameLogic;
 
 namespace TanmaNabu.States
@@ -22,9 +23,9 @@ namespace TanmaNabu.States
             currentPosition = renderTarget.GetView().Center;
         }
 
-        public void Update(float deltaTime, Time elapsedTime, float positionX, float positionY)
+        public void Update(float deltaTime, GameTime gameTime, float positionX, float positionY)
         {
-            float lerpSpeed = CameraMath.Clamp(elapsedTime.AsMicroseconds() * moveSpeed, 0, 1);
+            float lerpSpeed = CameraMath.Clamp(gameTime.ElapsedTime.AsMicroseconds() * moveSpeed, 0, 1);
 
             var view = new View
             {

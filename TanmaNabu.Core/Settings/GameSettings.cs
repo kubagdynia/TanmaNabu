@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
-using TanmaNabu.Core;
 using TanmaNabu.Core.Extensions;
 using TanmaNabu.Core.Settings.Exceptions;
 
-namespace TanmaNabu.Settings
+namespace TanmaNabu.Core.Settings
 {
-    class GameSettings
+    public class GameSettings
     {
         public static event EventHandler<SettingsPropertyType> GameSettingsChanged;
 

@@ -1,4 +1,4 @@
-﻿namespace TanmaNabu.Settings
+﻿namespace TanmaNabu.Core.Settings
 {
     public class SettingsData
     {

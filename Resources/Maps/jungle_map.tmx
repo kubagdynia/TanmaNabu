@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="249">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="250">
  <properties>
   <property name="BackgroundImagePath" value=""/>
   <property name="BackgroundMusicPath" value=""/>
@@ -16,7 +16,7 @@
   </layer>
   <layer id="3" name="Background Front" width="50" height="50">
    <data encoding="base64" compression="zlib">
-   eJztmVlOwzAQQJ27wCXgt6w9ABKLFA4AlLXiA35YzsD2wRfwB6X9glNwD5YrMIhEckexO17GdiQ/aeQ68Ta2O2NPhMhkMlTuCyEGIK9SelX4bY+DF6n9Icio6mcdZKMq81yMl6Omcnt/7PKoQGKVoc0VpjVx5cCw/FYkPfYd6x+i/Fmi60GlW6XXDXpsw7MdkJ5lGoPabsh28Bx+X4BcWqYhWUB5WZ8bkFuQO8uUypFXjf6pbTu260ND+z6o9BhZjGHZoz4uLKK8jS7dyUWCMkcoc4zyJ8S232DN31tuZ2U6gjZfmTSZjz2AlhFyr5ueQ214YrBFHG36JDV/Ywreg5SzQAmyqXi3ZzmOpYZntX/T3U2+QL5Bfiz7DU0p1HPHxWng/lRwnJ9d6DjU7XsbRYaDB7Abjwrf0UN5XSwM30lCYnqe+rTsRzdXXEyBTKNntr5jzXEsLsyAzGrel2Lc3jf5uSaoMVJ8d9SBY3RNaxACPA7Turj+pDVIGZe5UFHvsVTiOi5Q/i+6u82Hr4EwIn/f0RHDzmFf2XZifvdKkXyO9QPVD6cez9CB/Umb488qvxLrTOSb1M5EbfDDHKQW86iJea915RcO5mxT
+   eJztmVlOwzAQQJ27wCXgh4+y9gBILFI4AFCggPgAIbGcgaUf/QL+oLRfcApuwAFYrsCgxJI7il1nvEbyk0auHS8zdjpjO4wlEgld+hljA5BXIb3J7Pbngheh/yHIqBxnA2SzrPOcjdfTTcX+/tlzY4IWa5LyXiHnIHN1+1x1tCYUQP9+acdnt8hrsx3IjgPD9ocofxHRelBol+lthR07ULYL0iGmIeB+Q/SDl/D7CuSamPpkEeVFe+5A7kF6xFSXI6sWFXDfjv36sKZ/H5R2jAg6rFi0x4QllKfY0p5cxSvzGnVOUP5Us+83WPP3hvtZkRbTm69EnCyEVqBh+HzXux7GeHLgi1z0aZPY4k1d8DuosxfIQbYkz/aJeixXlPH4pjqbfIP8gPwSx/VNzuRz54ozz+PJcLF/NqFl0PbYmhYJFzyA33iUxI4OyqvuwvCZxCd191NfxHFUc+WKKZBpVEaNHeuGupgwAzKreJ6zcX9fFeeqkN2RYvDZUQW+o6taAx9gPeq2xe0nrUHMmMyFDP6OxXKvY4LO/0V1tvmwpYhDxO87KkL4ORwrm07I714xkvaxdtCNw7HfZ6jA8aTJ98+yuBJqT2Sb2PZETYjDLojtzoMT8lxryh8YOnNX
   </data>
   </layer>
  </group>
@@ -140,7 +140,7 @@
   <object id="247" x="692" y="512" width="8" height="16"/>
  </objectgroup>
  <objectgroup id="10" name="Entities">
-  <object id="35" name="Player" type="Sara" x="520" y="444" width="32" height="32">
+  <object id="35" name="Player" type="Sara" x="220" y="184" width="32" height="32">
    <properties>
     <property name="InitialState" value="WalkDown"/>
     <property name="IsPlayer" type="bool" value="true"/>
@@ -386,7 +386,7 @@
     <property name="TilesetName" value="tileset01"/>
    </properties>
   </object>
-  <object id="83" name="Ghost 1" type="Ghost" x="344" y="420" width="20" height="20">
+  <object id="83" name="Ghost 1" type="Ghost" x="344" y="424" width="20" height="20">
    <properties>
     <property name="InitialState" value="WalkDown"/>
     <property name="MovementSpeed" type="int" value="3"/>
@@ -933,6 +933,13 @@
    </properties>
   </object>
   <object id="169" name="Ghost 1" type="Ghost" x="156" y="704" width="20" height="20">
+   <properties>
+    <property name="InitialState" value="WalkDown"/>
+    <property name="MovementSpeed" type="int" value="3"/>
+    <property name="TilesetName" value="tileset01"/>
+   </properties>
+  </object>
+  <object id="249" name="Ghost 1" type="Ghost" x="176" y="108" width="20" height="20">
    <properties>
     <property name="InitialState" value="WalkDown"/>
     <property name="MovementSpeed" type="int" value="3"/>

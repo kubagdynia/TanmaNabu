@@ -69,7 +69,7 @@ namespace TanmaNabu.Core.Map
                 var vertices = new Vertex[(uint)(_mapData.MapSize.X * _mapData.MapSize.Y * TileVertices)];
 
                 var verticeIndex = 0;
-                foreach (var tileItem in layer.Tiles)
+                foreach (TmxLayerTile tileItem in layer.Tiles)
                 {
                     AddTileVertices(vertices, verticeIndex, tileItem, tilesetColumns);
 
@@ -109,13 +109,19 @@ namespace TanmaNabu.Core.Map
 
         private void AddTileVertices(Vertex[] vertices, int verticeIndex, TmxLayerTile tileItem, int tilesetColumns)
         {
+            var a1 = tileItem.VerticalFlip;
+            var a2 = tileItem.HorizontalFlip;
+            var a3 = tileItem.DiagonalFlip;
+
             var xIndex = (tileItem.Gid - 1) % tilesetColumns;
             var yIndex = (tileItem.Gid - 1) / tilesetColumns;
 
-            AddTileVertices(vertices, verticeIndex, xIndex, yIndex, new Vector2f(tileItem.X, tileItem.Y));
+            AddTileVertices(vertices, verticeIndex, xIndex, yIndex, new Vector2f(tileItem.X, tileItem.Y),
+                tileItem.VerticalFlip, tileItem.HorizontalFlip, tileItem.DiagonalFlip);
         }
 
-        private unsafe void AddTileVertices(Vertex[] vertices, int verticeIndex, int x, int y, Vector2f position)
+        private unsafe void AddTileVertices(Vertex[] vertices, int verticeIndex, int x, int y, Vector2f position,
+            bool verticalFlip = false, bool horizontalFlip = false, bool diagonalFlip = false)
         {
             var tileWorldDimension = GetWorldTileSize.X * _mapData.TileWorldDimension;
 
@@ -123,24 +129,78 @@ namespace TanmaNabu.Core.Map
             {
                 var ptr = fptr + verticeIndex;
 
+                Vector2f[] textCoords = new Vector2f[]
+                {
+                    new Vector2f(GetWorldTileSize.X * x, GetWorldTileSize.Y * y),
+                    new Vector2f(GetWorldTileSize.X * x + GetWorldTileSize.X, GetWorldTileSize.Y * y),
+                    new Vector2f(GetWorldTileSize.X * x + GetWorldTileSize.X, GetWorldTileSize.Y * y + GetWorldTileSize.Y),
+                    new Vector2f(GetWorldTileSize.X * x, GetWorldTileSize.X * y + GetWorldTileSize.Y)
+                };
+
+                if (horizontalFlip)
+                {
+                    textCoords = new Vector2f[]
+                    {
+                        textCoords[1],
+                        textCoords[0],
+                        textCoords[3],
+                        textCoords[2]
+                    };
+                }
+
+                if (verticalFlip)
+                {
+                    textCoords = new Vector2f[]
+                    {
+                        textCoords[3],
+                        textCoords[2],
+                        textCoords[1],
+                        textCoords[0]
+                    };
+                }
+
+                if (diagonalFlip)
+                {
+                    textCoords = new Vector2f[]
+                    {
+                        textCoords[1],
+                        textCoords[2],
+                        textCoords[3],
+                        textCoords[0]
+                    };
+                }
+
+                //if (diagonalFlip)
+                //{
+                //    textCoords = new Vector2f[]
+                //    {
+                //        textCoords[3],
+                //        textCoords[0],
+                //        textCoords[1],
+                //        textCoords[2]
+                //    };
+                //}
+
+
+
                 ptr->Position = position * tileWorldDimension;
-                ptr->TexCoords = new Vector2f(GetWorldTileSize.X * x, GetWorldTileSize.Y * y);
+                ptr->TexCoords = textCoords[0];
                 ptr->Color = Color.White;
 
                 ptr++;
 
                 ptr->Position = (new Vector2f(1.0f, 0.0f) + position) * tileWorldDimension;
-                ptr->TexCoords = new Vector2f(GetWorldTileSize.X * x + GetWorldTileSize.X, GetWorldTileSize.Y * y);
+                ptr->TexCoords = textCoords[1];
                 ptr->Color = Color.White;
                 ptr++;
 
                 ptr->Position = (new Vector2f(1.0f, 1.0f) + position) * tileWorldDimension;
-                ptr->TexCoords = new Vector2f(GetWorldTileSize.X * x + GetWorldTileSize.X, GetWorldTileSize.Y * y + GetWorldTileSize.Y);
+                ptr->TexCoords = textCoords[2];
                 ptr->Color = Color.White;
                 ptr++;
 
                 ptr->Position = (new Vector2f(0.0f, 1.0f) + position) * tileWorldDimension;
-                ptr->TexCoords = new Vector2f(GetWorldTileSize.X * x, GetWorldTileSize.X * y + GetWorldTileSize.Y);
+                ptr->TexCoords = textCoords[3];
                 ptr->Color = Color.White;
             }
         }

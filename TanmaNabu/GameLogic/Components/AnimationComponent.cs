@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using TanmaNabu.Core.Animation;
 using TanmaNabu.Core.Managers;
-using TanmaNabu.Settings;
+using TanmaNabu.Core.Settings;
 using TiledSharp;
 
 namespace TanmaNabu.GameLogic.Components

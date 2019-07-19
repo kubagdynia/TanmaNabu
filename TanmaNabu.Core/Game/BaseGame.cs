@@ -17,7 +17,7 @@ namespace TanmaNabu.Core
         private RenderTexture _renderTexture;
         private Sprite _renderSprite;
 
-        private Time Time { get; set; }
+        private GameTime _gameTime;
 
         protected BaseGame(Vector2u windowSize, string windowTitle, Color clearColor, uint framerateLimit = 60,
            bool fullScreen = false, bool vsync = false)
@@ -73,15 +73,16 @@ namespace TanmaNabu.Core
             LoadContent();
             Initialize(_renderTexture);
 
-            var clock = new Clock();
+            _gameTime = new GameTime();
 
             var totalTime = 0.0f;
 
             // Main game loop
             while (Window.IsOpen)
             {
-                Time = clock.Restart();
-                var deltaTime = Time.AsSeconds();
+                _gameTime.Restart();
+
+                var deltaTime = _gameTime.ElapsedTime.AsSeconds();
 
                 if (deltaTime > 1)
                 {
@@ -108,13 +109,15 @@ namespace TanmaNabu.Core
                     totalTime -= _updateRate;
                     // Increase the counter
                     updateCount++;
+
+                    System.Console.WriteLine(GetFps());
                 }
 
                 // clear the window with clear color
                 _renderTexture.Clear(_clearColor);
 
                 // call render from the inheriting objects
-                Render(_renderTexture, totalTime / _updateRate, Time);
+                Render(_renderTexture, totalTime / _updateRate, _gameTime);
 
                 _renderTexture.Display();
 
@@ -132,7 +135,7 @@ namespace TanmaNabu.Core
 
         protected abstract void Update(float deltaTime);
 
-        protected abstract void Render(RenderTarget target, float deltaTime, Time elapsedTime);
+        protected abstract void Render(RenderTarget target, float deltaTime, GameTime gameTime);
 
         protected abstract void Quit();
 
@@ -160,7 +163,7 @@ namespace TanmaNabu.Core
 
         protected float GetFps()
         {
-            return (1000000.0f / Time.AsMicroseconds());
+            return (1000000.0f / _gameTime.ElapsedTime.AsMicroseconds());
         }
     }
 }
