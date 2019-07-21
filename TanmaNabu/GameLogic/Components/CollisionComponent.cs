@@ -45,7 +45,7 @@ namespace TanmaNabu.GameLogic.Components
             return collisionObjectGroup.Collissions[0].CollisionRect;
         }
 
-        public IntRect GetCollisionRectGlobalBounds(int tileId, SFML.Graphics.FloatRect parentRect, int offsetX, int offsetY)
+        public IntRect GetCollisionRectGlobalBounds(int tileId, SFML.Graphics.FloatRect parentRect, float offsetX, float offsetY)
         {
             var collisionRect = GetFirstCollisionRect(tileId);
 
@@ -65,7 +65,7 @@ namespace TanmaNabu.GameLogic.Components
                 return false;
             }
 
-            TmxTileset tileset = AssetManager.Instance.Tileset.Get(_tilesetName);
+            TmxTileset tileset = AssetManager.Tileset.Get(_tilesetName);
 
             if (tileset == null || tileset.Tiles == null)
             {

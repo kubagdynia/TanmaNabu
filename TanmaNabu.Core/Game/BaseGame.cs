@@ -71,59 +71,70 @@ namespace TanmaNabu.Core
         public void Run()
         {
             LoadContent();
-            Initialize(_renderTexture);
-
-            _gameTime = new GameTime();
-
-            var totalTime = 0.0f;
-
-            // Main game loop
-            while (Window.IsOpen)
+            try
             {
-                _gameTime.Restart();
+                _gameTime = new GameTime();
 
-                var deltaTime = _gameTime.ElapsedTime.AsSeconds();
-
-                if (deltaTime > 1)
+                Initialize(_renderTexture, _gameTime);
+                try
                 {
-                    deltaTime = 0;
+                    var totalTime = 0.0f;
+
+                    // Main game loop
+                    while (Window.IsOpen)
+                    {
+                        _gameTime.Restart();
+
+                        var deltaTime = _gameTime.ElapsedTime.AsSeconds();
+
+                        if (deltaTime > 1)
+                        {
+                            deltaTime = 0;
+                        }
+
+                        totalTime += deltaTime;
+                        var updateCount = 0;
+
+                        // While the total amount of time spend on the render step is
+                        // greater or equal to the update rate (1/x, in this game x = 60) and we have
+                        // not executed the update step 10 times then do the loop
+                        // If the counter hits 10 we break because it means that the
+                        // render step is lagging behind the update step
+                        while (totalTime >= _updateRate && updateCount < UpdateLimit)
+                        {
+                            Window.DispatchEvents();
+
+                            Joystick.Update();
+
+                            Update(_updateRate);
+
+                            // Subtract the update frequency from the total time
+                            totalTime -= _updateRate;
+                            // Increase the counter
+                            updateCount++;
+                        }
+
+                        // clear the window with clear color
+                        _renderTexture.Clear(_clearColor);
+
+                        // call render from the inheriting objects
+                        Render(_renderTexture, totalTime / _updateRate, _gameTime);
+
+                        _renderTexture.Display();
+
+                        // draw it to the window
+                        Window.Draw(_renderSprite);
+                        Window.Display();
+                    }
                 }
-
-                totalTime += deltaTime;
-                var updateCount = 0;
-
-                // While the total amount of time spend on the render step is
-                // greater or equal to the update rate (1/x, in this game x = 60) and we have
-                // not executed the update step 10 times then do the loop
-                // If the counter hits 10 we break because it means that the
-                // render step is lagging behind the update step
-                while (totalTime >= _updateRate && updateCount < UpdateLimit)
+                finally
                 {
-                    Window.DispatchEvents();
-
-                    Joystick.Update();
-
-                    Update(_updateRate);
-
-                    // Subtract the update frequency from the total time
-                    totalTime -= _updateRate;
-                    // Increase the counter
-                    updateCount++;
-
-                    System.Console.WriteLine(GetFps());
+                    Deinitialize();
                 }
-
-                // clear the window with clear color
-                _renderTexture.Clear(_clearColor);
-
-                // call render from the inheriting objects
-                Render(_renderTexture, totalTime / _updateRate, _gameTime);
-
-                _renderTexture.Display();
-
-                // draw it to the window
-                Window.Draw(_renderSprite);
-                Window.Display();
+            }
+            finally
+            {
+                UnloadContent();
             }
 
             Quit();
@@ -131,7 +142,11 @@ namespace TanmaNabu.Core
 
         protected abstract void LoadContent();
 
-        protected abstract void Initialize(RenderTarget target);
+        protected abstract void UnloadContent();
+
+        protected abstract void Initialize(RenderTarget target, GameTime gameTime);
+
+        protected abstract void Deinitialize();
 
         protected abstract void Update(float deltaTime);
 

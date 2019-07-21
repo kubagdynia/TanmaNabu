@@ -144,7 +144,7 @@
    <properties>
     <property name="InitialState" value="WalkDown"/>
     <property name="IsPlayer" type="bool" value="true"/>
-    <property name="MovementSpeed" type="int" value="5"/>
+    <property name="MovementSpeed" type="int" value="250"/>
     <property name="TilesetName" value="tileset01"/>
    </properties>
   </object>

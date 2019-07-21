@@ -69,7 +69,7 @@ namespace TanmaNabu.GameLogic.Systems
             #endregion
         }
 
-        private void ChangePlayerPosition(int x, int y)
+        private void ChangePlayerPosition(float x, float y)
         {
             var entity = _contexts.Game.GetEntity(GameMatcher.Player);
 
@@ -79,8 +79,8 @@ namespace TanmaNabu.GameLogic.Systems
                 {
                     int entitySpeed = entity.Movement.Speed;
 
-                    x *= entitySpeed;
-                    y *= entitySpeed;
+                    x *= _contexts.GameTime.ElapsedTime.AsSeconds() * entitySpeed;
+                    y *= _contexts.GameTime.ElapsedTime.AsSeconds() * entitySpeed;
 
                     FloatRect spriteRect = entity.Animation.GetSpriteGlobalBounds();
                     int tileId = entity.Animation.GetCurrentTiledId();

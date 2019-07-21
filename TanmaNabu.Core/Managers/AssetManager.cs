@@ -41,27 +41,27 @@ namespace TanmaNabu.Core.Managers
 
         private IManager<Texture> _texture;
 
-        public IManager<Texture> Texture => _texture ?? (_texture = new Manager<Texture>());
+        public static IManager<Texture> Texture => Instance._texture ?? (Instance._texture = new Manager<Texture>());
 
         private IManager<Font> _font;
 
-        public IManager<Font> Font => _font ?? (_font = new Manager<Font>());
+        public static IManager<Font> Font => Instance._font ?? (Instance._font = new Manager<Font>());
 
         private IManager<Music> _music;
 
-        public IManager<Music> Music => _music ?? (_music = new Manager<Music>());
+        public static IManager<Music> Music => Instance._music ?? (Instance._music = new Manager<Music>());
 
         private IManager<SoundBuffer> _sound;
 
-        public IManager<SoundBuffer> Sound => _sound ?? (_sound = new Manager<SoundBuffer>());
+        public static IManager<SoundBuffer> Sound => Instance._sound ?? (Instance._sound = new Manager<SoundBuffer>());
 
         private IManager<TmxMap> _map;
 
-        public IManager<TmxMap> Map => _map ?? (_map = new Manager<TmxMap>());
+        public static IManager<TmxMap> Map => Instance._map ?? (Instance._map = new Manager<TmxMap>());
 
         private IManager<TmxTileset> _tileset;
 
-        public IManager<TmxTileset> Tileset => _tileset ?? (_tileset = new Manager<TmxTileset>());
+        public static IManager<TmxTileset> Tileset => Instance._tileset ?? (Instance._tileset = new Manager<TmxTileset>());
 
         public string CombineResourcePathWith(string str1, string str2 = "", string str3 = "")
         {
@@ -81,6 +81,15 @@ namespace TanmaNabu.Core.Managers
                 Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), ResourcePath, resourceType, fileName);
 
             return path;
+        }
+
+        public static void CleanUp()
+        {
+            Instance._texture?.RemoveAll();
+            Instance._font?.RemoveAll();
+            Instance._music?.RemoveAll();
+            Instance._sound?.RemoveAll();
+            Instance._map?.RemoveAll();
         }
 
     }

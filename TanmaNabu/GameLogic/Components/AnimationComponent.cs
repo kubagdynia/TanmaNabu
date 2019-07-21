@@ -122,7 +122,7 @@ namespace TanmaNabu.GameLogic.Components
                 return false;
             }
 
-            TmxTileset tileset = AssetManager.Instance.Tileset.Get(_tilesetName);
+            TmxTileset tileset = AssetManager.Tileset.Get(_tilesetName);
 
             if (tileset == null || tileset.Image == null)
             {
@@ -132,10 +132,10 @@ namespace TanmaNabu.GameLogic.Components
             string filename = Path.GetFileName(tileset.Image.Source);
             string texturePath = GameSettings.GetFullPath(SettingsPropertyType.TexturesPath, filename);
 
-            AssetManager.Instance.Texture.Load(filename, GameSettings.GetFullPath(
+            AssetManager.Texture.Load(filename, GameSettings.GetFullPath(
                     SettingsPropertyType.TexturesPath, filename));            
 
-            Texture = AssetManager.Instance.Texture.LoadAndGet(filename, texturePath);
+            Texture = AssetManager.Texture.LoadAndGet(filename, texturePath);
 
             return true;
         }
@@ -147,7 +147,7 @@ namespace TanmaNabu.GameLogic.Components
                 return false;
             }
 
-            TmxTileset tileset = AssetManager.Instance.Tileset.Get(_tilesetName);
+            TmxTileset tileset = AssetManager.Tileset.Get(_tilesetName);
 
             if (tileset == null || tileset.Image == null || tileset.Tiles == null)
             {

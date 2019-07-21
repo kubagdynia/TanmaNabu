@@ -29,15 +29,30 @@ namespace TanmaNabu.States
 
         protected override void LoadContent()
         {
+#if DEBUG
+            "Load content".Log();
+#endif
             GameSettings.Load();
 
-            AssetManager.Instance.Map.Load("jungleMap", AssetManager.Instance.GetMapPath("jungle_map.tmx"));
+            AssetManager.Map.Load("jungleMap", AssetManager.Instance.GetMapPath("jungle_map.tmx"));
         }
 
-        protected override void Initialize(RenderTarget target)
+        protected override void UnloadContent()
         {
+#if DEBUG
+            "Unload content".Log();
+#endif
+            AssetManager.CleanUp();
+        }
+
+        protected override void Initialize(RenderTarget target, GameTime gameTime)
+        {
+#if DEBUG
+            "Initialize".Log();
+#endif
             Contexts = Contexts.SharedInstance;
 
+            Contexts.GameTime = gameTime;
             Contexts.GameMap.Load("jungleMap");
 
             Systems = CreateSystems(Contexts);
@@ -46,6 +61,15 @@ namespace TanmaNabu.States
             Systems.Initialize();
 
             Camera = new Camera(target, Contexts);
+        }
+
+        protected override void Deinitialize()
+        {
+#if DEBUG
+            "Deinitialize".Log();
+#endif
+            Systems.TearDown();
+            GameSettings.CleanUp();
         }
 
         protected override void Update(float deltaTime)
@@ -133,9 +157,6 @@ namespace TanmaNabu.States
 
         protected override void Quit()
         {
-            Systems.TearDown();
-            GameSettings.CleanUp();
-
 #if DEBUG
             "Quit Game :(".Log();
 #endif

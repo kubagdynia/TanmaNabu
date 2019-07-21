@@ -19,7 +19,7 @@ namespace TanmaNabu.Core.Map
 #if DEBUG
             "Map loading...".Log(true);
 #endif
-            var map = AssetManager.Instance.Map.Get(mapResourceName);
+            var map = AssetManager.Map.Get(mapResourceName);
 
             // Load resources
             LoadMapProperties(map, data);
@@ -272,7 +272,7 @@ namespace TanmaNabu.Core.Map
             if (GetPropertyValue(entityObject, EntityCustomProperties.TilesetName, out string tilesetName))
             {
                 // Load tileset
-                AssetManager.Instance.Tileset.Load(tilesetName, GameSettings.GetFullPath(
+                AssetManager.Tileset.Load(tilesetName, GameSettings.GetFullPath(
                     SettingsPropertyType.TilesetsPath, $"{tilesetName}{GameSettings.TilesetFileExtension}"));
 
                 mapEntity.TilesetName = tilesetName;
