@@ -21,8 +21,8 @@ namespace TanmaNabu.States
         protected Camera Camera;
 
         public Game()
-            : base(new Vector2u(1440, 810), "Tanma Nabu", Color.Black, 60, false, true) // window
-            //: base(new Vector2u(1920, 1080), "Tanma Nabu", Color.Black, 60, true, true) // full screen
+            : base(new Vector2u(1440, 810), "Tanma Nabu", Color.Black, 60, false, false) // window
+            //: base(new Vector2u(1920, 1080), "Tanma Nabu", Color.Black, 60, true, false) // full screen
         {
 
         }

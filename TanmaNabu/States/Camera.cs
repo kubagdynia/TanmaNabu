@@ -3,29 +3,20 @@ using SFML.System;
 using System;
 using TanmaNabu.Core;
 using TanmaNabu.GameLogic;
+using TanmaNabu.Core.Extensions;
 
 namespace TanmaNabu.States
 {
-    public class Camera
+    public class Camera(RenderTarget renderTarget, Contexts contexts)
     {
-        protected readonly RenderTarget renderTarget;
-        protected readonly Contexts contexts;
+        private Vector2f _currentPosition = renderTarget.GetView().Center;
+        private float _currentZoomFactor;
 
-        private Vector2f currentPosition;
-        private float currentZoomFactor;
-
-        private const float moveSpeed = 0.000008f;
-
-        public Camera(RenderTarget renderTarget, Contexts contexts)
-        {
-            this.renderTarget = renderTarget;
-            this.contexts = contexts;
-            currentPosition = renderTarget.GetView().Center;
-        }
+        private const float MoveSpeed = 0.000008f;
 
         public void Update(float deltaTime, GameTime gameTime, float positionX, float positionY)
         {
-            float lerpSpeed = CameraMath.Clamp(gameTime.ElapsedTime.AsMicroseconds() * moveSpeed, 0, 1);
+            float lerpSpeed = CameraMath.Clamp(gameTime.ElapsedTime.AsMicroseconds() * MoveSpeed, 0, 1);
 
             var view = new View
             {
@@ -41,25 +32,25 @@ namespace TanmaNabu.States
             var targetCenterY = Math.Max(renderTarget.Size.Y / 2.0f * contexts.GameMap.MapData.MapZoomFactor,
                 Math.Min(contexts.GameMap.MapData.MapRec.Height * contexts.GameMap.MapData.TileWorldDimension - renderTarget.Size.Y / 2.0f * contexts.GameMap.MapData.MapZoomFactor, positionY));
 
-            var oldPosition = currentPosition;
+            Vector2f oldPosition = _currentPosition;
 
-            currentPosition = CameraMath.Lerp(new Vector2f(targetCenterX, targetCenterY), currentPosition, lerpSpeed);
+            _currentPosition = CameraMath.Lerp(new Vector2f(targetCenterX, targetCenterY), _currentPosition, lerpSpeed);
 
-            if (oldPosition.Equals(currentPosition, 0.1f) && currentZoomFactor == contexts.GameMap.MapData.MapZoomFactor)
+            if (oldPosition.Equals(_currentPosition, 0.1f) && Math.Abs(_currentZoomFactor - contexts.GameMap.MapData.MapZoomFactor) < 0.01f)
             {
                 return;
             }
 
-            currentZoomFactor = contexts.GameMap.MapData.MapZoomFactor;
+            _currentZoomFactor = contexts.GameMap.MapData.MapZoomFactor;
 
             // How to fix vertical artifact lines in a vertex array in SFML, WITH pixel perfect zoom/move?
             // https://stackoverflow.com/questions/55997965/how-to-fix-vertical-artifact-lines-in-a-vertex-array-in-sfml-with-pixel-perfect
             // https://www.sfml-dev.org/tutorials/2.5/graphics-draw.php#off-screen-drawing
 
-            currentPosition.X = (float)Math.Floor(currentPosition.X);
-            currentPosition.Y = (float)Math.Floor(currentPosition.Y);
+            _currentPosition.X = (float)Math.Floor(_currentPosition.X);
+            _currentPosition.Y = (float)Math.Floor(_currentPosition.Y);
 
-            view.Center = currentPosition;
+            view.Center = _currentPosition;
 
             renderTarget.SetView(view);
         }

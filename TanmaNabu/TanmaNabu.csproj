@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
 	<Configurations>Debug;Release</Configurations>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -15,9 +16,6 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <CSFMLFiles Include="../ExtLibs/SFML.Net/lib-x64/*.*">
-      <InProject>false</InProject>
-    </CSFMLFiles>
 	<MapsFiles Include="../Resources/Maps/*.*">
       <InProject>false</InProject>
     </MapsFiles>
@@ -33,7 +31,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   
   <ItemGroup>
@@ -42,7 +40,6 @@
   
   <!-- Copying resources files -->
   <Target Name="CopyFiles" AfterTargets="AfterBuild">
-    <Copy SourceFiles="@(CSFMLFiles)" DestinationFolder="$(OutDir)/res/dll" SkipUnchangedFiles="true" />
 	<Copy SourceFiles="@(MapsFiles)" DestinationFolder="$(OutDir)/res/maps" SkipUnchangedFiles="true" />
 	<Copy SourceFiles="@(TilesetsFiles)" DestinationFolder="$(OutDir)/res/tilesets" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(FontsFiles)" DestinationFolder="$(OutDir)/res/fonts" SkipUnchangedFiles="true" />
