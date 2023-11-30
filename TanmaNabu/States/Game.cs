@@ -10,7 +10,7 @@ using TanmaNabu.Core.Managers;
 using TanmaNabu.GameLogic;
 using TanmaNabu.GameLogic.Game;
 using TanmaNabu.GameLogic.Systems;
-using TanmaNabu.Settings;
+using TanmaNabu.Core.Settings;
 
 namespace TanmaNabu.States
 {
@@ -18,30 +18,58 @@ namespace TanmaNabu.States
     {
         protected Contexts Contexts;
         protected Systems Systems;
+        protected Camera Camera;
 
         public Game()
-            : base(new Vector2u(1440, 810), "Tanma Nabu", Color.Black, 60, false, true)
+            : base(new Vector2u(1440, 810), "Tanma Nabu", Color.Black, 60, false, false) // window
+            //: base(new Vector2u(1920, 1080), "Tanma Nabu", Color.Black, 60, true, false) // full screen
         {
 
         }
 
         protected override void LoadContent()
         {
+#if DEBUG
+            "Load content".Log();
+#endif
             GameSettings.Load();
 
-            AssetManager.Instance.Map.Load("jungleMap", AssetManager.Instance.GetMapPath("jungle_map.tmx"));
+            AssetManager.Map.Load("jungleMap", AssetManager.Instance.GetMapPath("jungle_map.tmx"));
         }
 
-        protected override void Initialize()
+        protected override void UnloadContent()
         {
+#if DEBUG
+            "Unload content".Log();
+#endif
+            AssetManager.CleanUp();
+        }
+
+        protected override void Initialize(RenderTarget target, GameTime gameTime)
+        {
+#if DEBUG
+            "Initialize".Log();
+#endif
             Contexts = Contexts.SharedInstance;
 
+            Contexts.GameTime = gameTime;
             Contexts.GameMap.Load("jungleMap");
 
             Systems = CreateSystems(Contexts);
 
             // Call once on start
             Systems.Initialize();
+
+            Camera = new Camera(target, Contexts);
+        }
+
+        protected override void Deinitialize()
+        {
+#if DEBUG
+            "Deinitialize".Log();
+#endif
+            Systems.TearDown();
+            GameSettings.CleanUp();
         }
 
         protected override void Update(float deltaTime)
@@ -54,35 +82,29 @@ namespace TanmaNabu.States
             Systems.Cleanup();
         }
 
-        protected override void Render(float deltaTime)
+        protected override void Render(RenderTarget target, float deltaTime, GameTime gameTime)
         {
             var players = Contexts.Game.GetGroup(GameMatcher.Player);
             var entity = players.GetSingleEntity();
 
-            /* Hack to get rid of the annoying horizontal and vertical
-               lines that are caused by floating point rendering */
-            Vector2f correction = new Vector2f(
-                ((int)(Window.DefaultView.Size.X) % 2 == 0 ? 0 : 1) * 0.5f,
-                ((int)(Window.DefaultView.Size.Y) % 2 == 0 ? 0 : 1) * 0.5f);
+            Camera.Update(deltaTime, gameTime, entity.Position.X, entity.Position.Y);
 
-            Contexts.GameMap.SetWorldView(Window, new Vector2f(entity.Position.X + correction.X, entity.Position.Y + correction.Y));
-
-            Window.Draw(Contexts.GameMap.GetBackgroundTileMap());
+            target.Draw(Contexts.GameMap.GetBackgroundTileMap());
 
             var entities = Contexts.Game.GetEntities(GameMatcher.Animation);
             foreach (var objEntity in entities.OrderBy(c => c.Position.Y))
             {
-                Window.Draw(objEntity.Animation.GetSprite());
+                target.Draw(objEntity.Animation.GetSprite());
             }
 
-            Window.Draw(Contexts.GameMap.GetForegroundTileMap());
+            target.Draw(Contexts.GameMap.GetForegroundTileMap());
 
 #if DEBUG
-            DrawCollisions();
+            DrawCollisions(target);
 #endif
         }
 
-        private void DrawCollisions()
+        private void DrawCollisions(RenderTarget target)
         {
             foreach (var item in Contexts.GameMap.MapData.CollidersLayer.Colliders)
             {
@@ -94,7 +116,7 @@ namespace TanmaNabu.States
                     FillColor = new Color(255, 0, 0, 50)
                 };
 
-                Window.Draw(colRectangle);
+                target.Draw(colRectangle);
             }
         }
 
@@ -105,7 +127,7 @@ namespace TanmaNabu.States
 
         protected override void KeyReleased(object sender, KeyEventArgs e)
         {
-
+            
         }
 
         protected override void JoystickButtonPressed(object sender, JoystickButtonEventArgs arg)
@@ -135,9 +157,6 @@ namespace TanmaNabu.States
 
         protected override void Quit()
         {
-            Systems.TearDown();
-            GameSettings.CleanUp();
-
 #if DEBUG
             "Quit Game :(".Log();
 #endif
@@ -145,7 +164,7 @@ namespace TanmaNabu.States
 
         protected override void Resize(uint width, uint height)
         {
-
+            
         }
 
         private Systems CreateSystems(Contexts contexts)

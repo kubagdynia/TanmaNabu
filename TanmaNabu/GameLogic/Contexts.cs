@@ -1,5 +1,6 @@
 ﻿using Entitas;
 using System;
+using TanmaNabu.Core;
 using TanmaNabu.Core.Map;
 using TanmaNabu.GameLogic.Game;
 
@@ -22,6 +23,8 @@ namespace TanmaNabu.GameLogic
         }
 
         private static Contexts _sharedInstance;
+
+        public GameTime GameTime { get; set; }
 
         public Map GameMap { get; set; }
 

@@ -30,26 +30,33 @@ namespace TanmaNabu.GameLogic.Systems
                 _contexts.GameMap.MapData.MapZoomFactor += 0.01f;
             }
 
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Home))
+            {
+                _contexts.GameMap.MapData.MapZoomFactor = 1;
+            }
+
             #endregion
 
             #region PLAYER
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Left) || Keyboard.IsKeyPressed(Keyboard.Key.Right) ||
-                Keyboard.IsKeyPressed(Keyboard.Key.Up) || Keyboard.IsKeyPressed(Keyboard.Key.Down))
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Left) || Keyboard.IsKeyPressed(Keyboard.Key.A) ||
+                Keyboard.IsKeyPressed(Keyboard.Key.Right) || Keyboard.IsKeyPressed(Keyboard.Key.D) ||
+                Keyboard.IsKeyPressed(Keyboard.Key.Up) || Keyboard.IsKeyPressed(Keyboard.Key.W) ||
+                Keyboard.IsKeyPressed(Keyboard.Key.Down) || Keyboard.IsKeyPressed(Keyboard.Key.S))
             {
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
+                if (Keyboard.IsKeyPressed(Keyboard.Key.Left) || Keyboard.IsKeyPressed(Keyboard.Key.A))
                 {
                     ChangePlayerPosition(-1, 0);
                 }
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
+                if (Keyboard.IsKeyPressed(Keyboard.Key.Right) || Keyboard.IsKeyPressed(Keyboard.Key.D))
                 {
                     ChangePlayerPosition(1, 0);
                 }
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
+                if (Keyboard.IsKeyPressed(Keyboard.Key.Up) || Keyboard.IsKeyPressed(Keyboard.Key.W))
                 {
                     ChangePlayerPosition(0, -1);
                 }
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
+                if (Keyboard.IsKeyPressed(Keyboard.Key.Down) || Keyboard.IsKeyPressed(Keyboard.Key.S))
                 {
                     ChangePlayerPosition(0, 1);
                 }
@@ -62,7 +69,7 @@ namespace TanmaNabu.GameLogic.Systems
             #endregion
         }
 
-        private void ChangePlayerPosition(int x, int y)
+        private void ChangePlayerPosition(float x, float y)
         {
             var entity = _contexts.Game.GetEntity(GameMatcher.Player);
 
@@ -72,8 +79,8 @@ namespace TanmaNabu.GameLogic.Systems
                 {
                     int entitySpeed = entity.Movement.Speed;
 
-                    x *= entitySpeed;
-                    y *= entitySpeed;
+                    x *= _contexts.GameTime.ElapsedTime.AsSeconds() * entitySpeed;
+                    y *= _contexts.GameTime.ElapsedTime.AsSeconds() * entitySpeed;
 
                     FloatRect spriteRect = entity.Animation.GetSpriteGlobalBounds();
                     int tileId = entity.Animation.GetCurrentTiledId();
