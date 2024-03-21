@@ -211,10 +211,10 @@ namespace TanmaNabu.Core.DataStructures
         /// </summary>
         public override bool Equals(object obj)
         {
-            if (!(obj is Point2))
+            if (!(obj is Point2 point2))
                 return false;
 
-            return this.Equals((Point2)obj);
+            return Equals(point2);
         }
     }
 }

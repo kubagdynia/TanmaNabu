@@ -1,36 +1,19 @@
 ﻿using SFML.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TanmaNabu.Core.Animation;
 
 namespace TanmaNabu.GameLogic.Components
 {
-    public class AnimationFrame
+    public class AnimationFrame(int id, int duration, AnimationType animationType = AnimationType.None, IntRect rect = new())
     {
         /// <summary>
         /// Tile id
         /// </summary>
-        public int Id { get; set; }
+        public int Id { get; set; } = id;
 
-        public int Duration { get; set; }
+        public int Duration { get; set; } = duration;
 
-        public IntRect Rect { get; set; }
+        public IntRect Rect { get; set; } = rect;
 
-        public AnimationType AnimationType { get; set; }
-
-        public AnimationFrame(int id, int duration)
-        {
-            Id = id;
-            Duration = duration;
-        }
-
-        public AnimationFrame(int id, int duration, AnimationType animationType, IntRect rect)
-        {
-            Id = id;
-            Duration = duration;
-            AnimationType = animationType;
-            Rect = rect;
-        }
+        public AnimationType AnimationType { get; set; } = animationType;
     }
 }

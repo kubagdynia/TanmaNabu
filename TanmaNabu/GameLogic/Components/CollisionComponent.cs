@@ -18,7 +18,7 @@ namespace TanmaNabu.GameLogic.Components
 
         private List<CollisionObjectGroup> _collisionObjectGroups;
 
-        public List<CollisionObjectGroup> CollisionObjectGroups => _collisionObjectGroups ?? (_collisionObjectGroups = new List<CollisionObjectGroup>());
+        public List<CollisionObjectGroup> CollisionObjectGroups => _collisionObjectGroups ??= new List<CollisionObjectGroup>();
 
         public void SetTileset(string tilesetName, string objectType, int spriteWorldDimension)
         {
@@ -37,7 +37,7 @@ namespace TanmaNabu.GameLogic.Components
         {
             var collisionObjectGroup = GetCollisionObjectGroup(tileId);
 
-            if (collisionObjectGroup == null || collisionObjectGroup.Collissions == null)
+            if (collisionObjectGroup?.Collissions == null)
             {
                 return IntRect.Zero;
             }
@@ -67,7 +67,7 @@ namespace TanmaNabu.GameLogic.Components
 
             TmxTileset tileset = AssetManager.Tileset.Get(_tilesetName);
 
-            if (tileset == null || tileset.Tiles == null)
+            if (tileset?.Tiles == null)
             {
                 return false;
             }
