@@ -8,7 +8,7 @@ namespace TanmaNabu.GameLogic.Components
 
         private List<CollisionObject> _collissions;
 
-        public List<CollisionObject> Collissions => _collissions ?? (_collissions = new List<CollisionObject>());
+        public List<CollisionObject> Collissions => _collissions ??= new List<CollisionObject>();
 
         /// <summary>
         /// Weight of the object

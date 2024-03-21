@@ -75,7 +75,7 @@ namespace TanmaNabu.Core.DataStructures
             int minY = Math.Min(Top, Bottom);
             int maxY = Math.Max(Top, Bottom);
 
-            return (x >= minX) && (x < maxX) && (y >= minY) && (y < maxY);
+            return x >= minX && x < maxX && y >= minY && y < maxY;
         }
 
         /// <summary>
@@ -114,14 +114,12 @@ namespace TanmaNabu.Core.DataStructures
             int interBottom = Math.Min(r1MaxY, r2MaxY);
 
             // If the intersection is valid (positive non zero area), then there is an intersection
-            if ((interLeft < interRight) && (interTop < interBottom))
+            if (interLeft < interRight && interTop < interBottom)
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         /// <summary>
@@ -153,7 +151,7 @@ namespace TanmaNabu.Core.DataStructures
             int interBottom = Math.Min(r1MaxY, r2MaxY);
 
             // If the intersection is valid (positive non zero area), then there is an intersection
-            if ((interLeft < interRight) && (interTop < interBottom))
+            if (interLeft < interRight && interTop < interBottom)
             {
                 overlap.Left = interLeft;
                 overlap.Top = interTop;
@@ -161,14 +159,12 @@ namespace TanmaNabu.Core.DataStructures
                 overlap.Bottom = interBottom;
                 return true;
             }
-            else
-            {
-                overlap.Left = 0;
-                overlap.Top = 0;
-                overlap.Right = 0;
-                overlap.Bottom = 0;
-                return false;
-            }
+
+            overlap.Left = 0;
+            overlap.Top = 0;
+            overlap.Right = 0;
+            overlap.Bottom = 0;
+            return false;
         }
 
         /// <summary>
@@ -185,7 +181,7 @@ namespace TanmaNabu.Core.DataStructures
         /// </summary>
         public override bool Equals(object obj)
         {
-            return (obj is IntRect) && Equals((IntRect)obj);
+            return obj is IntRect rect && Equals(rect);
         }
 
         /// <summary>

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using TanmaNabu.Core.Animation;
 using TanmaNabu.Core.Managers;
 using TanmaNabu.Core.Settings;
@@ -15,15 +14,15 @@ namespace TanmaNabu.GameLogic.Components
 {
     public sealed class AnimationComponent : IComponent
     {
-        private float switchTime = 0.15f;
+        private float _switchTime = 0.15f;
 
-        private float totalTime = 0;
+        private float _totalTime = 0;
 
         private List<AnimationFrame> _frames;
 
-        private List<AnimationFrame> Frames => _frames ?? (_frames = new List<AnimationFrame>());
+        private List<AnimationFrame> Frames => _frames ??= new List<AnimationFrame>();
 
-        private Sprite _sprite { get; set; }
+        private Sprite Sprite { get; set; }
 
         private string _tilesetName;
 
@@ -31,7 +30,7 @@ namespace TanmaNabu.GameLogic.Components
 
         private int _spriteWorldDimension;
 
-        private AnimationType _currentAnimationType { get; set; } = AnimationType.Idle;
+        private AnimationType CurrentAnimationType { get; set; } = AnimationType.Idle;
 
         public Texture Texture { get; set; }
 
@@ -57,30 +56,30 @@ namespace TanmaNabu.GameLogic.Components
 
         public void UpdateAnimation(float deltaTime)
         {
-            totalTime += deltaTime;
+            _totalTime += deltaTime;
 
-            if (totalTime >= switchTime)
+            if (_totalTime >= _switchTime)
             {
-                totalTime = 0;
+                _totalTime = 0;
 
                 // Get next animation frame
                 if (CurrentAnimationFrame == null)
                 {
-                    CurrentAnimationFrame = Frames.FirstOrDefault(x => x.AnimationType == _currentAnimationType);
+                    CurrentAnimationFrame = Frames.FirstOrDefault(x => x.AnimationType == CurrentAnimationType);
                 }
                 else
                 {
-                    CurrentAnimationFrame = Frames.FirstOrDefault(x => x.AnimationType == _currentAnimationType && x.Id != CurrentAnimationFrame.Id);
+                    CurrentAnimationFrame = Frames.FirstOrDefault(x => x.AnimationType == CurrentAnimationType && x.Id != CurrentAnimationFrame.Id);
                 }
 
                 if (CurrentAnimationFrame == null)
                 {
                     CurrentAnimationFrame = Frames.Skip(1).FirstOrDefault(x => x.AnimationType == AnimationType.WalkDown);
-                    switchTime = float.MaxValue;
+                    _switchTime = float.MaxValue;
                 }
                 else
                 {
-                    switchTime = (float)CurrentAnimationFrame.Duration / 1000;
+                    _switchTime = (float)CurrentAnimationFrame.Duration / 1000;
                 }
 
                 SetSprite();
@@ -89,29 +88,29 @@ namespace TanmaNabu.GameLogic.Components
 
         public void UpdateSpritePosition(float x, float y)
         {
-            if (_sprite == null)
+            if (Sprite == null)
             {
                 return;
             }
 
-            _sprite.Position = new Vector2f(x, y);
+            Sprite.Position = new Vector2f(x, y);
         }
 
         public void UpdateAnimationType(AnimationType animationType)
         {
-            if (_currentAnimationType == animationType)
+            if (CurrentAnimationType == animationType)
             {
                 return;
             }
 
-            _currentAnimationType = animationType;
+            CurrentAnimationType = animationType;
 
-            UpdateAnimation(switchTime);
+            UpdateAnimation(_switchTime);
         }
 
-        public Sprite GetSprite() => _sprite;
+        public Sprite GetSprite() => Sprite;
 
-        public FloatRect GetSpriteGlobalBounds() => _sprite.GetGlobalBounds();
+        public FloatRect GetSpriteGlobalBounds() => Sprite.GetGlobalBounds();
 
         public int GetCurrentTiledId() => CurrentAnimationFrame.Id;
 
@@ -124,7 +123,7 @@ namespace TanmaNabu.GameLogic.Components
 
             TmxTileset tileset = AssetManager.Tileset.Get(_tilesetName);
 
-            if (tileset == null || tileset.Image == null)
+            if (tileset?.Image == null)
             {
                 return false;
             }
@@ -149,7 +148,7 @@ namespace TanmaNabu.GameLogic.Components
 
             TmxTileset tileset = AssetManager.Tileset.Get(_tilesetName);
 
-            if (tileset == null || tileset.Image == null || tileset.Tiles == null)
+            if (tileset?.Image == null || tileset.Tiles == null)
             {
                 return false;
             }
@@ -158,24 +157,19 @@ namespace TanmaNabu.GameLogic.Components
             List<TmxTilesetTile> tiles;
             if (objectType == null)
             {
-                tiles = tileset.Tiles.Where(c => c.AnimationFrames != null && c.AnimationFrames.Any()).ToList();
+                tiles = tileset.Tiles.Where(c => c.AnimationFrames != null && c.AnimationFrames.Count != 0).ToList();
             }
             else
             {
-                tiles = tileset.Tiles.Where(c => c.AnimationFrames != null && c.Type != null && c.AnimationFrames.Any() &&
+                tiles = tileset.Tiles.Where(c => c.AnimationFrames != null && c.Type != null && c.AnimationFrames.Count != 0 &&
                     c.Type.Equals(objectType, StringComparison.InvariantCultureIgnoreCase)).ToList();
             }
 
-            foreach (var tile in tiles)
+            foreach (var tile in tiles.Where(tile => tile.Properties != null))
             {
-                if (tile.Properties == null)
-                {
-                    continue;
-                }
-
                 if (!Enum.TryParse(
-                    tile.Properties.FirstOrDefault(c => c.Key.Equals("AnimationType", StringComparison.InvariantCultureIgnoreCase)).Value,
-                    out AnimationType animationType))
+                        tile.Properties.FirstOrDefault(c => c.Key.Equals("AnimationType", StringComparison.InvariantCultureIgnoreCase)).Value,
+                        out AnimationType animationType))
                 {
                     continue;
                 }
@@ -215,27 +209,30 @@ namespace TanmaNabu.GameLogic.Components
                 idleFrame = Frames.FirstOrDefault(x => x.AnimationType == AnimationType.WalkDown);
             }
 
-            switchTime = (float)idleFrame.Duration / 1000;
+            if (idleFrame != null)
+            {
+                _switchTime = (float)idleFrame.Duration / 1000;
 
-            CurrentAnimationFrame = idleFrame;
+                CurrentAnimationFrame = idleFrame;
+            }
 
             SetSprite();
         }
 
         private void SetSprite()
         {
-            if (_sprite == null)
+            if (Sprite == null)
             {
-                _sprite = new Sprite(Texture)
+                Sprite = new Sprite(Texture)
                 {
                     Origin = new Vector2f(CurrentAnimationFrame.Rect.Width / 2, CurrentAnimationFrame.Rect.Height / 2), // 8, 8
                     Scale = new Vector2f(_spriteWorldDimension, _spriteWorldDimension)
                 };
             }
 
-            if (_sprite.TextureRect != CurrentAnimationFrame.Rect)
+            if (Sprite.TextureRect != CurrentAnimationFrame.Rect)
             {
-                _sprite.TextureRect = CurrentAnimationFrame.Rect;
+                Sprite.TextureRect = CurrentAnimationFrame.Rect;
             }
         }
     }

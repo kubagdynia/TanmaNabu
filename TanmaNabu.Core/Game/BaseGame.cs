@@ -12,10 +12,10 @@ namespace TanmaNabu.Core
         private readonly float _updateRate;
         private readonly Color _clearColor;
 
-        protected readonly RenderWindow Window;
+        private readonly RenderWindow _window;
 
-        private RenderTexture _renderTexture;
-        private Sprite _renderSprite;
+        private readonly RenderTexture _renderTexture;
+        private readonly Sprite _renderSprite;
 
         private GameTime _gameTime;
 
@@ -29,14 +29,14 @@ namespace TanmaNabu.Core
 
             if (fullScreen)
             {
-                Window = new RenderWindow(new VideoMode(windowSize.X, windowSize.Y, 32), windowTitle, Styles.Fullscreen);
+                _window = new RenderWindow(new VideoMode(windowSize.X, windowSize.Y, 32), windowTitle, Styles.Fullscreen);
 
                 _renderTexture = new RenderTexture(windowSize.X, windowSize.Y);
                 _renderSprite = new Sprite(_renderTexture.Texture, new IntRect(0, 0, (int)windowSize.X, (int)windowSize.Y));
             }
             else
             {
-                Window = new RenderWindow(new VideoMode(windowSize.X, windowSize.Y, 32), windowTitle, Styles.Default);
+                _window = new RenderWindow(new VideoMode(windowSize.X, windowSize.Y, 32), windowTitle, Styles.Default);
 
                 _renderTexture = new RenderTexture(windowSize.X, windowSize.Y);
                 _renderSprite = new Sprite(_renderTexture.Texture, new IntRect(0, 0, (int)windowSize.X, (int)windowSize.Y));
@@ -44,28 +44,28 @@ namespace TanmaNabu.Core
 
             if (vsync)
             {
-                Window.SetVerticalSyncEnabled(true);
+                _window.SetVerticalSyncEnabled(true);
 
             }
             else
             {
-                Window.SetFramerateLimit(framerateLimit);
+                _window.SetFramerateLimit(framerateLimit);
             }
 
             // Set up events
-            Window.Closed += (sender, arg) => Window.Close();
-            Window.Resized += (sender, arg) => Resize(arg.Width, arg.Height);
+            _window.Closed += (sender, arg) => _window.Close();
+            _window.Resized += (sender, arg) => Resize(arg.Width, arg.Height);
 
             // Key
-            Window.KeyPressed += KeyPressed;
-            Window.KeyReleased += KeyReleased;
+            _window.KeyPressed += KeyPressed;
+            _window.KeyReleased += KeyReleased;
 
             // Controller
-            Window.JoystickConnected += JoystickConnected;
-            Window.JoystickDisconnected += JoystickDisconnected;
-            Window.JoystickButtonPressed += JoystickButtonPressed;
-            Window.JoystickButtonReleased += JoystickButtonReleased;
-            Window.JoystickMoved += JoystickMoved;
+            _window.JoystickConnected += JoystickConnected;
+            _window.JoystickDisconnected += JoystickDisconnected;
+            _window.JoystickButtonPressed += JoystickButtonPressed;
+            _window.JoystickButtonReleased += JoystickButtonReleased;
+            _window.JoystickMoved += JoystickMoved;
         }
 
         public void Run()
@@ -81,7 +81,7 @@ namespace TanmaNabu.Core
                     var totalTime = 0.0f;
 
                     // Main game loop
-                    while (Window.IsOpen)
+                    while (_window.IsOpen)
                     {
                         _gameTime.Restart();
 
@@ -102,7 +102,7 @@ namespace TanmaNabu.Core
                         // render step is lagging behind the update step
                         while (totalTime >= _updateRate && updateCount < UpdateLimit)
                         {
-                            Window.DispatchEvents();
+                            _window.DispatchEvents();
 
                             Joystick.Update();
 
@@ -123,8 +123,8 @@ namespace TanmaNabu.Core
                         _renderTexture.Display();
 
                         // draw it to the window
-                        Window.Draw(_renderSprite);
-                        Window.Display();
+                        _window.Draw(_renderSprite);
+                        _window.Display();
                     }
                 }
                 finally
@@ -160,7 +160,7 @@ namespace TanmaNabu.Core
         {
             if (e.Code == Keyboard.Key.Q)
             {
-                Window.Close();
+                _window.Close();
             }
         }
 
