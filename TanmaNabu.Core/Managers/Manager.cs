@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SFML.Graphics;
 
 namespace TanmaNabu.Core.Managers
 {
@@ -84,8 +85,18 @@ namespace TanmaNabu.Core.Managers
                 }
             }
 
+            T instance;
             // Create instance of T class and send filename to its constructor
-            var instance = Activator.CreateInstance(typeof(T), filename) as T;
+            // In version 2.6.0 of SFML.Net, the constructor of the Texture class was changed, causing a compilation error.
+            // This required a workaround in the code.
+            if (typeof(T) == typeof(Texture))
+            {
+                instance = Activator.CreateInstance(typeof(T), filename, false) as T;
+            }
+            else
+            {
+                instance = Activator.CreateInstance(typeof(T), filename) as T;
+            }
 
             if (parent == null)
             {
