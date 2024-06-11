@@ -24,7 +24,7 @@ namespace TanmaNabu.Core
             // Create Directory if it does not exist
             if (!Directory.Exists(Path.GetDirectoryName(tempPath)))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(tempPath));
+                Directory.CreateDirectory(Path.GetDirectoryName(tempPath) ?? throw new InvalidOperationException());
             }
 
             try

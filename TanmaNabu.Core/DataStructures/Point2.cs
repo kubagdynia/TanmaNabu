@@ -179,7 +179,7 @@ namespace TanmaNabu.Core.DataStructures
         /// </summary>
         public static bool operator !=(Point2 left, Point2 right)
         {
-            return !left.Equals(right);
+            return left != null && !left.Equals(right);
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace TanmaNabu.Core.DataStructures
         /// </summary>
         public bool Equals(Point2 other)
         {
-            return X == other.X && Y == other.Y;
+            return other != null && X == other.X && Y == other.Y;
         }
 
         /// <summary>

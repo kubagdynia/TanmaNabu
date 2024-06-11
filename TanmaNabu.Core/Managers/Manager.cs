@@ -9,17 +9,7 @@ namespace TanmaNabu.Core.Managers
     {
         private static List<ManagerItem<T>> _items;
 
-        private static List<ManagerItem<T>> Items
-        {
-            get
-            {
-                if (_items == null)
-                {
-                    _items = new List<ManagerItem<T>>();
-                }
-                return _items;
-            }
-        }
+        private static List<ManagerItem<T>> Items => _items ?? (_items = new List<ManagerItem<T>>());
 
         public T LoadAndGet(string name, string filename) => LoadAndGet(name, filename, false);
 
@@ -146,7 +136,7 @@ namespace TanmaNabu.Core.Managers
         {
             if (!Exists(name, parent))
             {
-                return default(T);
+                return default;
             }
 
             if (parent == null)
@@ -166,13 +156,12 @@ namespace TanmaNabu.Core.Managers
 
             foreach (var item in Items.Where(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase) || name == null))
             {
-                if (!grouped.ContainsKey(item.Parent))
+                if (!grouped.TryGetValue(item.Parent, out var groupedItem))
                 {
                     grouped.Add(item.Parent, new List<T> { item.Resource });
                     continue;
                 }
 
-                var groupedItem = grouped[item.Parent];
                 groupedItem.Add(item.Resource);
             }
 

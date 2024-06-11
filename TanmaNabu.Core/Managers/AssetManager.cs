@@ -78,7 +78,7 @@ namespace TanmaNabu.Core.Managers
         private string GetPath(string resourceType, string fileName)
         {
             string path = Path.Combine(
-                Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), ResourcePath, resourceType, fileName);
+                Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]) ?? string.Empty, ResourcePath, resourceType, fileName);
 
             return path;
         }
