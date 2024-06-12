@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Entitas
 {
@@ -9,21 +10,21 @@ namespace Entitas
     /// SafeAERC checks if the entity has already been
     /// retained or released. It's slower, but you keep the information
     /// about the owners.
-    public sealed class SafeAerc : IAerc
+    public sealed class SafeAerc(IEntity entity) : IAerc
     {
-        private readonly IEntity _entity;
+        public static readonly Func<IEntity, IAerc> Delegate = entity => new SafeAerc(entity);
+        
+        public int RetainCount => _owners.Count;
+        
+        public HashSet<object> Owners => _owners;
 
-        public int RetainCount => Owners.Count;
-
-        public HashSet<object> Owners { get; } = new HashSet<object>();
-
-        public SafeAerc(IEntity entity) => _entity = entity;
+        private readonly HashSet<object> _owners = [];
 
         public void Retain(object owner)
         {
             if (!Owners.Add(owner))
             {
-                throw new EntityIsAlreadyRetainedByOwnerException(_entity, owner);
+                throw new EntityIsAlreadyRetainedByOwnerException(entity, owner);
             }
         }
 
@@ -31,7 +32,7 @@ namespace Entitas
         {
             if (!Owners.Remove(owner))
             {
-                throw new EntityIsNotRetainedByOwnerException(_entity, owner);
+                throw new EntityIsNotRetainedByOwnerException(entity, owner);
             }
         }
     }

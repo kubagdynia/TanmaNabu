@@ -16,13 +16,13 @@ namespace Entitas
         protected ReactiveSystem(IContext<TEntity> context)
         {
             _collector = GetTrigger(context);
-            _buffer = new List<TEntity>();
+            _buffer = [];
         }
 
         protected ReactiveSystem(ICollector<TEntity> collector)
         {
             _collector = collector;
-            _buffer = new List<TEntity>();
+            _buffer = [];
         }
 
         /// Specify the collector that will trigger the ReactiveSystem.
@@ -91,19 +91,9 @@ namespace Entitas
             }
         }
 
-        public override string ToString()
-        {
-            if (_toStringCache == null)
-            {
-                _toStringCache = $"ReactiveSystem({GetType().Name})";
-            }
-
-            return _toStringCache;
-        }
+        public override string ToString() => _toStringCache ??= $"ReactiveSystem({GetType().Name})";
 
         ~ReactiveSystem()
-        {
-            Deactivate();
-        }
+            => Deactivate();
     }
 }

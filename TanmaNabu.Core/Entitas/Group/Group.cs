@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Entitas
 {
@@ -29,9 +28,7 @@ namespace Entitas
 
         private readonly IMatcher<TEntity> _matcher;
 
-        private readonly HashSet<TEntity> _entities = new HashSet<TEntity>(
-            EntityEqualityComparer<TEntity>.Comparer
-        );
+        private readonly HashSet<TEntity> _entities = new(EntityEqualityComparer<TEntity>.Comparer);
 
         private TEntity[] _entitiesCache;
         private TEntity _singleEntityCache;
@@ -90,15 +87,15 @@ namespace Entitas
         public GroupChanged<TEntity> HandleEntity(TEntity entity)
         {
             return _matcher.Matches(entity)
-                       ? (AddEntitySilently(entity) ? OnEntityAdded : null)
-                       : (RemoveEntitySilently(entity) ? OnEntityRemoved : null);
+                       ? AddEntitySilently(entity) ? OnEntityAdded : null
+                       : RemoveEntitySilently(entity) ? OnEntityRemoved : null;
         }
 
         public bool AddEntitySilently(TEntity entity)
         {
             if (!entity.IsEnabled) return false;
 
-            bool added = _entities.Add(entity);
+            var added = _entities.Add(entity);
             if (added)
             {
                 _entitiesCache = null;
@@ -132,7 +129,7 @@ namespace Entitas
 
         public void RemoveEntity(TEntity entity, int index, IComponent component)
         {
-            bool removed = _entities.Remove(entity);
+            var removed = _entities.Remove(entity);
             if (removed)
             {
                 _entitiesCache = null;
@@ -147,15 +144,7 @@ namespace Entitas
 
         /// Returns all entities which are currently in this group.
         public TEntity[] GetEntities()
-        {
-            if (_entitiesCache == null)
-            {
-                _entitiesCache = new TEntity[_entities.Count];
-                _entities.CopyTo(_entitiesCache);
-            }
-
-            return _entitiesCache;
-        }
+            => _entitiesCache ??= _entities.ToArray();
 
         /// Fills the buffer with all entities which are currently in this group.
         public List<TEntity> GetEntities(List<TEntity> buffer)
@@ -176,14 +165,12 @@ namespace Entitas
         {
             if (_singleEntityCache == null)
             {
-                int c = _entities.Count;
+                var c = _entities.Count;
                 if (c == 1)
                 {
-                    using (HashSet<TEntity>.Enumerator enumerator = _entities.GetEnumerator())
-                    {
-                        enumerator.MoveNext();
-                        _singleEntityCache = enumerator.Current;
-                    }
+                    using var enumerator = _entities.GetEnumerator();
+                    enumerator.MoveNext();
+                    _singleEntityCache = enumerator.Current;
                 }
                 else if (c == 0)
                 {
@@ -199,12 +186,6 @@ namespace Entitas
         }
 
         public override string ToString()
-        {
-            if (_toStringCache == null)
-            {
-                _toStringCache = $"Group({_matcher})";
-            }
-            return _toStringCache;
-        }
+            => _toStringCache ??= $"Group({_matcher})";
     }
 }

@@ -1,69 +1,46 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 
 namespace Entitas
 {
     public partial class Matcher<TEntity>
     {
         private string _toStringCache;
-        private StringBuilder _toStringBuilder;
 
         public override string ToString()
         {
             if (_toStringCache == null)
             {
-                if (_toStringBuilder == null)
+                var sb = new StringBuilder();
+                if (_allOfIndexes != null)
                 {
-                    _toStringBuilder = new StringBuilder();
+                    sb.Append(GetComponentNames("AllOf", _allOfIndexes, ComponentNames));
                 }
 
-                _toStringBuilder.Length = 0;
+                if (_anyOfIndexes != null)
+                {
+                    if (_allOfIndexes != null)
+                        sb.Append('.');
 
-                if (_allOfIndices != null)
-                {
-                    AppendIndices(_toStringBuilder, "AllOf", _allOfIndices, ComponentNames);
+                    sb.Append(GetComponentNames("AnyOf", _anyOfIndexes, ComponentNames));
                 }
-                if (_anyOfIndices != null)
+
+                if (_noneOfIndexes != null)
                 {
-                    if (_allOfIndices != null)
-                    {
-                        _toStringBuilder.Append(".");
-                    }
-                    AppendIndices(_toStringBuilder, "AnyOf", _anyOfIndices, ComponentNames);
+                    sb.Append(GetComponentNames(".NoneOf", _noneOfIndexes, ComponentNames));
                 }
-                if (_noneOfIndices != null)
-                {
-                    AppendIndices(_toStringBuilder, ".NoneOf", _noneOfIndices, ComponentNames);
-                }
-                _toStringCache = _toStringBuilder.ToString();
+
+                _toStringCache = sb.ToString();
             }
 
             return _toStringCache;
         }
-
-        private static void AppendIndices(StringBuilder sb, string prefix, int[] indexArray, string[] componentNames)
+        
+        static string GetComponentNames(string prefix, int[] indexArray, string[] componentNames)
         {
-            const string separator = ", ";
-            sb.Append(prefix);
-            sb.Append("(");
-            int lastSeparator = indexArray.Length - 1;
-            for (int i = 0; i < indexArray.Length; i++)
-            {
-                int index = indexArray[i];
-                if (componentNames == null)
-                {
-                    sb.Append(index);
-                }
-                else
-                {
-                    sb.Append(componentNames[index]);
-                }
-
-                if (i < lastSeparator)
-                {
-                    sb.Append(separator);
-                }
-            }
-            sb.Append(")");
+            return componentNames != null
+                ? $"{prefix}({string.Join(", ", indexArray.Select(index => componentNames[index]))})"
+                : $"{prefix}({string.Join(", ", indexArray.Select(index => index.ToString()))})";
         }
     }
 }

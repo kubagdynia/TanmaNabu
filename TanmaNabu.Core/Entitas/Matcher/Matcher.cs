@@ -2,45 +2,33 @@
 {
     public partial class Matcher<TEntity> : IAllOfMatcher<TEntity> where TEntity : class, IEntity
     {
-        public int[] Indices
-        {
-            get
-            {
-                if (_indices == null)
-                {
-                    _indices = MergeIndices(_allOfIndices, _anyOfIndices, _noneOfIndices);
-                }
-                return _indices;
-            }
-        }
+        public int[] Indices => _indices ??= MergeIndices(_allOfIndexes, _anyOfIndexes, _noneOfIndexes);
 
-        public int[] AllOfIndices => _allOfIndices;
-        public int[] AnyOfIndices => _anyOfIndices;
-        public int[] NoneOfIndices => _noneOfIndices;
+        public int[] AllOfIndexes => _allOfIndexes;
+        public int[] AnyOfIndexes => _anyOfIndexes;
+        public int[] NoneOfIndexes => _noneOfIndexes;
 
         public string[] ComponentNames { get; set; }
 
         private int[] _indices;
-        private int[] _allOfIndices;
-        private int[] _anyOfIndices;
-        private int[] _noneOfIndices;
+        private int[] _allOfIndexes;
+        private int[] _anyOfIndexes;
+        private int[] _noneOfIndexes;
 
         IAnyOfMatcher<TEntity> IAllOfMatcher<TEntity>.AnyOf(params int[] indices)
         {
-            _anyOfIndices = DistinctIndices(indices);
+            _anyOfIndexes = DistinctIndices(indices);
             _indices = null;
             _isHashCached = false;
             return this;
         }
 
         IAnyOfMatcher<TEntity> IAllOfMatcher<TEntity>.AnyOf(params IMatcher<TEntity>[] matchers)
-        {
-            return ((IAllOfMatcher<TEntity>)this).AnyOf(MergeIndices(matchers));
-        }
+            => ((IAllOfMatcher<TEntity>)this).AnyOf(MergeIndices(matchers));
 
         public INoneOfMatcher<TEntity> NoneOf(params int[] indices)
         {
-            _noneOfIndices = DistinctIndices(indices);
+            _noneOfIndexes = DistinctIndices(indices);
             _indices = null;
             _isHashCached = false;
             return this;
@@ -52,10 +40,8 @@
         }
 
         public bool Matches(TEntity entity)
-        {
-            return (_allOfIndices == null || entity.HasComponents(_allOfIndices))
-                   && (_anyOfIndices == null || entity.HasAnyComponent(_anyOfIndices))
-                   && (_noneOfIndices == null || !entity.HasAnyComponent(_noneOfIndices));
-        }
+            => (_allOfIndexes == null || entity.HasComponents(_allOfIndexes))
+               && (_anyOfIndexes == null || entity.HasAnyComponent(_anyOfIndexes))
+               && (_noneOfIndexes == null || !entity.HasAnyComponent(_noneOfIndexes));
     }
 }

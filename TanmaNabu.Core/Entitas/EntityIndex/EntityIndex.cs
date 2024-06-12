@@ -43,7 +43,7 @@ namespace Entitas
 
         public HashSet<TEntity> GetEntities(TKey key)
         {
-            if (_index.TryGetValue(key, out HashSet<TEntity> entities)) return entities;
+            if (_index.TryGetValue(key, out var entities)) return entities;
 
             entities = new HashSet<TEntity>(EntityEqualityComparer<TEntity>.Comparer);
             _index.Add(key, entities);
@@ -55,9 +55,9 @@ namespace Entitas
 
         protected override void Clear()
         {
-            foreach (HashSet<TEntity> entities in _index.Values)
+            foreach (var entities in _index.Values)
             {
-                foreach (TEntity entity in entities)
+                foreach (var entity in entities)
                 {
                     if (entity.Aerc is SafeAerc safeAerc)
                     {

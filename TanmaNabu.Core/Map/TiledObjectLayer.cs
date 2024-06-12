@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TanmaNabu.Core.Map
+﻿namespace TanmaNabu.Core.Map
 {
     public class TiledObjectLayer
     {

@@ -7,7 +7,7 @@ namespace TanmaNabu.Core.Settings
 {
     public class GameSettings
     {
-        public static event EventHandler<SettingsPropertyType> GameSettingsChanged;
+        public static event EventHandler<SettingsPropertyType> OnGameSettingsChanged;
 
         private const string FileName = "settings.json";
 
@@ -23,7 +23,7 @@ namespace TanmaNabu.Core.Settings
                 if (_settings.MusicEnabled == value) return;
 
                 _settings.MusicEnabled = value;
-                GameSettingsChanged?.Invoke(null, SettingsPropertyType.MusicEnabled);
+                OnGameSettingsChanged?.Invoke(null, SettingsPropertyType.MusicEnabled);
                 MarkToSaveSettings();
             }
         }
@@ -36,7 +36,7 @@ namespace TanmaNabu.Core.Settings
                 if (_settings.SoundEnabled == value) return;
 
                 _settings.SoundEnabled = value;
-                GameSettingsChanged?.Invoke(null, SettingsPropertyType.SoundEnabled);
+                OnGameSettingsChanged?.Invoke(null, SettingsPropertyType.SoundEnabled);
                 MarkToSaveSettings();
             }
         }
@@ -49,7 +49,7 @@ namespace TanmaNabu.Core.Settings
                 if (_settings.MusicVolume == value) return;
 
                 _settings.MusicVolume = value > 100 ? (byte)100 : value;
-                GameSettingsChanged?.Invoke(null, SettingsPropertyType.MusicVolume);
+                OnGameSettingsChanged?.Invoke(null, SettingsPropertyType.MusicVolume);
                 MarkToSaveSettings();
             }
         }
@@ -62,7 +62,7 @@ namespace TanmaNabu.Core.Settings
                 if (_settings.SoundVolume == value) return;
 
                 _settings.SoundVolume = value > 100 ? (byte)100 : value;
-                GameSettingsChanged?.Invoke(null, SettingsPropertyType.SoundVolume);
+                OnGameSettingsChanged?.Invoke(null, SettingsPropertyType.SoundVolume);
                 MarkToSaveSettings();
             }
         }
@@ -75,7 +75,7 @@ namespace TanmaNabu.Core.Settings
                 if (_settings.MapsPath == value) return;
 
                 _settings.MapsPath = value;
-                GameSettingsChanged?.Invoke(null, SettingsPropertyType.MapsPath);
+                OnGameSettingsChanged?.Invoke(null, SettingsPropertyType.MapsPath);
                 MarkToSaveSettings();
             }
         }
@@ -88,7 +88,7 @@ namespace TanmaNabu.Core.Settings
                 if (_settings.TilesetsPath == value) return;
 
                 _settings.TilesetsPath = value;
-                GameSettingsChanged?.Invoke(null, SettingsPropertyType.TilesetsPath);
+                OnGameSettingsChanged?.Invoke(null, SettingsPropertyType.TilesetsPath);
                 MarkToSaveSettings();
             }
         }
@@ -101,7 +101,7 @@ namespace TanmaNabu.Core.Settings
                 if (_settings.TexturesPath == value) return;
 
                 _settings.TexturesPath = value;
-                GameSettingsChanged?.Invoke(null, SettingsPropertyType.TexturesPath);
+                OnGameSettingsChanged?.Invoke(null, SettingsPropertyType.TexturesPath);
                 MarkToSaveSettings();
             }
         }
@@ -114,7 +114,7 @@ namespace TanmaNabu.Core.Settings
                 if (_settings.FontsPath == value) return;
 
                 _settings.FontsPath = value;
-                GameSettingsChanged?.Invoke(null, SettingsPropertyType.FontsPath);
+                OnGameSettingsChanged?.Invoke(null, SettingsPropertyType.FontsPath);
                 MarkToSaveSettings();
             }
         }
@@ -127,7 +127,7 @@ namespace TanmaNabu.Core.Settings
                 if (_settings.BackgroundsPath == value) return;
 
                 _settings.BackgroundsPath = value;
-                GameSettingsChanged?.Invoke(null, SettingsPropertyType.BackgroundsPath);
+                OnGameSettingsChanged?.Invoke(null, SettingsPropertyType.BackgroundsPath);
                 MarkToSaveSettings();
             }
         }
@@ -140,7 +140,7 @@ namespace TanmaNabu.Core.Settings
                 if (_settings.SoundsPath == value) return;
 
                 _settings.SoundsPath = value;
-                GameSettingsChanged?.Invoke(null, SettingsPropertyType.SoundsPath);
+                OnGameSettingsChanged?.Invoke(null, SettingsPropertyType.SoundsPath);
                 MarkToSaveSettings();
             }
         }
@@ -153,7 +153,7 @@ namespace TanmaNabu.Core.Settings
                 if (_settings.MusicPath == value) return;
 
                 _settings.MusicPath = value;
-                GameSettingsChanged?.Invoke(null, SettingsPropertyType.MusicPath);
+                OnGameSettingsChanged?.Invoke(null, SettingsPropertyType.MusicPath);
                 MarkToSaveSettings();
             }
         }
@@ -166,7 +166,7 @@ namespace TanmaNabu.Core.Settings
                 if (_settings.ImagesPath == value) return;
 
                 _settings.ImagesPath = value;
-                GameSettingsChanged?.Invoke(null, SettingsPropertyType.ImagesPath);
+                OnGameSettingsChanged?.Invoke(null, SettingsPropertyType.ImagesPath);
                 MarkToSaveSettings();
             }
         }
@@ -179,7 +179,7 @@ namespace TanmaNabu.Core.Settings
                 if (_settings.TilesetFileExtension == value) return;
 
                 _settings.TilesetFileExtension = value;
-                GameSettingsChanged?.Invoke(null, SettingsPropertyType.TilesetFileExtension);
+                OnGameSettingsChanged?.Invoke(null, SettingsPropertyType.TilesetFileExtension);
                 MarkToSaveSettings();
             }
         }

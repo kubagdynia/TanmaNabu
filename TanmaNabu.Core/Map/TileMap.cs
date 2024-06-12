@@ -1,10 +1,8 @@
 ﻿using SFML.Graphics;
 using SFML.System;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using TiledSharp;
 
 namespace TanmaNabu.Core.Map
@@ -84,10 +82,7 @@ namespace TanmaNabu.Core.Map
 
         public void Update(float deltaTime)
         {
-            foreach (var mapLayer in _mapLayers)
-            {
-
-            }
+            
         }
 
         private void DrawVertices(RenderTarget target, RenderStates states, uint tilesCount, Vertex[] vertices, int lineNumber)
@@ -109,10 +104,6 @@ namespace TanmaNabu.Core.Map
 
         private void AddTileVertices(Vertex[] vertices, int verticeIndex, TmxLayerTile tileItem, int tilesetColumns)
         {
-            var a1 = tileItem.VerticalFlip;
-            var a2 = tileItem.HorizontalFlip;
-            var a3 = tileItem.DiagonalFlip;
-
             var xIndex = (tileItem.Gid - 1) % tilesetColumns;
             var yIndex = (tileItem.Gid - 1) / tilesetColumns;
 
@@ -129,7 +120,7 @@ namespace TanmaNabu.Core.Map
             {
                 var ptr = fptr + verticeIndex;
 
-                Vector2f[] textCoords = new Vector2f[]
+                Vector2f[] textCoords =
                 {
                     new Vector2f(GetWorldTileSize.X * x, GetWorldTileSize.Y * y),
                     new Vector2f(GetWorldTileSize.X * x + GetWorldTileSize.X, GetWorldTileSize.Y * y),
@@ -139,7 +130,7 @@ namespace TanmaNabu.Core.Map
 
                 if (horizontalFlip)
                 {
-                    textCoords = new Vector2f[]
+                    textCoords = new[]
                     {
                         textCoords[1],
                         textCoords[0],
@@ -150,7 +141,7 @@ namespace TanmaNabu.Core.Map
 
                 if (verticalFlip)
                 {
-                    textCoords = new Vector2f[]
+                    textCoords = new[]
                     {
                         textCoords[3],
                         textCoords[2],
@@ -161,7 +152,7 @@ namespace TanmaNabu.Core.Map
 
                 if (diagonalFlip)
                 {
-                    textCoords = new Vector2f[]
+                    textCoords = new[]
                     {
                         textCoords[1],
                         textCoords[2],

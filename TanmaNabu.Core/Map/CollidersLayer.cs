@@ -6,17 +6,7 @@ namespace TanmaNabu.Core.Map
     {
         private Collection<DataStructures.IntRect> _colliders;
 
-        public Collection<DataStructures.IntRect> Colliders
-        {
-            get
-            {
-                if (_colliders == null)
-                {
-                    _colliders = new Collection<DataStructures.IntRect>();
-                }
-                return _colliders;
-            }
-            set => _colliders = value;
-        }
+        public Collection<DataStructures.IntRect> Colliders =>
+            _colliders ?? (_colliders = new Collection<DataStructures.IntRect>());
     }
 }

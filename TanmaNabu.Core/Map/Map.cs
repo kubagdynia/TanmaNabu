@@ -6,7 +6,7 @@ namespace TanmaNabu.Core.Map
 {
     public class Map
     {
-        private float switchTimeOfTileAnimations = 0.1f; // 100ms
+        private readonly float _switchTimeOfTileAnimations = 0.1f; // 100ms
 
         private float _totalTime;
 
@@ -31,7 +31,7 @@ namespace TanmaNabu.Core.Map
         {
             _totalTime += deltaTime;
 
-            if (_totalTime >= switchTimeOfTileAnimations)
+            if (_totalTime >= _switchTimeOfTileAnimations)
             {
                 _backgroundTileMap.Update(_totalTime);
                 _foregroundTileMap.Update(_totalTime);
