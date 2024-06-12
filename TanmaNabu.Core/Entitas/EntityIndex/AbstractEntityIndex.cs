@@ -44,7 +44,7 @@ namespace Entitas
 
         protected void IndexEntities(IGroup<TEntity> group)
         {
-            foreach (TEntity entity in group)
+            foreach (var entity in group)
             {
                 if (IsSingleKey)
                 {
@@ -52,8 +52,8 @@ namespace Entitas
                 }
                 else
                 {
-                    TKey[] keys = GetKeys(entity, null);
-                    foreach (TKey key in keys)
+                    var keys = GetKeys(entity, null);
+                    foreach (var key in keys)
                     {
                         AddEntity(key, entity);
                     }
@@ -69,8 +69,8 @@ namespace Entitas
             }
             else
             {
-                TKey[] keys = GetKeys(entity, component);
-                foreach (TKey key in keys)
+                var keys = GetKeys(entity, component);
+                foreach (var key in keys)
                 {
                     AddEntity(key, entity);
                 }
@@ -85,8 +85,8 @@ namespace Entitas
             }
             else
             {
-                TKey[] keys = GetKeys(entity, component);
-                foreach (TKey key in keys)
+                var keys = GetKeys(entity, component);
+                foreach (var key in keys)
                 {
                     RemoveEntity(key, entity);
                 }

@@ -10,44 +10,27 @@ namespace Entitas
     /// you added them.
     public class Systems : IInitializeSystem, IExecuteSystem, ICleanupSystem, ITearDownSystem
     {
-        protected readonly List<IInitializeSystem> _initializeSystems;
-        protected readonly List<IExecuteSystem> _executeSystems;
-        protected readonly List<ICleanupSystem> _cleanupSystems;
-        protected readonly List<ITearDownSystem> _tearDownSystems;
-
-        /// Creates a new Systems instance.
-        public Systems()
-        {
-            _initializeSystems = new List<IInitializeSystem>();
-            _executeSystems = new List<IExecuteSystem>();
-            _cleanupSystems = new List<ICleanupSystem>();
-            _tearDownSystems = new List<ITearDownSystem>();
-        }
+        protected readonly List<IInitializeSystem> _initializeSystems = new();
+        protected readonly List<IExecuteSystem> _executeSystems = new();
+        protected readonly List<ICleanupSystem> _cleanupSystems = new();
+        protected readonly List<ITearDownSystem> _tearDownSystems = new();
 
         /// Adds the system instance to the systems list.
         public virtual Systems Add(ISystem system)
         {
-            if (system is IInitializeSystem initializeSystem)
-            {
-                _initializeSystems.Add(initializeSystem);
-            }
-
-            if (system is IExecuteSystem executeSystem)
-            {
-                _executeSystems.Add(executeSystem);
-            }
-
-            if (system is ICleanupSystem cleanupSystem)
-            {
-                _cleanupSystems.Add(cleanupSystem);
-            }
-
-            if (system is ITearDownSystem tearDownSystem)
-            {
-                _tearDownSystems.Add(tearDownSystem);
-            }
-
+            if (system is IInitializeSystem initializeSystem) _initializeSystems.Add(initializeSystem);
+            if (system is IExecuteSystem executeSystem) _executeSystems.Add(executeSystem);
+            if (system is ICleanupSystem cleanupSystem) _cleanupSystems.Add(cleanupSystem);
+            if (system is ITearDownSystem tearDownSystem) _tearDownSystems.Add(tearDownSystem);
             return this;
+        }
+        
+        public void Remove(ISystem system)
+        {
+            if (system is IInitializeSystem initializeSystem) _initializeSystems.Remove(initializeSystem);
+            if (system is IExecuteSystem executeSystem) _executeSystems.Remove(executeSystem);
+            if (system is ICleanupSystem cleanupSystem) _cleanupSystems.Remove(cleanupSystem);
+            if (system is ITearDownSystem tearDownSystem) _tearDownSystems.Remove(tearDownSystem);
         }
 
         /// Calls Initialize() on all IInitializeSystem and other
@@ -93,7 +76,7 @@ namespace Entitas
         /// Activates all ReactiveSystems in the systems list.
         public void ActivateReactiveSystems()
         {
-            foreach (IExecuteSystem system in _executeSystems)
+            foreach (var system in _executeSystems)
             {
                 if (system is IReactiveSystem reactiveSystem)
                 {
@@ -113,7 +96,7 @@ namespace Entitas
         /// want to reuse your existing system instances.
         public void DeactivateReactiveSystems()
         {
-            foreach (IExecuteSystem system in _executeSystems)
+            foreach (var system in _executeSystems)
             {
                 if (system is IReactiveSystem reactiveSystem)
                 {
@@ -130,7 +113,7 @@ namespace Entitas
         /// Clears all ReactiveSystems in the systems list.
         public void ClearReactiveSystems()
         {
-            foreach (IExecuteSystem system in _executeSystems)
+            foreach (var system in _executeSystems)
             {
                 if (system is IReactiveSystem reactiveSystem)
                 {

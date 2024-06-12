@@ -51,7 +51,7 @@ namespace Entitas
 
         protected override void Clear()
         {
-            foreach (TEntity entity in _index.Values)
+            foreach (var entity in _index.Values)
             {
                 if (entity.Aerc is SafeAerc safeAerc)
                 {
@@ -71,14 +71,12 @@ namespace Entitas
 
         protected override void AddEntity(TKey key, TEntity entity)
         {
-            if (_index.ContainsKey(key))
+            if (!_index.TryAdd(key, entity))
             {
                 throw new EntityIndexException(
                     $"Entity for key '{key}' already exists!",
                     "Only one entity for a primary key is allowed.");
             }
-
-            _index.Add(key, entity);
 
             if (entity.Aerc is SafeAerc safeAerc)
             {

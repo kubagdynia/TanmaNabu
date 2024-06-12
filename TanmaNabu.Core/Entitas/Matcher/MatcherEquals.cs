@@ -11,17 +11,17 @@
 
             Matcher<TEntity> matcher = (Matcher<TEntity>)obj;
 
-            if (!EqualIndices(matcher.AllOfIndices, _allOfIndices))
+            if (!EqualIndices(matcher.AllOfIndexes, _allOfIndexes))
             {
                 return false;
             }
 
-            if (!EqualIndices(matcher.AnyOfIndices, _anyOfIndices))
+            if (!EqualIndices(matcher.AnyOfIndexes, _anyOfIndexes))
             {
                 return false;
             }
 
-            if (!EqualIndices(matcher.NoneOfIndices, _noneOfIndices))
+            if (!EqualIndices(matcher.NoneOfIndexes, _noneOfIndexes))
             {
                 return false;
             }
@@ -46,7 +46,7 @@
                 return false;
             }
 
-            for (int i = 0; i < i1.Length; i++)
+            for (var i = 0; i < i1.Length; i++)
             {
                 if (i1[i] != i2[i])
                 {
@@ -65,9 +65,9 @@
             if (!_isHashCached)
             {
                 int hash = GetType().GetHashCode();
-                hash = ApplyHash(hash, _allOfIndices, 3, 53);
-                hash = ApplyHash(hash, _anyOfIndices, 307, 367);
-                hash = ApplyHash(hash, _noneOfIndices, 647, 683);
+                hash = ApplyHash(hash, _allOfIndexes, 3, 53);
+                hash = ApplyHash(hash, _anyOfIndexes, 307, 367);
+                hash = ApplyHash(hash, _noneOfIndexes, 647, 683);
                 _hash = hash;
                 _isHashCached = true;
             }

@@ -56,11 +56,11 @@ namespace Entitas
         private readonly Func<IEntity, IAerc> _aercFactory;
         readonly Func<TEntity> _entityFactory;
 
-        private readonly HashSet<TEntity> _entities = new HashSet<TEntity>(EntityEqualityComparer<TEntity>.Comparer);
-        private readonly Stack<TEntity> _reusableEntities = new Stack<TEntity>();
-        private readonly HashSet<TEntity> _retainedEntities = new HashSet<TEntity>(EntityEqualityComparer<TEntity>.Comparer);
+        private readonly HashSet<TEntity> _entities = new(EntityEqualityComparer<TEntity>.Comparer);
+        private readonly Stack<TEntity> _reusableEntities = new();
+        private readonly HashSet<TEntity> _retainedEntities = new(EntityEqualityComparer<TEntity>.Comparer);
 
-        private readonly Dictionary<IMatcher<TEntity>, IGroup<TEntity>> _groups = new Dictionary<IMatcher<TEntity>, IGroup<TEntity>>();
+        private readonly Dictionary<IMatcher<TEntity>, IGroup<TEntity>> _groups = new();
         private readonly List<IGroup<TEntity>>[] _groupsForIndex;
         private readonly ObjectPool<List<GroupChanged<TEntity>>> _groupChangedListPool;
 
@@ -102,6 +102,8 @@ namespace Entitas
             {
                 _contextInfo = CreateDefaultContextInfo();
             }
+            
+            _aercFactory = aercFactory ?? SafeAerc.Delegate;
 
             _aercFactory = aercFactory ?? (entity => new SafeAerc(entity));
             _entityFactory = entityFactory;
@@ -123,11 +125,10 @@ namespace Entitas
 
         private ContextInfo CreateDefaultContextInfo()
         {
-            string[] componentNames = new string[_totalComponents];
-            const string prefix = "Index ";
-            for (int i = 0; i < componentNames.Length; i++)
+            var componentNames = new string[_totalComponents];
+            for (var i = 0; i < componentNames.Length; i++)
             {
-                componentNames[i] = prefix + i;
+                componentNames[i] = "Index " + i;
             }
 
             return new ContextInfo("Unnamed Context", componentNames, null);
@@ -169,8 +170,8 @@ namespace Entitas
         /// Throws an exception if there are still retained entities.
         public void DestroyAllEntities()
         {
-            TEntity[] entities = GetEntities();
-            foreach (TEntity entity in entities)
+            var entities = GetEntities();
+            foreach (var entity in entities)
             {
                 entity.Destroy();
             }
@@ -184,41 +185,36 @@ namespace Entitas
         }
 
         /// Determines whether the context has the specified entity.
-        public bool HasEntity(TEntity entity) => _entities.Contains(entity);
+        public bool HasEntity(TEntity entity)
+            => _entities.Contains(entity);
 
         /// Returns all entities which are currently in the context.
         public TEntity[] GetEntities()
-        {
-            if (_entitiesCache == null)
-            {
-                _entitiesCache = new TEntity[_entities.Count];
-                _entities.CopyTo(_entitiesCache);
-            }
-
-            return _entitiesCache;
-        }
+            =>  _entitiesCache ??= _entities.ToArray();
+        
+        /// Returns all entities matching the specified matcher.
+        public TEntity[] GetEntities(IMatcher<TEntity> matcher)
+            => GetGroup(matcher).GetEntities();
+        
 
         /// Returns a group for the specified matcher.
         /// Calling context.GetGroup(matcher) with the same matcher will always
         /// return the same instance of the group.
         public IGroup<TEntity> GetGroup(IMatcher<TEntity> matcher)
         {
-            if (_groups.TryGetValue(matcher, out IGroup<TEntity> group)) return group;
+            if (_groups.TryGetValue(matcher, out var group)) return group;
 
             group = new Group<TEntity>(matcher);
-            TEntity[] entities = GetEntities();
-            foreach (TEntity entity in entities)
+            var entities = GetEntities();
+            foreach (var entity in entities)
             {
                 group.HandleEntitySilently(entity);
             }
             _groups.Add(matcher, group);
 
-            foreach (int index in matcher.Indices)
+            foreach (var index in matcher.Indices)
             {
-                if (_groupsForIndex[index] == null)
-                {
-                    _groupsForIndex[index] = new List<IGroup<TEntity>>();
-                }
+                _groupsForIndex[index] ??= new List<IGroup<TEntity>>();
                 _groupsForIndex[index].Add(group);
             }
 
@@ -231,18 +227,16 @@ namespace Entitas
         /// There can only be one IEntityIndex per name.
         public void AddEntityIndex(IEntityIndex entityIndex)
         {
-            if (_entityIndices.ContainsKey(entityIndex.Name))
+            if (!_entityIndices.TryAdd(entityIndex.Name, entityIndex))
             {
                 throw new ContextEntityIndexDoesAlreadyExistException(this, entityIndex.Name);
             }
-
-            _entityIndices.Add(entityIndex.Name, entityIndex);
         }
 
         /// Gets the IEntityIndex for the specified name.
         public IEntityIndex GetEntityIndex(string name)
         {
-            if (!_entityIndices.TryGetValue(name, out IEntityIndex entityIndex))
+            if (!_entityIndices.TryGetValue(name, out var entityIndex))
             {
                 throw new ContextEntityIndexDoesNotExistException(this, name);
             }
@@ -255,15 +249,12 @@ namespace Entitas
 
         /// Clears the componentPool at the specified index.
         public void ClearComponentPool(int index)
-        {
-            Stack<IComponent> componentPool = _componentPools[index];
-            componentPool?.Clear();
-        }
+            => _componentPools[index]?.Clear();
 
         /// Clears all componentPools.
         public void ClearComponentPools()
         {
-            for (int i = 0; i < _componentPools.Length; i++)
+            for (var i = 0; i < _componentPools.Length; i++)
             {
                 ClearComponentPool(i);
             }
