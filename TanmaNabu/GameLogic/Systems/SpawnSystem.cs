@@ -3,17 +3,10 @@ using TanmaNabu.GameLogic.Game;
 
 namespace TanmaNabu.GameLogic.Systems;
 
-public class SpawnSystem : IInitializeSystem
+public class SpawnSystem(Contexts contexts) : IInitializeSystem
 {
-    private readonly Contexts _contexts;
-
-    public SpawnSystem(Contexts contexts)
-    {
-        _contexts = contexts;
-    }
-
     public void Initialize()
     {
-        GameEntityFactory.AddAllEntities(_contexts.Game, _contexts.GameMap.MapData);
+        GameEntityFactory.AddAllEntities(contexts.Game, contexts.GameMap.MapData);
     }
 }

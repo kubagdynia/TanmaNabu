@@ -8,7 +8,7 @@ public class CollisionObjectGroup
 
     private List<CollisionObject> _collissions;
 
-    public List<CollisionObject> Collissions => _collissions ??= new List<CollisionObject>();
+    public List<CollisionObject> Collissions => _collissions ??= [];
 
     /// <summary>
     /// Weight of the object

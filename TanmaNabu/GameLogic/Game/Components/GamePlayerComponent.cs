@@ -5,7 +5,7 @@ namespace TanmaNabu.GameLogic.Game;
 
 public partial class GameEntity
 {
-    static readonly PlayerComponent PlayerComponent = new PlayerComponent();
+    static readonly PlayerComponent PlayerComponent = new();
 
     public bool IsPlayer
     {

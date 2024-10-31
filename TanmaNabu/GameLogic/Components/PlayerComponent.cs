@@ -2,6 +2,4 @@
 
 namespace TanmaNabu.GameLogic.Components;
 
-public sealed class PlayerComponent : IComponent
-{
-}
+public sealed class PlayerComponent : IComponent;

@@ -49,7 +49,7 @@ public sealed class CollisionComponent : IComponent
     {
         var collisionRect = GetFirstCollisionRect(tileId);
 
-        IntRect intRect = new IntRect(
+        var intRect = new IntRect(
             parentRect.Left + collisionRect.Left + offsetX,
             parentRect.Top + collisionRect.Top + offsetY,
             parentRect.Left + collisionRect.Left + offsetX + collisionRect.Width,
@@ -65,7 +65,7 @@ public sealed class CollisionComponent : IComponent
             return false;
         }
 
-        TmxTileset tileset = AssetManager.Tileset.Get(_tilesetName);
+        var tileset = AssetManager.Tileset.Get(_tilesetName);
 
         if (tileset?.Tiles == null)
         {
@@ -103,7 +103,8 @@ public sealed class CollisionComponent : IComponent
                 // Load weight of the object
                 if (objectGroup.Properties != null)
                 {
-                    string weightValue = objectGroup.Properties.FirstOrDefault(c => c.Key.Equals("weight", StringComparison.OrdinalIgnoreCase)).Value;
+                    var weightValue =
+                        objectGroup.Properties.FirstOrDefault(c => c.Key.Equals("weight", StringComparison.OrdinalIgnoreCase)).Value;
 
                     if (int.TryParse(weightValue, out int weight))
                     {
@@ -114,7 +115,7 @@ public sealed class CollisionComponent : IComponent
                 // Load collissions
                 foreach (var objectValue in objectGroup.Objects)
                 {
-                    CollisionObject collisionObject = new CollisionObject
+                    var collisionObject = new CollisionObject
                     {
                         Id = objectValue.Id,
                         CollisionRect = new IntRect(

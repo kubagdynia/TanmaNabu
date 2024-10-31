@@ -4,15 +4,8 @@ using TanmaNabu.GameLogic.Game;
 
 namespace TanmaNabu.GameLogic.Systems;
 
-public class PositionSystem : ReactiveSystem<GameEntity>
+public class PositionSystem(Contexts contexts) : ReactiveSystem<GameEntity>(contexts.Game)
 {
-    private readonly Contexts _contexts;
-
-    public PositionSystem(Contexts contexts) : base(contexts.Game)
-    {
-        _contexts = contexts;
-    }
-
     protected override ICollector<GameEntity> GetTrigger(IContext<GameEntity> context)
     {
         // we only care about entities with PositionComponent 

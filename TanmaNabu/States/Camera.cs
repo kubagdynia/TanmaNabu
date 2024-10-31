@@ -25,16 +25,11 @@ public class Camera(RenderTarget renderTarget, Contexts contexts)
         };
         view.Zoom(contexts.GameMap.MapData.MapZoomFactor);
 
-        var targetCenterX = Math.Max(
-            renderTarget.Size.X / 2.0f * contexts.GameMap.MapData.MapZoomFactor,
-            Math.Min(contexts.GameMap.MapData.MapRec.Width * contexts.GameMap.MapData.TileWorldDimension - renderTarget.Size.X / 2.0f * contexts.GameMap.MapData.MapZoomFactor, positionX));
+        var targetCenter = TargetCenter(positionX, positionY);
 
-        var targetCenterY = Math.Max(renderTarget.Size.Y / 2.0f * contexts.GameMap.MapData.MapZoomFactor,
-            Math.Min(contexts.GameMap.MapData.MapRec.Height * contexts.GameMap.MapData.TileWorldDimension - renderTarget.Size.Y / 2.0f * contexts.GameMap.MapData.MapZoomFactor, positionY));
+        var oldPosition = _currentPosition;
 
-        Vector2f oldPosition = _currentPosition;
-
-        _currentPosition = CameraMath.Lerp(new Vector2f(targetCenterX, targetCenterY), _currentPosition, lerpSpeed);
+        _currentPosition = CameraMath.Lerp(new Vector2f(targetCenter.X, targetCenter.Y), _currentPosition, lerpSpeed);
 
         if (oldPosition.Equals(_currentPosition, 0.1f) && Math.Abs(_currentZoomFactor - contexts.GameMap.MapData.MapZoomFactor) < 0.01f)
         {
@@ -53,6 +48,22 @@ public class Camera(RenderTarget renderTarget, Contexts contexts)
         view.Center = _currentPosition;
 
         renderTarget.SetView(view);
+    }
+
+    private (float X, float Y) TargetCenter(float positionX, float positionY)
+    {
+        var targetCenterX = Math.Max(
+            renderTarget.Size.X / 2.0f * contexts.GameMap.MapData.MapZoomFactor,
+            Math.Min(
+                contexts.GameMap.MapData.MapRec.Width * contexts.GameMap.MapData.TileWorldDimension -
+                renderTarget.Size.X / 2.0f * contexts.GameMap.MapData.MapZoomFactor, positionX));
+
+        var targetCenterY = Math.Max(renderTarget.Size.Y / 2.0f * contexts.GameMap.MapData.MapZoomFactor,
+            Math.Min(
+                contexts.GameMap.MapData.MapRec.Height * contexts.GameMap.MapData.TileWorldDimension -
+                renderTarget.Size.Y / 2.0f * contexts.GameMap.MapData.MapZoomFactor, positionY));
+        
+        return (targetCenterX, targetCenterY);
     }
 }
 
