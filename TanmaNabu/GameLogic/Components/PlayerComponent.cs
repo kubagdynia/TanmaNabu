@@ -1,8 +1,7 @@
 ﻿using Entitas;
 
-namespace TanmaNabu.GameLogic.Components
+namespace TanmaNabu.GameLogic.Components;
+
+public sealed class PlayerComponent : IComponent
 {
-    public sealed class PlayerComponent : IComponent
-    {
-    }
 }

@@ -6,132 +6,131 @@ using TanmaNabu.Core.DataStructures;
 using TanmaNabu.Core.Managers;
 using TiledSharp;
 
-namespace TanmaNabu.GameLogic.Components
+namespace TanmaNabu.GameLogic.Components;
+
+public sealed class CollisionComponent : IComponent
 {
-    public sealed class CollisionComponent : IComponent
+    private string _tilesetName;
+
+    private string _objectType;
+
+    private int _spriteWorldDimension;
+
+    private List<CollisionObjectGroup> _collisionObjectGroups;
+
+    public List<CollisionObjectGroup> CollisionObjectGroups => _collisionObjectGroups ??= new List<CollisionObjectGroup>();
+
+    public void SetTileset(string tilesetName, string objectType, int spriteWorldDimension)
     {
-        private string _tilesetName;
+        _tilesetName = tilesetName;
+        _objectType = objectType;
+        _spriteWorldDimension = spriteWorldDimension;
+        InitializeCollisions(objectType);
+    }
 
-        private string _objectType;
+    public CollisionObjectGroup GetCollisionObjectGroup(int tileId)
+    {
+        return CollisionObjectGroups.SingleOrDefault(c => c.TileId == tileId);
+    }
 
-        private int _spriteWorldDimension;
+    public IntRect GetFirstCollisionRect(int tileId)
+    {
+        var collisionObjectGroup = GetCollisionObjectGroup(tileId);
 
-        private List<CollisionObjectGroup> _collisionObjectGroups;
-
-        public List<CollisionObjectGroup> CollisionObjectGroups => _collisionObjectGroups ??= new List<CollisionObjectGroup>();
-
-        public void SetTileset(string tilesetName, string objectType, int spriteWorldDimension)
+        if (collisionObjectGroup?.Collissions == null)
         {
-            _tilesetName = tilesetName;
-            _objectType = objectType;
-            _spriteWorldDimension = spriteWorldDimension;
-            InitializeCollisions(objectType);
+            return IntRect.Zero;
         }
 
-        public CollisionObjectGroup GetCollisionObjectGroup(int tileId)
+        return collisionObjectGroup.Collissions[0].CollisionRect;
+    }
+
+    public IntRect GetCollisionRectGlobalBounds(int tileId, SFML.Graphics.FloatRect parentRect, float offsetX, float offsetY)
+    {
+        var collisionRect = GetFirstCollisionRect(tileId);
+
+        IntRect intRect = new IntRect(
+            parentRect.Left + collisionRect.Left + offsetX,
+            parentRect.Top + collisionRect.Top + offsetY,
+            parentRect.Left + collisionRect.Left + offsetX + collisionRect.Width,
+            parentRect.Top + collisionRect.Top + offsetY + collisionRect.Height);
+
+        return intRect;
+    }
+
+    private bool InitializeCollisions(string objectType)
+    {
+        if (string.IsNullOrEmpty(_tilesetName))
         {
-            return CollisionObjectGroups.SingleOrDefault(c => c.TileId == tileId);
+            return false;
         }
 
-        public IntRect GetFirstCollisionRect(int tileId)
+        TmxTileset tileset = AssetManager.Tileset.Get(_tilesetName);
+
+        if (tileset?.Tiles == null)
         {
-            var collisionObjectGroup = GetCollisionObjectGroup(tileId);
-
-            if (collisionObjectGroup?.Collissions == null)
-            {
-                return IntRect.Zero;
-            }
-
-            return collisionObjectGroup.Collissions[0].CollisionRect;
+            return false;
         }
 
-        public IntRect GetCollisionRectGlobalBounds(int tileId, SFML.Graphics.FloatRect parentRect, float offsetX, float offsetY)
+        // If the objectType is not null than take only the tiles that correspond to that objectType
+        List<TmxTilesetTile> tiles;
+        if (objectType == null)
         {
-            var collisionRect = GetFirstCollisionRect(tileId);
-
-            IntRect intRect = new IntRect(
-                parentRect.Left + collisionRect.Left + offsetX,
-                parentRect.Top + collisionRect.Top + offsetY,
-                parentRect.Left + collisionRect.Left + offsetX + collisionRect.Width,
-                parentRect.Top + collisionRect.Top + offsetY + collisionRect.Height);
-
-            return intRect;
+            tiles = tileset.Tiles.Where(c => c.ObjectGroups != null && c.ObjectGroups.Any()).ToList();
+        }
+        else
+        {
+            tiles = tileset.Tiles.Where(c => c.Type != null && c.ObjectGroups != null && c.ObjectGroups.Any() &&
+                                             c.Type.Equals(objectType, StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
 
-        private bool InitializeCollisions(string objectType)
+        foreach (var tile in tiles)
         {
-            if (string.IsNullOrEmpty(_tilesetName))
+            var visibleObjectGroups = tile.ObjectGroups.Where(c => c.Visible);
+
+            if (visibleObjectGroups == null || !visibleObjectGroups.Any())
             {
-                return false;
+                continue;
             }
 
-            TmxTileset tileset = AssetManager.Tileset.Get(_tilesetName);
-
-            if (tileset?.Tiles == null)
+            CollisionObjectGroup collisionObjectGroup = new CollisionObjectGroup
             {
-                return false;
-            }
+                TileId = tile.Id
+            };
 
-            // If the objectType is not null than take only the tiles that correspond to that objectType
-            List<TmxTilesetTile> tiles;
-            if (objectType == null)
+            foreach (var objectGroup in visibleObjectGroups)
             {
-                tiles = tileset.Tiles.Where(c => c.ObjectGroups != null && c.ObjectGroups.Any()).ToList();
-            }
-            else
-            {
-                tiles = tileset.Tiles.Where(c => c.Type != null && c.ObjectGroups != null && c.ObjectGroups.Any() &&
-                    c.Type.Equals(objectType, StringComparison.InvariantCultureIgnoreCase)).ToList();
-            }
-
-            foreach (var tile in tiles)
-            {
-                var visibleObjectGroups = tile.ObjectGroups.Where(c => c.Visible);
-
-                if (visibleObjectGroups == null || !visibleObjectGroups.Any())
+                // Load weight of the object
+                if (objectGroup.Properties != null)
                 {
-                    continue;
-                }
+                    string weightValue = objectGroup.Properties.FirstOrDefault(c => c.Key.Equals("weight", StringComparison.OrdinalIgnoreCase)).Value;
 
-                CollisionObjectGroup collisionObjectGroup = new CollisionObjectGroup
-                {
-                    TileId = tile.Id
-                };
-
-                foreach (var objectGroup in visibleObjectGroups)
-                {
-                    // Load weight of the object
-                    if (objectGroup.Properties != null)
+                    if (int.TryParse(weightValue, out int weight))
                     {
-                        string weightValue = objectGroup.Properties.FirstOrDefault(c => c.Key.Equals("weight", StringComparison.OrdinalIgnoreCase)).Value;
-
-                        if (int.TryParse(weightValue, out int weight))
-                        {
-                            collisionObjectGroup.Weight = weight;
-                        }
-                    }
-
-                    // Load collissions
-                    foreach (var objectValue in objectGroup.Objects)
-                    {
-                        CollisionObject collisionObject = new CollisionObject
-                        {
-                            Id = objectValue.Id,
-                            CollisionRect = new IntRect(
-                                objectValue.X,
-                                objectValue.Y,
-                                objectValue.X + objectValue.Width,
-                                objectValue.Y + objectValue.Height) * _spriteWorldDimension
-                        };
-
-                        collisionObjectGroup.Collissions.Add(collisionObject);
+                        collisionObjectGroup.Weight = weight;
                     }
                 }
 
-                CollisionObjectGroups.Add(collisionObjectGroup);
+                // Load collissions
+                foreach (var objectValue in objectGroup.Objects)
+                {
+                    CollisionObject collisionObject = new CollisionObject
+                    {
+                        Id = objectValue.Id,
+                        CollisionRect = new IntRect(
+                            objectValue.X,
+                            objectValue.Y,
+                            objectValue.X + objectValue.Width,
+                            objectValue.Y + objectValue.Height) * _spriteWorldDimension
+                    };
+
+                    collisionObjectGroup.Collissions.Add(collisionObject);
+                }
             }
 
-            return true;
+            CollisionObjectGroups.Add(collisionObjectGroup);
         }
+
+        return true;
     }
 }

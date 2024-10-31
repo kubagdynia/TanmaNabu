@@ -1,48 +1,47 @@
 ﻿using Entitas;
 using TanmaNabu.GameLogic.Components;
 
-namespace TanmaNabu.GameLogic.Game
+namespace TanmaNabu.GameLogic.Game;
+
+public partial class GameEntity
 {
-    public partial class GameEntity
+    static readonly PlayerComponent PlayerComponent = new PlayerComponent();
+
+    public bool IsPlayer
     {
-        static readonly PlayerComponent PlayerComponent = new PlayerComponent();
-
-        public bool IsPlayer
+        get => HasComponent(GameComponentsLookup.Player);
+        set
         {
-            get => HasComponent(GameComponentsLookup.Player);
-            set
-            {
-                if (value == IsPlayer) return;
+            if (value == IsPlayer) return;
 
-                if (value)
-                {
-                    AddComponent(GameComponentsLookup.Player, PlayerComponent);
-                }
-                else
-                {
-                    RemoveComponent(GameComponentsLookup.Player);
-                }
+            if (value)
+            {
+                AddComponent(GameComponentsLookup.Player, PlayerComponent);
+            }
+            else
+            {
+                RemoveComponent(GameComponentsLookup.Player);
             }
         }
     }
+}
 
-    public static partial class GameMatcher
+public static partial class GameMatcher
+{
+    private static IMatcher<GameEntity> _matcherPlayer;
+
+    public static IMatcher<GameEntity> Player
     {
-        private static IMatcher<GameEntity> _matcherPlayer;
-
-        public static IMatcher<GameEntity> Player
+        get
         {
-            get
+            if (_matcherPlayer == null)
             {
-                if (_matcherPlayer == null)
-                {
-                    var matcher = (Matcher<GameEntity>)Matcher<GameEntity>.AllOf(GameComponentsLookup.Player);
-                    matcher.ComponentNames = GameComponentsLookup.ComponentNames;
-                    _matcherPlayer = matcher;
-                }
-
-                return _matcherPlayer;
+                var matcher = (Matcher<GameEntity>)Matcher<GameEntity>.AllOf(GameComponentsLookup.Player);
+                matcher.ComponentNames = GameComponentsLookup.ComponentNames;
+                _matcherPlayer = matcher;
             }
+
+            return _matcherPlayer;
         }
     }
 }

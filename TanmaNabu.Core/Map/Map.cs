@@ -2,79 +2,76 @@
 using SFML.System;
 using System;
 
-namespace TanmaNabu.Core.Map
+namespace TanmaNabu.Core.Map;
+
+public class Map
 {
-    public class Map
+    private readonly float _switchTimeOfTileAnimations = 0.1f; // 100ms
+
+    private float _totalTime;
+
+    private ITileMap _backgroundTileMap;
+    private ITileMap _foregroundTileMap;
+
+    public MapData MapData { get; } = new();
+
+    public ITileMap GetBackgroundTileMap() => _backgroundTileMap;
+
+    public ITileMap GetForegroundTileMap() => _foregroundTileMap;
+
+    public void Load(string filename)
     {
-        private readonly float _switchTimeOfTileAnimations = 0.1f; // 100ms
+        // Load map data to _mapData
+        MapLoader.LoadMap(filename, MapData);
 
-        private float _totalTime;
+        LoadTileMaps();
+    }
 
-        private ITileMap _backgroundTileMap;
-        private ITileMap _foregroundTileMap;
+    public void Update(float deltaTime)
+    {
+        _totalTime += deltaTime;
 
-        public MapData MapData { get; } = new MapData();
-
-        public ITileMap GetBackgroundTileMap() => _backgroundTileMap;
-
-        public ITileMap GetForegroundTileMap() => _foregroundTileMap;
-
-        public void Load(string filename)
+        if (_totalTime >= _switchTimeOfTileAnimations)
         {
-            // Load map data to _mapData
-            MapLoader.LoadMap(filename, MapData);
+            _backgroundTileMap.Update(_totalTime);
+            _foregroundTileMap.Update(_totalTime);
 
-            LoadTileMaps();
+            // TODO: Switch background animation frame
+            _totalTime = 0;
         }
+    }
 
-        public void Update(float deltaTime)
+    public void SetWorldView(RenderTarget target, Vector2f center)
+    {
+        // TODO: this part should be optimized
+        var view = new View
         {
-            _totalTime += deltaTime;
+            Size = new Vector2f(target.Size.X, target.Size.Y),
+            Viewport = new FloatRect(0f, 0f, 1.0f, 1.0f),
+        };
+        view.Zoom(MapData.MapZoomFactor);
 
-            if (_totalTime >= _switchTimeOfTileAnimations)
-            {
-                _backgroundTileMap.Update(_totalTime);
-                _foregroundTileMap.Update(_totalTime);
+        var camCenterX = Math.Max(
+            target.Size.X / 2.0f * MapData.MapZoomFactor,
+            Math.Min(MapData.MapRec.Width * MapData.TileWorldDimension - target.Size.X / 2.0f * MapData.MapZoomFactor, center.X));
 
-                // TODO: Switch background animation frame
-                _totalTime = 0;
-            }
-        }
+        var camCenterY = Math.Max(target.Size.Y / 2.0f * MapData.MapZoomFactor,
+            Math.Min(MapData.MapRec.Height * MapData.TileWorldDimension - target.Size.Y / 2.0f * MapData.MapZoomFactor, center.Y));
 
-        public void SetWorldView(RenderTarget target, Vector2f center)
-        {
-            // TODO: this part should be optimized
-            var view = new View
-            {
-                Size = new Vector2f(target.Size.X, target.Size.Y),
-                Viewport = new FloatRect(0f, 0f, 1.0f, 1.0f),
-            };
-            view.Zoom(MapData.MapZoomFactor);
+        view.Center = new Vector2f(camCenterX, camCenterY);
 
-            var camCenterX = Math.Max(
-                target.Size.X / 2.0f * MapData.MapZoomFactor,
-                Math.Min(MapData.MapRec.Width * MapData.TileWorldDimension - target.Size.X / 2.0f * MapData.MapZoomFactor, center.X));
+        target.SetView(view);
+    }
 
-            var camCenterY = Math.Max(target.Size.Y / 2.0f * MapData.MapZoomFactor,
-                Math.Min(MapData.MapRec.Height * MapData.TileWorldDimension - target.Size.Y / 2.0f * MapData.MapZoomFactor, center.Y));
+    private float Lerp(float value, float start, float end)
+        => start + (end - start) * value;
 
-            view.Center = new Vector2f(camCenterX, camCenterY);
+    private void LoadTileMaps()
+    {
+        _backgroundTileMap = new TileMap();
+        _backgroundTileMap.Load(MapData, MapData.BackgroundTileLayers);
 
-            target.SetView(view);
-        }
-
-        private float Lerp(float value, float start, float end)
-        {
-            return start + (end - start) * value;
-        }
-
-        private void LoadTileMaps()
-        {
-            _backgroundTileMap = new TileMap();
-            _backgroundTileMap.Load(MapData, MapData.BackgroundTileLayers);
-
-            _foregroundTileMap = new TileMap();
-            _foregroundTileMap.Load(MapData, MapData.ForegroundTileLayers);
-        }
+        _foregroundTileMap = new TileMap();
+        _foregroundTileMap.Load(MapData, MapData.ForegroundTileLayers);
     }
 }

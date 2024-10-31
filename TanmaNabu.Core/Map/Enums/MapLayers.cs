@@ -1,12 +1,11 @@
-﻿namespace TanmaNabu.Core.Map
+﻿namespace TanmaNabu.Core.Map;
+
+public enum MapLayers
 {
-    public enum MapLayers
-    {
-        Background,
-        Foreground,
-        AlwaysFront,
-        Colliders,
-        Entities,
-        Objects
-    }
+    Background,
+    Foreground,
+    AlwaysFront,
+    Colliders,
+    Entities,
+    Objects
 }

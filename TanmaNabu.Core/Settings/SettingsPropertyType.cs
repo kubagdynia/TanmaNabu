@@ -1,19 +1,18 @@
-﻿namespace TanmaNabu.Core.Settings
+﻿namespace TanmaNabu.Core.Settings;
+
+public enum SettingsPropertyType
 {
-    public enum SettingsPropertyType
-    {
-        MusicEnabled,
-        SoundEnabled,
-        MusicVolume,
-        SoundVolume,
-        MapsPath,
-        TilesetsPath,
-        TexturesPath,
-        FontsPath,
-        BackgroundsPath,
-        SoundsPath,
-        MusicPath,
-        ImagesPath,
-        TilesetFileExtension
-    }
+    MusicEnabled,
+    SoundEnabled,
+    MusicVolume,
+    SoundVolume,
+    MapsPath,
+    TilesetsPath,
+    TexturesPath,
+    FontsPath,
+    BackgroundsPath,
+    SoundsPath,
+    MusicPath,
+    ImagesPath,
+    TilesetFileExtension
 }

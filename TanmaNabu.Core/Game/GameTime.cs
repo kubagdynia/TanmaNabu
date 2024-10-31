@@ -1,21 +1,20 @@
 ﻿using SFML.System;
 
-namespace TanmaNabu.Core
+namespace TanmaNabu.Core.Game;
+
+public class GameTime
 {
-    public class GameTime
+    private readonly Clock _clock = new();
+
+    public Time ElapsedTime { get; set; }
+
+    internal void Restart()
     {
-        private readonly Clock _clock = new Clock();
+        ElapsedTime = _clock.Restart();
+    }
 
-        public Time ElapsedTime { get; set; }
-
-        internal void Restart()
-        {
-            ElapsedTime = _clock.Restart();
-        }
-
-        internal void SetTime(Time time)
-        {
-            ElapsedTime = time;
-        }
+    internal void SetTime(Time time)
+    {
+        ElapsedTime = time;
     }
 }

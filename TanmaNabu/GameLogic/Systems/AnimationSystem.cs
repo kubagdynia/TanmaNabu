@@ -1,25 +1,17 @@
 ﻿using Entitas;
 using TanmaNabu.GameLogic.Game;
 
-namespace TanmaNabu.GameLogic.Systems
+namespace TanmaNabu.GameLogic.Systems;
+
+class AnimationSystem(Contexts contextses) : IExecuteSystem
 {
-    class AnimationSystem : IExecuteSystem
+    public void Execute()
     {
-        private readonly Contexts _contexts;
+        var animations = contextses.Game.GetEntities(GameMatcher.Animation);
 
-        public AnimationSystem(Contexts contextses)
+        foreach (var animation in animations)
         {
-            _contexts = contextses;
-        }
-
-        public void Execute()
-        {
-            var animations = _contexts.Game.GetEntities(GameMatcher.Animation);
-
-            foreach (var animation in animations)
-            {
-                animation.Animation.UpdateAnimation(_contexts.Game.DeltaTime);
-            }
+            animation.Animation.UpdateAnimation(contextses.Game.DeltaTime);
         }
     }
 }

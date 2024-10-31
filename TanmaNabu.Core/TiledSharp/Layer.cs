@@ -6,119 +6,123 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Xml.Linq;
 
-namespace TiledSharp
+namespace TiledSharp;
+
+public class TmxLayer : ITmxLayer
 {
-    public class TmxLayer : ITmxLayer
+    public string Name { get; private set; }
+    public double Opacity { get; private set; }
+    public bool Visible { get; private set; }
+    public double? OffsetX { get; private set; }
+    public double? OffsetY { get; private set; }
+
+    public Collection<TmxLayerTile> Tiles { get; private set; }
+    public PropertyDict Properties { get; private set; }
+
+    public TmxLayer(XElement xLayer, int width, int height)
     {
-        public string Name { get; private set; }
-        public double Opacity { get; private set; }
-        public bool Visible { get; private set; }
-        public double? OffsetX { get; private set; }
-        public double? OffsetY { get; private set; }
+        Name = (string)xLayer.Attribute("name");
+        Opacity = (double?)xLayer.Attribute("opacity") ?? 1.0;
+        Visible = (bool?)xLayer.Attribute("visible") ?? true;
+        OffsetX = (double?)xLayer.Attribute("offsetx") ?? 0.0;
+        OffsetY = (double?)xLayer.Attribute("offsety") ?? 0.0;
 
-        public Collection<TmxLayerTile> Tiles { get; private set; }
-        public PropertyDict Properties { get; private set; }
+        var xData = xLayer.Element("data");
+        var encoding = xData is null ? null : (string)xData.Attribute("encoding");
 
-        public TmxLayer(XElement xLayer, int width, int height)
+        Tiles = [];
+
+        switch (encoding)
         {
-            Name = (string)xLayer.Attribute("name");
-            Opacity = (double?)xLayer.Attribute("opacity") ?? 1.0;
-            Visible = (bool?)xLayer.Attribute("visible") ?? true;
-            OffsetX = (double?)xLayer.Attribute("offsetx") ?? 0.0;
-            OffsetY = (double?)xLayer.Attribute("offsety") ?? 0.0;
-
-            XElement xData = xLayer.Element("data");
-            string encoding = (string)xData.Attribute("encoding");
-
-            Tiles = new Collection<TmxLayerTile>();
-
-            if (encoding == "base64")
+            case "base64":
             {
-                TmxBase64Data decodedStream = new TmxBase64Data(xData);
-                Stream stream = decodedStream.Data;
+                var decodedStream = new TmxBase64Data(xData);
+                var stream = decodedStream.Data;
 
-                using (BinaryReader br = new BinaryReader(stream))
-                {
-                    for (int j = 0; j < height; j++)
-                        for (int i = 0; i < width; i++)
-                            Tiles.Add(new TmxLayerTile(br.ReadUInt32(), i, j));
-
-                }
+                using var br = new BinaryReader(stream);
+                for (var j = 0; j < height; j++)
+                for (var i = 0; i < width; i++)
+                    Tiles.Add(new TmxLayerTile(br.ReadUInt32(), i, j));
+                break;
             }
-            else if (encoding == "csv")
+            case "csv":
             {
-                string csvData = xData.Value;
-                int k = 0;
-                foreach (string s in csvData.Split(','))
+                var csvData = xData.Value;
+                var k = 0;
+                foreach (var s in csvData.Split(','))
                 {
-                    uint gid = uint.Parse(s.Trim());
-                    int x = k % width;
-                    int y = k / width;
+                    var gid = uint.Parse(s.Trim());
+                    var x = k % width;
+                    var y = k / width;
                     Tiles.Add(new TmxLayerTile(gid, x, y));
                     k++;
                 }
-            }
-            else if (encoding == null)
-            {
-                int k = 0;
-                foreach (XElement e in xData.Elements("tile"))
-                {
-                    uint gid = (uint?)e.Attribute("gid") ?? 0;
 
-                    int x = k % width;
-                    int y = k / width;
+                break;
+            }
+            case null:
+            {
+                var titleData = xData?.Elements("tile");
+                if (titleData is null) throw new Exception("TmxLayer: Missing data element.");
+                
+                var k = 0;
+                foreach (var e in xData.Elements("tile"))
+                {
+                    var gid = (uint?)e.Attribute("gid") ?? 0;
+
+                    var x = k % width;
+                    var y = k / width;
 
                     Tiles.Add(new TmxLayerTile(gid, x, y));
                     k++;
                 }
+
+                break;
             }
-            else
-            {
+            default:
                 throw new Exception("TmxLayer: Unknown encoding.");
-            }
-
-            Properties = new PropertyDict(xLayer.Element("properties"));
         }
+
+        Properties = new PropertyDict(xLayer.Element("properties"));
     }
+}
 
-    public class TmxLayerTile
+public class TmxLayerTile
+{
+    // Tile flip bit flags
+    const uint FlippedHorizontallyFlag = 0x80000000;
+    const uint FlippedVerticallyFlag = 0x40000000;
+    const uint FlippedDiagonallyFlag = 0x20000000;
+
+    public int Gid { get; private set; }
+    public int X { get; private set; }
+    public int Y { get; private set; }
+    public bool HorizontalFlip { get; private set; }
+    public bool VerticalFlip { get; private set; }
+    public bool DiagonalFlip { get; private set; }
+    public TmxLayerTile(uint id, int x, int y)
     {
-        // Tile flip bit flags
-        const uint FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
-        const uint FLIPPED_VERTICALLY_FLAG = 0x40000000;
-        const uint FLIPPED_DIAGONALLY_FLAG = 0x20000000;
+        uint rawGid = id;
+        X = x;
+        Y = y;
 
-        public int Gid { get; private set; }
-        public int X { get; private set; }
-        public int Y { get; private set; }
-        public bool HorizontalFlip { get; private set; }
-        public bool VerticalFlip { get; private set; }
-        public bool DiagonalFlip { get; private set; }
-        public TmxLayerTile(uint id, int x, int y)
-        {
-            uint rawGid = id;
-            X = x;
-            Y = y;
+        // Scan for tile flip bit flags
 
-            // Scan for tile flip bit flags
-            bool flip;
+        var flip = (rawGid & FlippedHorizontallyFlag) != 0;
+        HorizontalFlip = flip;
 
-            flip = (rawGid & FLIPPED_HORIZONTALLY_FLAG) != 0;
-            HorizontalFlip = flip ? true : false;
+        flip = (rawGid & FlippedVerticallyFlag) != 0;
+        VerticalFlip = flip;
 
-            flip = (rawGid & FLIPPED_VERTICALLY_FLAG) != 0;
-            VerticalFlip = flip ? true : false;
+        flip = (rawGid & FlippedDiagonallyFlag) != 0;
+        DiagonalFlip = flip;
 
-            flip = (rawGid & FLIPPED_DIAGONALLY_FLAG) != 0;
-            DiagonalFlip = flip ? true : false;
+        // Zero the bit flags
+        rawGid &= ~(FlippedHorizontallyFlag |
+                    FlippedVerticallyFlag |
+                    FlippedDiagonallyFlag);
 
-            // Zero the bit flags
-            rawGid &= ~(FLIPPED_HORIZONTALLY_FLAG |
-                        FLIPPED_VERTICALLY_FLAG |
-                        FLIPPED_DIAGONALLY_FLAG);
-
-            // Save GID remainder to int
-            Gid = (int)rawGid;
-        }
+        // Save GID remainder to int
+        Gid = (int)rawGid;
     }
 }

@@ -1,9 +1,8 @@
-﻿namespace TanmaNabu.Core.Map
+﻿namespace TanmaNabu.Core.Map;
+
+public enum MapCustomProperties
 {
-    public enum MapCustomProperties
-    {
-        BackgroundImagePath,
-        BackgroundMusicPath,
-        TilesetsPath
-    }
+    BackgroundImagePath,
+    BackgroundMusicPath,
+    TilesetsPath
 }

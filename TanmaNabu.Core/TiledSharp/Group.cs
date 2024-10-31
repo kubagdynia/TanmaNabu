@@ -5,72 +5,71 @@ using System;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace TiledSharp
+namespace TiledSharp;
+
+public class TmxGroup : ITmxLayer
 {
-    public class TmxGroup : ITmxLayer
+    public string Name { get; private set; }
+
+    public double Opacity { get; private set; }
+    public bool Visible { get; private set; }
+    public double? OffsetX { get; private set; }
+    public double? OffsetY { get; private set; }
+
+    public TmxList<ITmxLayer> Layers { get; private set; }
+
+    public TmxList<TmxLayer> TileLayers { get; private set; }
+    public TmxList<TmxObjectGroup> ObjectGroups { get; private set; }
+    public TmxList<TmxImageLayer> ImageLayers { get; private set; }
+    public TmxList<TmxGroup> Groups { get; private set; }
+    public PropertyDict Properties { get; private set; }
+
+    public TmxGroup(XElement xGroup, int width, int height, string tmxDirectory)
     {
-        public string Name { get; private set; }
+        Name = (string)xGroup.Attribute("name") ?? String.Empty;
+        Opacity = (double?)xGroup.Attribute("opacity") ?? 1.0;
+        Visible = (bool?)xGroup.Attribute("visible") ?? true;
+        OffsetX = (double?)xGroup.Attribute("offsetx") ?? 0.0;
+        OffsetY = (double?)xGroup.Attribute("offsety") ?? 0.0;
 
-        public double Opacity { get; private set; }
-        public bool Visible { get; private set; }
-        public double? OffsetX { get; private set; }
-        public double? OffsetY { get; private set; }
+        Properties = new PropertyDict(xGroup.Element("properties"));
 
-        public TmxList<ITmxLayer> Layers { get; private set; }
+        Layers = [];
+        TileLayers = [];
+        ObjectGroups = [];
+        ImageLayers = [];
+        Groups = [];
 
-        public TmxList<TmxLayer> TileLayers { get; private set; }
-        public TmxList<TmxObjectGroup> ObjectGroups { get; private set; }
-        public TmxList<TmxImageLayer> ImageLayers { get; private set; }
-        public TmxList<TmxGroup> Groups { get; private set; }
-        public PropertyDict Properties { get; private set; }
-
-        public TmxGroup(XElement xGroup, int width, int height, string tmxDirectory)
+        foreach (XElement element in xGroup.Elements().Where(x => x.Name == "layer" || x.Name == "objectgroup" || x.Name == "imagelayer" || x.Name == "group"))
         {
-            Name = (string)xGroup.Attribute("name") ?? String.Empty;
-            Opacity = (double?)xGroup.Attribute("opacity") ?? 1.0;
-            Visible = (bool?)xGroup.Attribute("visible") ?? true;
-            OffsetX = (double?)xGroup.Attribute("offsetx") ?? 0.0;
-            OffsetY = (double?)xGroup.Attribute("offsety") ?? 0.0;
-
-            Properties = new PropertyDict(xGroup.Element("properties"));
-
-            Layers = new TmxList<ITmxLayer>();
-            TileLayers = new TmxList<TmxLayer>();
-            ObjectGroups = new TmxList<TmxObjectGroup>();
-            ImageLayers = new TmxList<TmxImageLayer>();
-            Groups = new TmxList<TmxGroup>();
-
-            foreach (XElement element in xGroup.Elements().Where(x => x.Name == "layer" || x.Name == "objectgroup" || x.Name == "imagelayer" || x.Name == "group"))
+            switch (element.Name.LocalName)
             {
-                switch (element.Name.LocalName)
-                {
-                    case "layer":
-                        TmxLayer tileLayer = new TmxLayer(element, width, height);
-                        Layers.Add(tileLayer);
-                        TileLayers.Add(tileLayer);
-                        break;
+                case "layer":
+                    var tileLayer = new TmxLayer(element, width, height);
+                    Layers.Add(tileLayer);
+                    TileLayers.Add(tileLayer);
+                    break;
 
-                    case "objectgroup":
-                        TmxObjectGroup objectgroup = new TmxObjectGroup(element);
-                        Layers.Add(objectgroup);
-                        ObjectGroups.Add(objectgroup);
-                        break;
+                case "objectgroup":
+                    var objectgroup = new TmxObjectGroup(element);
+                    Layers.Add(objectgroup);
+                    ObjectGroups.Add(objectgroup);
+                    break;
 
-                    case "imagelayer":
-                        TmxImageLayer imagelayer = new TmxImageLayer(element, tmxDirectory);
-                        Layers.Add(imagelayer);
-                        ImageLayers.Add(imagelayer);
-                        break;
+                case "imagelayer":
+                    var imagelayer = new TmxImageLayer(element, tmxDirectory);
+                    Layers.Add(imagelayer);
+                    ImageLayers.Add(imagelayer);
+                    break;
 
-                    case "group":
-                        TmxGroup group = new TmxGroup(element, width, height, tmxDirectory);
-                        Layers.Add(group);
-                        Groups.Add(group);
-                        break;
+                case "group":
+                    var group = new TmxGroup(element, width, height, tmxDirectory);
+                    Layers.Add(group);
+                    Groups.Add(group);
+                    break;
 
-                    default:
-                        throw new InvalidOperationException();
-                }
+                default:
+                    throw new InvalidOperationException();
             }
         }
     }
