@@ -17,7 +17,7 @@ public static class GameComponentsLookup
     public const int TotalComponents = 8;
 
     public static readonly string[] ComponentNames =
-    {
+    [
         nameof(DebugMessage),
         nameof(Player),
         nameof(Position),
@@ -26,10 +26,10 @@ public static class GameComponentsLookup
         nameof(AnimationType),
         nameof(Animation),
         nameof(Collision)
-    };
+    ];
 
     public static readonly Type[] ComponentTypes =
-    {
+    [
         typeof(DebugMessageComponent),
         typeof(PlayerComponent),
         typeof(PositionComponent),
@@ -38,5 +38,5 @@ public static class GameComponentsLookup
         typeof(AnimationTypeComponent),
         typeof(AnimationComponent),
         typeof(CollisionComponent)
-    };
+    ];
 }

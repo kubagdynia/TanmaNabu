@@ -29,7 +29,7 @@ public static class GameEntityFactory
 
     private static void CreateEntity(GameContext context, MapEntity mapEntity, MapData mapData)
     {
-        GameEntity entity = context.CreateEntity();
+        var entity = context.CreateEntity();
         entity.AddDebugMessage($"Hello: {mapEntity.Name}, Type: {mapEntity.Type}");
 
         if (mapEntity.IsPlayer)
@@ -49,7 +49,7 @@ public static class GameEntityFactory
 
     private static GameEntity CreatePlayerEntity(GameContext context, Vector2f position, MapData mapData)
     {
-        GameEntity player = context.CreateEntity();
+        var player = context.CreateEntity();
         player.IsPlayer = true;
         player.AddDebugMessage("Hello player 1");
         player.AddPosition(position.X, position.Y);

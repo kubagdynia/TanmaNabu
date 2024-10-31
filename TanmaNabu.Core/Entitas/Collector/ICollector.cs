@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
 
-namespace Entitas
+namespace Entitas;
+
+public interface ICollector
 {
-    public interface ICollector
-    {
-        int Count { get; }
+    int Count { get; }
 
-        void Activate();
-        void Deactivate();
-        void ClearCollectedEntities();
+    void Activate();
+    void Deactivate();
+    void ClearCollectedEntities();
 
-        IEnumerable<TCast> GetCollectedEntities<TCast>() where TCast : class, IEntity;
-    }
+    IEnumerable<TCast> GetCollectedEntities<TCast>() where TCast : class, IEntity;
+}
 
-    public interface ICollector<TEntity> : ICollector where TEntity : class, IEntity
-    {
-        HashSet<TEntity> CollectedEntities { get; }
-    }
+public interface ICollector<TEntity> : ICollector where TEntity : class, IEntity
+{
+    HashSet<TEntity> CollectedEntities { get; }
 }

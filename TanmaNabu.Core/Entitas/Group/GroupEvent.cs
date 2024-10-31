@@ -1,9 +1,8 @@
-﻿namespace Entitas
+﻿namespace Entitas;
+
+public enum GroupEvent : byte
 {
-    public enum GroupEvent : byte
-    {
-        Added,
-        Removed,
-        AddedOrRemoved
-    }
+    Added,
+    Removed,
+    AddedOrRemoved
 }

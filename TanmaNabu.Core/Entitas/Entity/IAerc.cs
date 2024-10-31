@@ -1,9 +1,8 @@
-﻿namespace Entitas
+﻿namespace Entitas;
+
+public interface IAerc
 {
-    public interface IAerc
-    {
-        int RetainCount { get; }
-        void Retain(object owner);
-        void Release(object owner);
-    }
+    int RetainCount { get; }
+    void Retain(object owner);
+    void Release(object owner);
 }

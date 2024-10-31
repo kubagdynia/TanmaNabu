@@ -20,7 +20,7 @@ public sealed class AnimationComponent : IComponent
 
     private List<AnimationFrame> _frames;
 
-    private List<AnimationFrame> Frames => _frames ??= new List<AnimationFrame>();
+    private List<AnimationFrame> Frames => _frames ??= [];
 
     private Sprite Sprite { get; set; }
 
@@ -121,15 +121,15 @@ public sealed class AnimationComponent : IComponent
             return false;
         }
 
-        TmxTileset tileset = AssetManager.Tileset.Get(_tilesetName);
+        var tileset = AssetManager.Tileset.Get(_tilesetName);
 
         if (tileset?.Image == null)
         {
             return false;
         }
 
-        string filename = Path.GetFileName(tileset.Image.Source);
-        string texturePath = GameSettings.GetFullPath(SettingsPropertyType.TexturesPath, filename);
+        var filename = Path.GetFileName(tileset.Image.Source);
+        var texturePath = GameSettings.GetFullPath(SettingsPropertyType.TexturesPath, filename);
 
         AssetManager.Texture.Load(filename, GameSettings.GetFullPath(
             SettingsPropertyType.TexturesPath, filename));            
@@ -146,7 +146,7 @@ public sealed class AnimationComponent : IComponent
             return false;
         }
 
-        TmxTileset tileset = AssetManager.Tileset.Get(_tilesetName);
+        var tileset = AssetManager.Tileset.Get(_tilesetName);
 
         if (tileset?.Image == null || tileset.Tiles == null)
         {
@@ -176,10 +176,10 @@ public sealed class AnimationComponent : IComponent
 
             foreach (var animationFrame in tile.AnimationFrames)
             {
-                int xIndex = animationFrame.Id % tileset.Columns.Value;
-                int yIndex = animationFrame.Id / tileset.Columns.Value;
+                var xIndex = animationFrame.Id % tileset.Columns.Value;
+                var yIndex = animationFrame.Id / tileset.Columns.Value;
 
-                AnimationFrame frame = new AnimationFrame(
+                var frame = new AnimationFrame(
                     animationFrame.Id,
                     animationFrame.Duration,
                     animationType,
@@ -201,7 +201,7 @@ public sealed class AnimationComponent : IComponent
     private void SetDefaultIdleFrame()
     {
         // Set default idle frame
-        AnimationFrame idleFrame = Frames.FirstOrDefault(x => x.AnimationType == AnimationType.Idle);
+        var idleFrame = Frames.FirstOrDefault(x => x.AnimationType == AnimationType.Idle);
 
         // If idle frame is not set try to set first down walk frame
         if (idleFrame == null)

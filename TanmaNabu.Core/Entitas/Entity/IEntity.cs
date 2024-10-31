@@ -1,62 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Entitas
+namespace Entitas;
+
+public delegate void EntityComponentChanged(
+    IEntity entity, int index, IComponent component
+);
+
+public delegate void EntityComponentReplaced(
+    IEntity entity, int index, IComponent previousComponent, IComponent newComponent
+);
+
+public delegate void EntityEvent(IEntity entity);
+
+public interface IEntity : IAerc
 {
-    public delegate void EntityComponentChanged(
-        IEntity entity, int index, IComponent component
-    );
+    event EntityComponentChanged OnComponentAdded;
+    event EntityComponentChanged OnComponentRemoved;
+    event EntityComponentReplaced OnComponentReplaced;
+    event EntityEvent OnEntityReleased;
+    event EntityEvent OnDestroyEntity;
 
-    public delegate void EntityComponentReplaced(
-        IEntity entity, int index, IComponent previousComponent, IComponent newComponent
-    );
+    int TotalComponents { get; }
+    int CreationIndex { get; }
+    bool IsEnabled { get; }
 
-    public delegate void EntityEvent(IEntity entity);
+    Stack<IComponent>[] ComponentPools { get; }
+    ContextInfo ContextInfo { get; }
+    IAerc Aerc { get; }
 
-    public interface IEntity : IAerc
-    {
-        event EntityComponentChanged OnComponentAdded;
-        event EntityComponentChanged OnComponentRemoved;
-        event EntityComponentReplaced OnComponentReplaced;
-        event EntityEvent OnEntityReleased;
-        event EntityEvent OnDestroyEntity;
+    void Initialize(int creationIndex,
+        int totalComponents,
+        Stack<IComponent>[] componentPools,
+        ContextInfo contextInfo = null,
+        IAerc aerc = null);
 
-        int TotalComponents { get; }
-        int CreationIndex { get; }
-        bool IsEnabled { get; }
+    void Reactivate(int creationIndex);
 
-        Stack<IComponent>[] ComponentPools { get; }
-        ContextInfo ContextInfo { get; }
-        IAerc Aerc { get; }
+    void AddComponent(int index, IComponent component);
+    void RemoveComponent(int index);
+    void ReplaceComponent(int index, IComponent component);
 
-        void Initialize(int creationIndex,
-            int totalComponents,
-            Stack<IComponent>[] componentPools,
-            ContextInfo contextInfo = null,
-            IAerc aerc = null);
+    IComponent GetComponent(int index);
+    IComponent[] GetComponents();
+    int[] GetComponentIndices();
 
-        void Reactivate(int creationIndex);
+    bool HasComponent(int index);
+    bool HasComponents(int[] indices);
+    bool HasAnyComponent(int[] indices);
 
-        void AddComponent(int index, IComponent component);
-        void RemoveComponent(int index);
-        void ReplaceComponent(int index, IComponent component);
+    void RemoveAllComponents();
 
-        IComponent GetComponent(int index);
-        IComponent[] GetComponents();
-        int[] GetComponentIndices();
+    Stack<IComponent> GetComponentPool(int index);
+    IComponent CreateComponent(int index, Type type);
+    T CreateComponent<T>(int index) where T : new();
 
-        bool HasComponent(int index);
-        bool HasComponents(int[] indices);
-        bool HasAnyComponent(int[] indices);
-
-        void RemoveAllComponents();
-
-        Stack<IComponent> GetComponentPool(int index);
-        IComponent CreateComponent(int index, Type type);
-        T CreateComponent<T>(int index) where T : new();
-
-        void Destroy();
-        void InternalDestroy();
-        void RemoveAllOnEntityReleasedHandlers();
-    }
+    void Destroy();
+    void InternalDestroy();
+    void RemoveAllOnEntityReleasedHandlers();
 }

@@ -77,13 +77,13 @@ public class InputSystem : IExecuteSystem
         {
             if (x != 0 || y != 0)
             {
-                int entitySpeed = entity.Movement.Speed;
+                var entitySpeed = entity.Movement.Speed;
 
                 x *= _contexts.GameTime.ElapsedTime.AsSeconds() * entitySpeed;
                 y *= _contexts.GameTime.ElapsedTime.AsSeconds() * entitySpeed;
 
-                FloatRect spriteRect = entity.Animation.GetSpriteGlobalBounds();
-                int tileId = entity.Animation.GetCurrentTiledId();
+                var spriteRect = entity.Animation.GetSpriteGlobalBounds();
+                var tileId = entity.Animation.GetCurrentTiledId();
 
                 if (entity.HasCollision)
                 {
@@ -91,7 +91,7 @@ public class InputSystem : IExecuteSystem
 
                     var collisions = _contexts.GameMap.MapData.GetCollisionsNearby(spriteCollisionRect, _contexts.GameMap.MapData.CollisionNearbyDistance);
 
-                    foreach (Core.DataStructures.IntRect collsionRect in collisions)
+                    foreach (var collsionRect in collisions)
                     {
                         if (collsionRect.Intersects(spriteCollisionRect))
                         {
@@ -104,34 +104,23 @@ public class InputSystem : IExecuteSystem
             }
         }
 
-        if (entity.HasAnimationType)
+        if (!entity.HasAnimationType) return;
+        
+        var animType = x switch
         {
-            AnimationType animType;
-            if (x < 0)
+            < 0 => AnimationType.WalkLeft,
+            > 0 => AnimationType.WalkRight,
+            _ => y switch
             {
-                animType = AnimationType.WalkLeft;
+                < 0 => AnimationType.WalkUp,
+                > 0 => AnimationType.WalkDown,
+                _ => AnimationType.Idle
             }
-            else if (x > 0)
-            {
-                animType = AnimationType.WalkRight;
-            }
-            else if (y < 0)
-            {
-                animType = AnimationType.WalkUp;
-            }
-            else if (y > 0)
-            {
-                animType = AnimationType.WalkDown;
-            }
-            else
-            {
-                animType = AnimationType.Idle;
-            }
+        };
 
-            if (entity.AnimationType.AnimationType != animType)
-            {
-                entity.ReplaceAnimationType(animType);
-            }
+        if (entity.AnimationType.AnimationType != animType)
+        {
+            entity.ReplaceAnimationType(animType);
         }
     }
 }
