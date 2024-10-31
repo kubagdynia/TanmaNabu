@@ -1,9 +1,8 @@
 ﻿using SFML.Graphics;
 
-namespace TanmaNabu.Core.Map
+namespace TanmaNabu.Core.Map;
+
+public class MapLayer
 {
-    public class MapLayer
-    {
-        public Vertex[] VerticesLayer { get; set; }
-    }
+    public Vertex[] VerticesLayer { get; set; }
 }

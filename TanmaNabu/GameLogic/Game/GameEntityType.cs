@@ -1,7 +1,6 @@
-﻿namespace TanmaNabu.GameLogic.Game
+﻿namespace TanmaNabu.GameLogic.Game;
+
+public enum GameEntityType
 {
-    public enum GameEntityType
-    {
-        Player = 0
-    }
+    Player = 0
 }

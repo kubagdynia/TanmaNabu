@@ -1,14 +1,13 @@
 ﻿using Entitas;
 
-namespace TanmaNabu.GameLogic.Components
-{
-    public sealed class CharacterComponent : IComponent
-    {
-        public ObjectType ObjectType;
+namespace TanmaNabu.GameLogic.Components;
 
-        public override string ToString()
-        {
-            return $"Character(ObjectType: {ObjectType}";
-        }
+public sealed class CharacterComponent : IComponent
+{
+    public ObjectType ObjectType;
+
+    public override string ToString()
+    {
+        return $"Character(ObjectType: {ObjectType}";
     }
 }

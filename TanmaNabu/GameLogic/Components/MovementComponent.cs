@@ -1,14 +1,13 @@
 ﻿using Entitas;
 
-namespace TanmaNabu.GameLogic.Components
-{
-    public sealed class MovementComponent : IComponent
-    {
-        public int Speed { get; set; }
+namespace TanmaNabu.GameLogic.Components;
 
-        public override string ToString()
-        {
-            return $"Movement(Speed: {Speed})";
-        }
+public sealed class MovementComponent : IComponent
+{
+    public int Speed { get; set; }
+
+    public override string ToString()
+    {
+        return $"Movement(Speed: {Speed})";
     }
 }

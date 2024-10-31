@@ -4,57 +4,56 @@ using TanmaNabu.Core.Extensions;
 using TanmaNabu.Core.Map;
 using TanmaNabu.GameLogic.Game.Exceptions;
 
-namespace TanmaNabu.GameLogic.Game
+namespace TanmaNabu.GameLogic.Game;
+
+public static class GameEntityFactory
 {
-    public static class GameEntityFactory
+    public static GameEntity Get(GameContext context, GameEntityType gameEntityType, int positionX, int positionY, MapData mapData)
     {
-        public static GameEntity Get(GameContext context, GameEntityType gameEntityType, int positionX, int positionY, MapData mapData)
+        switch (gameEntityType)
         {
-            switch (gameEntityType)
-            {
-                case GameEntityType.Player:
-                    return CreatePlayerEntity(context, new Vector2f(positionX, positionY), mapData);
-                default:
-                    throw new GameInvalidEnumArgumentException("Unrecognized GameEntityType value", gameEntityType.AllowedValues());
-            }
+            case GameEntityType.Player:
+                return CreatePlayerEntity(context, new Vector2f(positionX, positionY), mapData);
+            default:
+                throw new GameInvalidEnumArgumentException("Unrecognized GameEntityType value", gameEntityType.AllowedValues());
+        }
+    }
+
+    public static void AddAllEntities(GameContext context, MapData mapData)
+    {
+        foreach (MapEntity item in mapData.MapEntities)
+        {
+            CreateEntity(context, item, mapData);
+        }
+    }
+
+    private static void CreateEntity(GameContext context, MapEntity mapEntity, MapData mapData)
+    {
+        GameEntity entity = context.CreateEntity();
+        entity.AddDebugMessage($"Hello: {mapEntity.Name}, Type: {mapEntity.Type}");
+
+        if (mapEntity.IsPlayer)
+        {
+            entity.IsPlayer = true;
         }
 
-        public static void AddAllEntities(GameContext context, MapData mapData)
-        {
-            foreach (MapEntity item in mapData.MapEntities)
-            {
-                CreateEntity(context, item, mapData);
-            }
-        }
+        var position = new Point2(mapEntity.X + mapEntity.Width / 2, mapEntity.Y + mapEntity.Height / 2) * mapData.TileWorldDimension;
+        entity.AddPosition(position.X, position.Y);
 
-        private static void CreateEntity(GameContext context, MapEntity mapEntity, MapData mapData)
-        {
-            GameEntity entity = context.CreateEntity();
-            entity.AddDebugMessage($"Hello: {mapEntity.Name}, Type: {mapEntity.Type}");
+        entity.AddAnimationType(mapEntity.InitialState);
+        entity.AddAnimation(mapEntity.TilesetName, mapEntity.Type, mapData.SpriteWorldDimension);
+        entity.AddCollision(mapEntity.TilesetName, mapEntity.Type, mapData.SpriteWorldDimension);
+        entity.AddMovement(mapEntity.MovementSpeed);
+        entity.AddCharacter(mapEntity.Type);
+    }
 
-            if (mapEntity.IsPlayer)
-            {
-                entity.IsPlayer = true;
-            }
+    private static GameEntity CreatePlayerEntity(GameContext context, Vector2f position, MapData mapData)
+    {
+        GameEntity player = context.CreateEntity();
+        player.IsPlayer = true;
+        player.AddDebugMessage("Hello player 1");
+        player.AddPosition(position.X, position.Y);
 
-            var position = new Point2(mapEntity.X + mapEntity.Width / 2, mapEntity.Y + mapEntity.Height / 2) * mapData.TileWorldDimension;
-            entity.AddPosition(position.X, position.Y);
-
-            entity.AddAnimationType(mapEntity.InitialState);
-            entity.AddAnimation(mapEntity.TilesetName, mapEntity.Type, mapData.SpriteWorldDimension);
-            entity.AddCollision(mapEntity.TilesetName, mapEntity.Type, mapData.SpriteWorldDimension);
-            entity.AddMovement(mapEntity.MovementSpeed);
-            entity.AddCharacter(mapEntity.Type);
-        }
-
-        private static GameEntity CreatePlayerEntity(GameContext context, Vector2f position, MapData mapData)
-        {
-            GameEntity player = context.CreateEntity();
-            player.IsPlayer = true;
-            player.AddDebugMessage("Hello player 1");
-            player.AddPosition(position.X, position.Y);
-
-            return player;
-        }
+        return player;
     }
 }

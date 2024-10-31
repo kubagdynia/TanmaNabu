@@ -12,210 +12,213 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace TiledSharp
-{
-    public class TmxDocument
-    {
-        public string TmxDirectory { get; private set; }
+namespace TiledSharp;
 
-        public TmxDocument()
+public class TmxDocument
+{
+    public string TmxDirectory { get; private set; } = string.Empty;
+
+    protected XDocument ReadXml(string filepath)
+    {
+        XDocument xDoc = null;
+
+        var asm = Assembly.GetEntryAssembly();
+        if (asm == null)
         {
+            throw new FileNotFoundException($"Resource file {Path.GetFileName(filepath)} not found", filepath);
+        }
+        
+        var manifest = asm.GetManifestResourceNames();
+
+        var fileResPath = filepath.Replace(Path.DirectorySeparatorChar.ToString(), ".");
+        var fileRes = Array.Find(manifest, s => s.EndsWith(fileResPath));
+
+        // If there is a resource in the assembly, load the resource
+        // Otherwise, assume filepath is an explicit path
+        if (fileRes != null)
+        {
+            using (var xmlStream = asm.GetManifestResourceStream(fileRes))
+            {
+                if (xmlStream != null)
+                {
+                    using var reader = XmlReader.Create(xmlStream);
+                    xDoc = XDocument.Load(reader);
+                }
+            }
             TmxDirectory = string.Empty;
         }
-
-        protected XDocument ReadXml(string filepath)
+        else
         {
-            XDocument xDoc;
-
-            Assembly asm = Assembly.GetEntryAssembly();
-            string[] manifest = new string[0];
-
-            if (asm != null)
+            if (!File.Exists(filepath))
             {
-                manifest = asm.GetManifestResourceNames();
+                throw new FileNotFoundException($"Resource file {Path.GetFileName(filepath)} not found", filepath);
             }
 
-            string fileResPath = filepath.Replace(Path.DirectorySeparatorChar.ToString(), ".");
-            string fileRes = Array.Find(manifest, s => s.EndsWith(fileResPath));
-
-            // If there is a resource in the assembly, load the resource
-            // Otherwise, assume filepath is an explicit path
-            if (fileRes != null)
-            {
-                using (Stream xmlStream = asm.GetManifestResourceStream(fileRes))
-                {
-                    using (XmlReader reader = XmlReader.Create(xmlStream))
-                    {
-                        xDoc = XDocument.Load(reader);
-                    }
-                }
-                TmxDirectory = string.Empty;
-            }
-            else
-            {
-                if (!File.Exists(filepath))
-                {
-                    throw new FileNotFoundException($"Resource file {Path.GetFileName(filepath)} not found", filepath);
-                }
-
-                xDoc = XDocument.Load(filepath);
-                TmxDirectory = Path.GetDirectoryName(filepath);
-            }
-
-            return xDoc;
+            xDoc = XDocument.Load(filepath);
+            TmxDirectory = Path.GetDirectoryName(filepath);
         }
+
+        return xDoc;
+    }
+}
+
+public class TmxList<T> : KeyedCollection<string, T> where T : ITmxElement
+{
+    private readonly Dictionary<string, int> _nameCount = new();
+
+    public new void Add(T t)
+    {
+        var tName = t.Name;
+
+        // Rename duplicate entries by appending a number
+        if (Contains(tName))
+        {
+            _nameCount[tName] += 1;
+        }
+        else
+        {
+            _nameCount.Add(tName, 0);
+        }
+        base.Add(t);
     }
 
-    public class TmxList<T> : KeyedCollection<string, T> where T : ITmxElement
+    protected override string GetKeyForItem(T item)
     {
-        private Dictionary<string, int> nameCount = new Dictionary<string, int>();
+        var name = item.Name;
+        var count = _nameCount[name];
 
-        public new void Add(T t)
+        var dupes = 0;
+
+        // For duplicate keys, append a counter
+        // For pathological cases, insert underscores to ensure uniqueness
+        while (Contains(name))
         {
-            string tName = t.Name;
-
-            // Rename duplicate entries by appending a number
-            if (Contains(tName))
-            {
-                nameCount[tName] += 1;
-            }
-            else
-            {
-                nameCount.Add(tName, 0);
-            }
-            base.Add(t);
+            name = name + string.Concat(Enumerable.Repeat("_", dupes)) + count;
+            dupes++;
         }
 
-        protected override string GetKeyForItem(T item)
+        return name;
+    }
+}
+
+[Serializable]
+public class PropertyDict : Dictionary<string, string>
+{
+    public PropertyDict(XContainer xmlProp)
+    {
+        if (xmlProp == null) return;
+
+        foreach (var p in xmlProp.Elements("property"))
         {
-            string name = item.Name;
-            int count = nameCount[name];
-
-            int dupes = 0;
-
-            // For duplicate keys, append a counter
-            // For pathological cases, insert underscores to ensure uniqueness
-            while (Contains(name))
+            string pVal;
+            try
             {
-                name = name + string.Concat(Enumerable.Repeat("_", dupes)) + count.ToString();
-                dupes++;
+                pVal = p.Attribute("value")!.Value;
+            }
+            catch (NullReferenceException)
+            {
+                // Fallback to element value if no "value"
+                pVal = p.Value;
             }
 
-            return name;
+            var pName = p.Attribute("name")!.Value;
+            Add(pName, pVal);
         }
     }
+}
 
-    [Serializable]
-    public class PropertyDict : Dictionary<string, string>
+public class TmxImage
+{
+    public string Source { get; private set; }
+    public string Format { get; private set; }
+    public Stream Data { get; private set; }
+    public TmxColor Trans { get; private set; }
+    public int? Width { get; private set; }
+    public int? Height { get; private set; }
+
+    public TmxImage(XElement xImage, string tmxDir = "")
     {
-        public PropertyDict(XContainer xmlProp)
+        if (xImage == null) return;
+
+        var xSource = xImage.Attribute("source");
+
+        if (xSource != null)
         {
-            if (xmlProp == null) return;
-
-            foreach (XElement p in xmlProp.Elements("property"))
-            {
-                string pval;
-                try
-                {
-                    pval = p.Attribute("value").Value;
-                }
-                catch (NullReferenceException)
-                {
-                    // Fallback to element value if no "value"
-                    pval = p.Value;
-                }
-
-                string pname = p.Attribute("name").Value;
-                Add(pname, pval);
-            }
+            // Append directory if present
+            Source = Path.Combine(tmxDir, ((string)xSource)!);
+        }                
+        else
+        {
+            Format = (string)xImage.Attribute("format");
+            var xData = xImage.Element("data");
+            var decodedStream = new TmxBase64Data(xData);
+            Data = decodedStream.Data;
         }
+
+        Trans = new TmxColor(xImage.Attribute("trans"));
+        Width = (int?)xImage.Attribute("width");
+        Height = (int?)xImage.Attribute("height");
     }
+}
 
-    public class TmxImage
+public class TmxColor
+{
+    public int R { get; private set; }
+    public int G { get; private set; }
+    public int B { get; private set; }
+
+    public TmxColor(XAttribute xColor)
     {
-        public string Source { get; private set; }
-        public string Format { get; private set; }
-        public Stream Data { get; private set; }
-        public TmxColor Trans { get; private set; }
-        public int? Width { get; private set; }
-        public int? Height { get; private set; }
+        if (xColor == null) return;
 
-        public TmxImage(XElement xImage, string tmxDir = "")
+        var colorStr = ((string)xColor)!.TrimStart("#".ToCharArray());
+
+        R = int.Parse(colorStr.Substring(0, 2), NumberStyles.HexNumber);
+        G = int.Parse(colorStr.Substring(2, 2), NumberStyles.HexNumber);
+        B = int.Parse(colorStr.Substring(4, 2), NumberStyles.HexNumber);
+    }
+}
+
+public class TmxBase64Data
+{
+    public Stream Data { get; private set; }
+
+    public TmxBase64Data(XElement xData)
+    {
+        if ((string)xData.Attribute("encoding") != "base64")
         {
-            if (xImage == null) return;
-
-            XAttribute xSource = xImage.Attribute("source");
-
-            if (xSource != null)
-            {
-                // Append directory if present
-                Source = Path.Combine(tmxDir, (string)xSource);
-            }                
-            else
-            {
-                Format = (string)xImage.Attribute("format");
-                XElement xData = xImage.Element("data");
-                TmxBase64Data decodedStream = new TmxBase64Data(xData);
-                Data = decodedStream.Data;
-            }
-
-            Trans = new TmxColor(xImage.Attribute("trans"));
-            Width = (int?)xImage.Attribute("width");
-            Height = (int?)xImage.Attribute("height");
+            throw new Exception("TmxBase64Data: Only Base64-encoded data is supported.");
         }
-    }
 
-    public class TmxColor
-    {
-        public int R { get; private set; }
-        public int G { get; private set; }
-        public int B { get; private set; }
+        byte[] rawData = Convert.FromBase64String(xData.Value);
+        Data = new MemoryStream(rawData, false);
 
-        public TmxColor(XAttribute xColor)
+        var compression = (string)xData.Attribute("compression");
+        switch (compression)
         {
-            if (xColor == null) return;
-
-            string colorStr = ((string)xColor).TrimStart("#".ToCharArray());
-
-            R = int.Parse(colorStr.Substring(0, 2), NumberStyles.HexNumber);
-            G = int.Parse(colorStr.Substring(2, 2), NumberStyles.HexNumber);
-            B = int.Parse(colorStr.Substring(4, 2), NumberStyles.HexNumber);
-        }
-    }
-
-    public class TmxBase64Data
-    {
-        public Stream Data { get; private set; }
-
-        public TmxBase64Data(XElement xData)
-        {
-            if ((string)xData.Attribute("encoding") != "base64")
-            {
-                throw new Exception("TmxBase64Data: Only Base64-encoded data is supported.");
-            }
-
-            byte[] rawData = Convert.FromBase64String(xData.Value);
-            Data = new MemoryStream(rawData, false);
-
-            string compression = (string)xData.Attribute("compression");
-            if (compression == "gzip")
-            {
+            case "gzip":
                 Data = new GZipStream(Data, CompressionMode.Decompress);
-            }
-            else if (compression == "zlib")
+                break;
+            case "zlib":
             {
                 // Strip 2-byte header and 4-byte checksum
                 // TODO: Validate header here
-                int bodyLength = rawData.Length - 6;
-                byte[] bodyData = new byte[bodyLength];
+                var bodyLength = rawData.Length - 6;
+                var bodyData = new byte[bodyLength];
                 Array.Copy(rawData, 2, bodyData, 0, bodyLength);
 
-                MemoryStream bodyStream = new MemoryStream(bodyData, false);
+                var bodyStream = new MemoryStream(bodyData, false);
                 Data = new DeflateStream(bodyStream, CompressionMode.Decompress);
+                break;
             }
-            else if (compression != null)
+            default:
             {
-                throw new Exception("TmxBase64Data: Unknown compression.");
+                if (compression != null)
+                {
+                    throw new Exception("TmxBase64Data: Unknown compression.");
+                }
+
+                break;
             }
         }
     }

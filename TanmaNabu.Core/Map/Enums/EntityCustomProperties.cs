@@ -1,11 +1,10 @@
-﻿namespace TanmaNabu.Core.Map
+﻿namespace TanmaNabu.Core.Map;
+
+public enum EntityCustomProperties
 {
-    public enum EntityCustomProperties
-    {
-        InitialState,
-        MovementSpeed,
-        TilesetName,
-        ObjectType,
-        IsPlayer
-    }
+    InitialState,
+    MovementSpeed,
+    TilesetName,
+    ObjectType,
+    IsPlayer
 }

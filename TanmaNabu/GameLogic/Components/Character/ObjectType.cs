@@ -1,12 +1,11 @@
-﻿namespace TanmaNabu.GameLogic.Components
+﻿namespace TanmaNabu.GameLogic.Components;
+
+public enum ObjectType
 {
-    public enum ObjectType
-    {
-        Sara,
-        Skeleton,
-        Ghost,
-        Bat,
-        Slime,
-        Bug
-    }
+    Sara,
+    Skeleton,
+    Ghost,
+    Bat,
+    Slime,
+    Bug
 }
