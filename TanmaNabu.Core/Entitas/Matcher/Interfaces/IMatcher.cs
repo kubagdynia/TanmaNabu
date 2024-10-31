@@ -1,8 +1,7 @@
-﻿namespace Entitas
+﻿namespace Entitas;
+
+public interface IMatcher<in TEntity> where TEntity : class, IEntity
 {
-    public interface IMatcher<TEntity> where TEntity : class, IEntity
-    {
-        int[] Indices { get; }
-        bool Matches(TEntity entity);
-    }
+    int[] Indices { get; }
+    bool Matches(TEntity entity);
 }

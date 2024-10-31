@@ -1,7 +1,6 @@
-﻿namespace Entitas
+﻿namespace Entitas;
+
+public interface IContexts
 {
-    public interface IContexts
-    {
-        IContext[] AllContexts { get; }
-    }
+    IContext[] AllContexts { get; }
 }

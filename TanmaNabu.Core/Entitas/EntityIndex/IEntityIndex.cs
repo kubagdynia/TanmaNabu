@@ -1,10 +1,9 @@
-﻿namespace Entitas
-{
-    public interface IEntityIndex
-    {
-        string Name { get; }
+﻿namespace Entitas;
 
-        void Activate();
-        void Deactivate();
-    }
+public interface IEntityIndex
+{
+    string Name { get; }
+
+    void Activate();
+    void Deactivate();
 }

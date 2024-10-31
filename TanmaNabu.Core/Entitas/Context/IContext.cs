@@ -1,51 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace Entitas
+namespace Entitas;
+
+public delegate void ContextEntityChanged(IContext context, IEntity entity);
+public delegate void ContextGroupChanged(IContext context, IGroup group);
+
+public interface IContext
 {
-    public delegate void ContextEntityChanged(IContext context, IEntity entity);
-    public delegate void ContextGroupChanged(IContext context, IGroup group);
+    event ContextEntityChanged OnEntityCreated;
+    event ContextEntityChanged OnEntityWillBeDestroyed;
+    event ContextEntityChanged OnEntityDestroyed;
 
-    public interface IContext
-    {
-        event ContextEntityChanged OnEntityCreated;
-        event ContextEntityChanged OnEntityWillBeDestroyed;
-        event ContextEntityChanged OnEntityDestroyed;
+    event ContextGroupChanged OnGroupCreated;
 
-        event ContextGroupChanged OnGroupCreated;
+    int TotalComponents { get; }
 
-        int TotalComponents { get; }
+    Stack<IComponent>[] ComponentPools { get; }
+    ContextInfo ContextInfo { get; }
 
-        Stack<IComponent>[] ComponentPools { get; }
-        ContextInfo ContextInfo { get; }
+    int Count { get; }
+    int ReusableEntitiesCount { get; }
+    int RetainedEntitiesCount { get; }
 
-        int Count { get; }
-        int ReusableEntitiesCount { get; }
-        int RetainedEntitiesCount { get; }
+    void DestroyAllEntities();
 
-        void DestroyAllEntities();
+    void AddEntityIndex(IEntityIndex entityIndex);
+    IEntityIndex GetEntityIndex(string name);
 
-        void AddEntityIndex(IEntityIndex entityIndex);
-        IEntityIndex GetEntityIndex(string name);
+    void ResetCreationIndex();
+    void ClearComponentPool(int index);
+    void ClearComponentPools();
+    void RemoveAllEventHandlers();
+    void Reset();
+}
 
-        void ResetCreationIndex();
-        void ClearComponentPool(int index);
-        void ClearComponentPools();
-        void RemoveAllEventHandlers();
-        void Reset();
-    }
+public interface IContext<TEntity> : IContext where TEntity : class, IEntity
+{
+    TEntity CreateEntity();
 
-    public interface IContext<TEntity> : IContext where TEntity : class, IEntity
-    {
-        TEntity CreateEntity();
-
-        bool HasEntity(TEntity entity);
+    bool HasEntity(TEntity entity);
         
-        TEntity[] GetEntities();
+    TEntity[] GetEntities();
         
-        TEntity[] GetEntities(IMatcher<TEntity> matcher);
+    TEntity[] GetEntities(IMatcher<TEntity> matcher);
 
-        IGroup<TEntity> GetGroup(IMatcher<TEntity> matcher);
-    }
+    IGroup<TEntity> GetGroup(IMatcher<TEntity> matcher);
 }

@@ -1,18 +1,10 @@
 ﻿using System;
 
-namespace Entitas
-{
-    public class ContextInfo
-    {
-        public readonly string Name;
-        public readonly string[] ComponentNames;
-        public readonly Type[] ComponentTypes;
+namespace Entitas;
 
-        public ContextInfo(string name, string[] componentNames, Type[] componentTypes)
-        {
-            Name = name;
-            ComponentNames = componentNames;
-            ComponentTypes = componentTypes;
-        }
-    }
+public class ContextInfo(string name, string[] componentNames, Type[] componentTypes)
+{
+    public readonly string Name = name;
+    public readonly string[] ComponentNames = componentNames;
+    public readonly Type[] ComponentTypes = componentTypes;
 }

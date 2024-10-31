@@ -1,9 +1,8 @@
-﻿namespace Entitas
+﻿namespace Entitas;
+
+public interface IReactiveSystem : IExecuteSystem
 {
-    public interface IReactiveSystem : IExecuteSystem
-    {
-        void Activate();
-        void Deactivate();
-        void Clear();
-    }
+    void Activate();
+    void Deactivate();
+    void Clear();
 }

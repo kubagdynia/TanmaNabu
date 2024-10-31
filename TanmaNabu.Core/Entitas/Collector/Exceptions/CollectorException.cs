@@ -1,10 +1,3 @@
-﻿namespace Entitas
-{
-    public class CollectorException : BaseEntitasException
-    {
-        public CollectorException(string message, string hint)
-            : base(message, hint)
-        {
-        }
-    }
-}
+﻿namespace Entitas;
+
+public class CollectorException(string message, string hint) : BaseEntitasException(message, hint);

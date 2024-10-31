@@ -1,10 +1,3 @@
-﻿namespace Entitas
-{
-    public class EntityIndexException : BaseEntitasException
-    {
-        public EntityIndexException(string message, string hint)
-            : base(message, hint)
-        {
-        }
-    }
-}
+﻿namespace Entitas;
+
+public class EntityIndexException(string message, string hint) : BaseEntitasException(message, hint);

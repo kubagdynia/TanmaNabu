@@ -1,44 +1,43 @@
 ﻿using System.Collections.Generic;
 
-namespace Entitas
+namespace Entitas;
+
+public delegate void GroupChanged<TEntity>(
+    IGroup<TEntity> group, TEntity entity, int index, IComponent component
+) where TEntity : class, IEntity;
+
+public delegate void GroupUpdated<TEntity>(
+    IGroup<TEntity> group, TEntity entity, int index,
+    IComponent previousComponent, IComponent newComponent
+) where TEntity : class, IEntity;
+
+public interface IGroup
 {
-    public delegate void GroupChanged<TEntity>(
-        IGroup<TEntity> group, TEntity entity, int index, IComponent component
-    ) where TEntity : class, IEntity;
+    int Count { get; }
 
-    public delegate void GroupUpdated<TEntity>(
-        IGroup<TEntity> group, TEntity entity, int index,
-        IComponent previousComponent, IComponent newComponent
-    ) where TEntity : class, IEntity;
+    void RemoveAllEventHandlers();
+}
 
-    public interface IGroup
-    {
-        int Count { get; }
+public interface IGroup<TEntity> : IGroup where TEntity : class, IEntity
+{
+    event GroupChanged<TEntity> OnEntityAdded;
+    event GroupChanged<TEntity> OnEntityRemoved;
+    event GroupUpdated<TEntity> OnEntityUpdated;
 
-        void RemoveAllEventHandlers();
-    }
+    IMatcher<TEntity> Matcher { get; }
 
-    public interface IGroup<TEntity> : IGroup where TEntity : class, IEntity
-    {
-        event GroupChanged<TEntity> OnEntityAdded;
-        event GroupChanged<TEntity> OnEntityRemoved;
-        event GroupUpdated<TEntity> OnEntityUpdated;
+    void HandleEntitySilently(TEntity entity);
+    void HandleEntity(TEntity entity, int index, IComponent component);
+    GroupChanged<TEntity> HandleEntity(TEntity entity);
 
-        IMatcher<TEntity> Matcher { get; }
+    void UpdateEntity(TEntity entity, int index, IComponent previousComponent, IComponent newComponent);
 
-        void HandleEntitySilently(TEntity entity);
-        void HandleEntity(TEntity entity, int index, IComponent component);
-        GroupChanged<TEntity> HandleEntity(TEntity entity);
+    bool ContainsEntity(TEntity entity);
 
-        void UpdateEntity(TEntity entity, int index, IComponent previousComponent, IComponent newComponent);
+    TEntity[] GetEntities();
+    List<TEntity> GetEntities(List<TEntity> buffer);
+    TEntity GetSingleEntity();
 
-        bool ContainsEntity(TEntity entity);
-
-        TEntity[] GetEntities();
-        List<TEntity> GetEntities(List<TEntity> buffer);
-        TEntity GetSingleEntity();
-
-        IEnumerable<TEntity> AsEnumerable();
-        HashSet<TEntity>.Enumerator GetEnumerator();
-    }
+    IEnumerable<TEntity> AsEnumerable();
+    HashSet<TEntity>.Enumerator GetEnumerator();
 }
