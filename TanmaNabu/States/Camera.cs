@@ -16,7 +16,7 @@ public class Camera(RenderTarget renderTarget, Contexts contexts)
 
     public void Update(float deltaTime, GameTime gameTime, float positionX, float positionY)
     {
-        float lerpSpeed = CameraMath.Clamp(gameTime.ElapsedTime.AsMicroseconds() * MoveSpeed, 0, 1);
+        var lerpSpeed = Clamp(gameTime.ElapsedTime.AsMicroseconds() * MoveSpeed, 0, 1);
 
         var view = new View
         {
@@ -29,7 +29,7 @@ public class Camera(RenderTarget renderTarget, Contexts contexts)
 
         var oldPosition = _currentPosition;
 
-        _currentPosition = CameraMath.Lerp(new Vector2f(targetCenter.X, targetCenter.Y), _currentPosition, lerpSpeed);
+        _currentPosition = Lerp(new Vector2f(targetCenter.X, targetCenter.Y), _currentPosition, lerpSpeed);
 
         if (oldPosition.Equals(_currentPosition, 0.1f) && Math.Abs(_currentZoomFactor - contexts.GameMap.MapData.MapZoomFactor) < 0.01f)
         {
@@ -65,17 +65,10 @@ public class Camera(RenderTarget renderTarget, Contexts contexts)
         
         return (targetCenterX, targetCenterY);
     }
-}
 
-internal static class CameraMath
-{
-    public static float Clamp(float value, float min, float max)
-    {
-        return value < min ? min : value > max ? max : value;
-    }
+    private static float Clamp(float value, float min, float max)
+        => value < min ? min : value > max ? max : value;
 
-    public static Vector2f Lerp(Vector2f a, Vector2f b, float t)
-    {
-        return a * t + (1 - t) * b;
-    }
+    private static Vector2f Lerp(Vector2f a, Vector2f b, float t) 
+        => a * t + (1 - t) * b;
 }

@@ -6,39 +6,17 @@ using TanmaNabu.GameLogic.Game;
 
 namespace TanmaNabu.GameLogic.Systems;
 
-public class InputSystem : IExecuteSystem
+public class InputSystem(Contexts contexts) : IExecuteSystem
 {
-    private readonly Contexts _contexts;
-
-    public InputSystem(Contexts contexts)
-    {
-        _contexts = contexts;
-    }
-
     // Runs early every frame
     public void Execute()
     {
-        #region ZOOM
+        Zoom();
+        PlayerMovement();
+    }
 
-        if (Keyboard.IsKeyPressed(Keyboard.Key.PageUp))
-        {
-            _contexts.GameMap.MapData.MapZoomFactor -= 0.01f;
-        }
-
-        if (Keyboard.IsKeyPressed(Keyboard.Key.PageDown))
-        {
-            _contexts.GameMap.MapData.MapZoomFactor += 0.01f;
-        }
-
-        if (Keyboard.IsKeyPressed(Keyboard.Key.Home))
-        {
-            _contexts.GameMap.MapData.MapZoomFactor = 1;
-        }
-
-        #endregion
-
-        #region PLAYER
-
+    private void PlayerMovement()
+    {
         if (Keyboard.IsKeyPressed(Keyboard.Key.Left) || Keyboard.IsKeyPressed(Keyboard.Key.A) ||
             Keyboard.IsKeyPressed(Keyboard.Key.Right) || Keyboard.IsKeyPressed(Keyboard.Key.D) ||
             Keyboard.IsKeyPressed(Keyboard.Key.Up) || Keyboard.IsKeyPressed(Keyboard.Key.W) ||
@@ -65,13 +43,29 @@ public class InputSystem : IExecuteSystem
         {
             ChangePlayerPosition(0, 0);
         }
+    }
 
-        #endregion
+    private void Zoom()
+    {
+        if (Keyboard.IsKeyPressed(Keyboard.Key.PageUp))
+        {
+            contexts.GameMap.MapData.MapZoomFactor -= 0.01f;
+        }
+
+        if (Keyboard.IsKeyPressed(Keyboard.Key.PageDown))
+        {
+            contexts.GameMap.MapData.MapZoomFactor += 0.01f;
+        }
+
+        if (Keyboard.IsKeyPressed(Keyboard.Key.Home))
+        {
+            contexts.GameMap.MapData.MapZoomFactor = 1;
+        }
     }
 
     private void ChangePlayerPosition(float x, float y)
     {
-        var entity = _contexts.Game.GetEntity(GameMatcher.Player);
+        var entity = contexts.Game.GetEntity(GameMatcher.Player);
 
         if (entity.HasMovement)
         {
@@ -79,8 +73,8 @@ public class InputSystem : IExecuteSystem
             {
                 var entitySpeed = entity.Movement.Speed;
 
-                x *= _contexts.GameTime.ElapsedTime.AsSeconds() * entitySpeed;
-                y *= _contexts.GameTime.ElapsedTime.AsSeconds() * entitySpeed;
+                x *= contexts.GameTime.ElapsedTime.AsSeconds() * entitySpeed;
+                y *= contexts.GameTime.ElapsedTime.AsSeconds() * entitySpeed;
 
                 var spriteRect = entity.Animation.GetSpriteGlobalBounds();
                 var tileId = entity.Animation.GetCurrentTiledId();
@@ -89,7 +83,7 @@ public class InputSystem : IExecuteSystem
                 {
                     var spriteCollisionRect = entity.Collision.GetCollisionRectGlobalBounds(tileId, spriteRect, x, y);
 
-                    var collisions = _contexts.GameMap.MapData.GetCollisionsNearby(spriteCollisionRect, _contexts.GameMap.MapData.CollisionNearbyDistance);
+                    var collisions = contexts.GameMap.MapData.GetCollisionsNearby(spriteCollisionRect, contexts.GameMap.MapData.CollisionNearbyDistance);
 
                     foreach (var collsionRect in collisions)
                     {

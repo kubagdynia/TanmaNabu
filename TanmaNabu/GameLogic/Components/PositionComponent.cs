@@ -7,8 +7,5 @@ public sealed class PositionComponent : IComponent
     public float X { get; set; }
     public float Y { get; set; }
 
-    public override string ToString()
-    {
-        return $"Position({X}, {Y})";
-    }
+    public override string ToString() => $"Position({X}, {Y})";
 }

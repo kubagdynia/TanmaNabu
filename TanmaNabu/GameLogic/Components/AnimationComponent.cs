@@ -221,14 +221,11 @@ public sealed class AnimationComponent : IComponent
 
     private void SetSprite()
     {
-        if (Sprite == null)
+        Sprite ??= new Sprite(Texture)
         {
-            Sprite = new Sprite(Texture)
-            {
-                Origin = new Vector2f(CurrentAnimationFrame.Rect.Width / 2, CurrentAnimationFrame.Rect.Height / 2), // 8, 8
-                Scale = new Vector2f(_spriteWorldDimension, _spriteWorldDimension)
-            };
-        }
+            Origin = new Vector2f(CurrentAnimationFrame.Rect.Width / 2, CurrentAnimationFrame.Rect.Height / 2), // 8, 8
+            Scale = new Vector2f(_spriteWorldDimension, _spriteWorldDimension)
+        };
 
         if (Sprite.TextureRect != CurrentAnimationFrame.Rect)
         {

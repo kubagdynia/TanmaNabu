@@ -7,8 +7,5 @@ public sealed class AnimationTypeComponent : IComponent
 {
     public AnimationType AnimationType;
 
-    public override string ToString()
-    {
-        return $"AnimationType({AnimationType})";
-    }
+    public override string ToString() => $"AnimationType({AnimationType})";
 }

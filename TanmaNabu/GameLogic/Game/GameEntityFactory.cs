@@ -10,18 +10,16 @@ public static class GameEntityFactory
 {
     public static GameEntity Get(GameContext context, GameEntityType gameEntityType, int positionX, int positionY, MapData mapData)
     {
-        switch (gameEntityType)
+        return gameEntityType switch
         {
-            case GameEntityType.Player:
-                return CreatePlayerEntity(context, new Vector2f(positionX, positionY), mapData);
-            default:
-                throw new GameInvalidEnumArgumentException("Unrecognized GameEntityType value", gameEntityType.AllowedValues());
-        }
+            GameEntityType.Player => CreatePlayerEntity(context, new Vector2f(positionX, positionY), mapData),
+            _ => throw new GameInvalidEnumArgumentException("Unrecognized GameEntityType value", gameEntityType.AllowedValues())
+        };
     }
 
     public static void AddAllEntities(GameContext context, MapData mapData)
     {
-        foreach (MapEntity item in mapData.MapEntities)
+        foreach (var item in mapData.MapEntities)
         {
             CreateEntity(context, item, mapData);
         }
