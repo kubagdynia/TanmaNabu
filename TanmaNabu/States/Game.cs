@@ -15,9 +15,9 @@ namespace TanmaNabu.States;
 
 public class Game : BaseGame
 {
-    protected Contexts Contexts;
-    protected Systems Systems;
-    protected Camera Camera;
+    private Contexts _contexts;
+    private Systems _systems;
+    private Camera _camera;
 
     public Game()
         : base(new Vector2u(1440, 810), "Tanma Nabu", Color.Black, 60, false, false) // window
@@ -49,17 +49,17 @@ public class Game : BaseGame
 #if DEBUG
         "Initialize".Log();
 #endif
-        Contexts = Contexts.SharedInstance;
+        _contexts = Contexts.SharedInstance;
 
-        Contexts.GameTime = gameTime;
-        Contexts.GameMap.Load("jungleMap");
+        _contexts.GameTime = gameTime;
+        _contexts.GameMap.Load("jungleMap");
 
-        Systems = CreateSystems(Contexts);
+        _systems = CreateSystems(_contexts);
 
         // Call once on start
-        Systems.Initialize();
+        _systems.Initialize();
 
-        Camera = new Camera(target, Contexts);
+        _camera = new Camera(target, _contexts);
     }
 
     protected override void Deinitialize()
@@ -67,36 +67,36 @@ public class Game : BaseGame
 #if DEBUG
         "Deinitialize".Log();
 #endif
-        Systems.TearDown();
+        _systems.TearDown();
         GameSettings.CleanUp();
     }
 
     protected override void Update(float deltaTime)
     {
-        Contexts.Game.DeltaTime = deltaTime;
-        Contexts.GameMap.Update(deltaTime);
+        _contexts.Game.DeltaTime = deltaTime;
+        _contexts.GameMap.Update(deltaTime);
 
         // Call every frame
-        Systems.Execute();
-        Systems.Cleanup();
+        _systems.Execute();
+        _systems.Cleanup();
     }
 
     protected override void Render(RenderTarget target, float deltaTime, GameTime gameTime)
     {
-        var players = Contexts.Game.GetGroup(GameMatcher.Player);
+        var players = _contexts.Game.GetGroup(GameMatcher.Player);
         var entity = players.GetSingleEntity();
 
-        Camera.Update(deltaTime, gameTime, entity.Position.X, entity.Position.Y);
+        _camera.Update(deltaTime, gameTime, entity.Position.X, entity.Position.Y);
 
-        target.Draw(Contexts.GameMap.GetBackgroundTileMap());
+        target.Draw(_contexts.GameMap.GetBackgroundTileMap());
 
-        var entities = Contexts.Game.GetEntities(GameMatcher.Animation);
+        var entities = _contexts.Game.GetEntities(GameMatcher.Animation);
         foreach (var objEntity in entities.OrderBy(c => c.Position.Y))
         {
             target.Draw(objEntity.Animation.GetSprite());
         }
 
-        target.Draw(Contexts.GameMap.GetForegroundTileMap());
+        target.Draw(_contexts.GameMap.GetForegroundTileMap());
 
 #if DEBUG
         DrawCollisions(target);
@@ -105,7 +105,7 @@ public class Game : BaseGame
 
     private void DrawCollisions(RenderTarget target)
     {
-        foreach (var item in Contexts.GameMap.MapData.CollidersLayer.Colliders)
+        foreach (var item in _contexts.GameMap.MapData.CollidersLayer.Colliders)
         {
             var colRectangle = new RectangleShape(new Vector2f(item.Width, item.Height))
             {

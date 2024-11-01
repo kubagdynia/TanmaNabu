@@ -8,13 +8,7 @@ public class GameTime
 
     public Time ElapsedTime { get; set; }
 
-    internal void Restart()
-    {
-        ElapsedTime = _clock.Restart();
-    }
+    internal void Restart() => ElapsedTime = _clock.Restart();
 
-    internal void SetTime(Time time)
-    {
-        ElapsedTime = time;
-    }
+    internal void SetTime(Time time) => ElapsedTime = time;
 }

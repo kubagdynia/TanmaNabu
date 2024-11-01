@@ -10,13 +10,13 @@ public partial class GameEntity
 
     public void AddPosition(float x, float y)
     {
-        IComponent component = CreatePositionComponent(x, y);
+        var component = CreatePositionComponent(x, y);
         AddComponent(GameComponentsLookup.Position, component);
     }
 
     public void ReplacePosition(float x, float y)
     {
-        IComponent component = CreatePositionComponent(x, y);
+        var component = CreatePositionComponent(x, y);
         ReplaceComponent(GameComponentsLookup.Position, component);
     }
 
@@ -27,7 +27,7 @@ public partial class GameEntity
 
     private IComponent CreatePositionComponent(float x, float y)
     {
-        PositionComponent component = CreateComponent<PositionComponent>(GameComponentsLookup.Position);
+        var component = CreateComponent<PositionComponent>(GameComponentsLookup.Position);
         component.X = x;
         component.Y = y;
 

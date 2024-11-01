@@ -3,15 +3,15 @@ using TanmaNabu.GameLogic.Game;
 
 namespace TanmaNabu.GameLogic.Systems;
 
-class AnimationSystem(Contexts contextses) : IExecuteSystem
+class AnimationSystem(Contexts contexts) : IExecuteSystem
 {
     public void Execute()
     {
-        var animations = contextses.Game.GetEntities(GameMatcher.Animation);
+        var animations = contexts.Game.GetEntities(GameMatcher.Animation);
 
         foreach (var animation in animations)
         {
-            animation.Animation.UpdateAnimation(contextses.Game.DeltaTime);
+            animation.Animation.UpdateAnimation(contexts.Game.DeltaTime);
         }
     }
 }

@@ -93,7 +93,7 @@ public sealed class CollisionComponent : IComponent
                 continue;
             }
 
-            CollisionObjectGroup collisionObjectGroup = new CollisionObjectGroup
+            var collisionObjectGroup = new CollisionObjectGroup
             {
                 TileId = tile.Id
             };
