@@ -1,13 +1,23 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using TanmaNabu.Core.Extensions;
 
 namespace TanmaNabu.Core;
 
 public static class DataOperations
 {
+    private static readonly JsonSerializerOptions JsonSerializerOptionsIndented = new()
+    {
+        WriteIndented = false
+    };
+    
+    private static readonly JsonSerializerOptions JsonSerializerOptionsCaseInsensitive = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+    
     public static void SaveData<T>(T data, string fileName)
     {
         if (string.IsNullOrWhiteSpace(fileName))
@@ -18,7 +28,9 @@ public static class DataOperations
         var tempPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
 
         // Convert To Json then to bytes
-        var jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
+        var jsonData = JsonSerializer.Serialize(data, JsonSerializerOptionsIndented);
+        
+        
         var jsonByte = Encoding.UTF8.GetBytes(jsonData);
 
         // Create Directory if it does not exist
@@ -77,10 +89,10 @@ public static class DataOperations
         fileExists = true;
 
         // Load saved Json
-        byte[] jsonByte;
+        string jsonData;
         try
         {
-            jsonByte = File.ReadAllBytes(tempPath);
+            jsonData = File.ReadAllText(tempPath, Encoding.UTF8);
 
 #if DEBUG
             $"Loaded data from: {tempPath}".Log(true);
@@ -95,12 +107,19 @@ public static class DataOperations
             throw;
         }
 
-        // Convert to json string
-        var jsonData = Encoding.ASCII.GetString(jsonByte);
-
-        // Convert to Object
-        object resultValue = JsonConvert.DeserializeObject<T>(jsonData);
-        return (T)Convert.ChangeType(resultValue, typeof(T));
+        // Deserialization of JSON to object.
+        try
+        {
+            return JsonSerializer.Deserialize<T>(jsonData, JsonSerializerOptionsCaseInsensitive);
+        }
+        catch (Exception e)
+        {
+#if DEBUG
+            $"Failed to deserialize JSON from: {tempPath}".Log();
+            $"Error: {e.Message}".Log();
+#endif
+            throw;
+        }
     }
 
     public static T LoadData<T>(string fileName) => LoadData<T>(fileName, out _);
