@@ -184,10 +184,8 @@ public sealed class AnimationComponent : IComponent
                     animationFrame.Duration,
                     animationType,
                     new IntRect(
-                        xIndex * tileset.TileWidth,
-                        yIndex * tileset.TileHeight,
-                        tileset.TileWidth,
-                        tileset.TileHeight));
+                        new Vector2i(xIndex * tileset.TileWidth, yIndex * tileset.TileHeight),
+                        new Vector2i(tileset.TileWidth, tileset.TileHeight)));
 
                 Frames.Add(frame);
             }

@@ -41,13 +41,13 @@ public class Map
         }
     }
 
-    public void SetWorldView(RenderTarget target, Vector2f center)
+    public void SetWorldView(RenderTexture target, Vector2f center)
     {
         // TODO: this part should be optimized
         var view = new View
         {
             Size = new Vector2f(target.Size.X, target.Size.Y),
-            Viewport = new FloatRect(0f, 0f, 1.0f, 1.0f),
+            Viewport = new FloatRect(new Vector2f(0f, 0f), new Vector2f(1.0f, 1.0f)),
         };
         view.Zoom(MapData.MapZoomFactor);
 

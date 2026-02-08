@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -21,7 +22,7 @@ public class TileMap : ITileMap
     private Vector2i _downRight;
     private Vector2i _topLeft;
 
-    public void Draw(RenderTarget target, RenderStates states)
+    public void Draw(RenderTexture target, RenderStates states)
     {
         // Draw only visible tiles
         var view = target.GetView();
@@ -85,7 +86,7 @@ public class TileMap : ITileMap
             
     }
 
-    private void DrawVertices(RenderTarget target, RenderStates states, uint tilesCount, Vertex[] vertices, int lineNumber)
+    private void DrawVertices(RenderTexture target, RenderStates states, uint tilesCount, Vertex[] vertices, int lineNumber)
     {
         var start = (uint)(lineNumber * _mapData.MapSize.X * TileVertices);
 
@@ -94,12 +95,16 @@ public class TileMap : ITileMap
             return;
         }
 
-        if (start + tilesCount > vertices.Length)
-        {
-            tilesCount = (uint)(vertices.Length - start);
-        }
+        // Calculate how many tiles we can draw in this line
+        var maxTiles = (vertices.Length - start) / TileVertices;
+        var tilesToDraw = Math.Min((int)(tilesCount / TileVertices), (int)maxTiles);
 
-        target.Draw(vertices, start, tilesCount, PrimitiveType.Quads, states);
+        // Draw each tile separately as a TriangleFan (4 vertices per tile)
+        for (var i = 0; i < tilesToDraw; i++)
+        {
+            var tileStart = start + (uint)(i * TileVertices);
+            target.Draw(vertices, tileStart, TileVertices, PrimitiveType.TriangleFan, states);
+        }
     }
 
     private void AddTileVertices(Vertex[] vertices, int verticeIndex, TmxLayerTile tileItem, int tilesetColumns)

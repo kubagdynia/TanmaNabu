@@ -7,7 +7,7 @@ using TanmaNabu.Core.Extensions;
 
 namespace TanmaNabu.States;
 
-public class Camera(RenderTarget renderTarget, Contexts contexts)
+public class Camera(RenderTexture renderTarget, Contexts contexts)
 {
     private Vector2f _currentPosition = renderTarget.GetView().Center;
     private float _currentZoomFactor;
@@ -21,7 +21,7 @@ public class Camera(RenderTarget renderTarget, Contexts contexts)
         var view = new View
         {
             Size = new Vector2f(renderTarget.Size.X, renderTarget.Size.Y),
-            Viewport = new FloatRect(0f, 0f, 1.0f, 1.0f),
+            Viewport = new FloatRect(new Vector2f(0f, 0f), new Vector2f(1.0f, 1.0f)),
         };
         view.Zoom(contexts.GameMap.MapData.MapZoomFactor);
 

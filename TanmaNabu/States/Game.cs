@@ -44,7 +44,7 @@ public class Game : BaseGame
         AssetManager.CleanUp();
     }
 
-    protected override void Initialize(RenderTarget target, GameTime gameTime)
+    protected override void Initialize(RenderTexture target, GameTime gameTime)
     {
 #if DEBUG
         "Initialize".Log();
@@ -81,14 +81,14 @@ public class Game : BaseGame
         _systems.Cleanup();
     }
 
-    protected override void Render(RenderTarget target, float deltaTime, GameTime gameTime)
+    protected override void Render(RenderTexture target, float deltaTime, GameTime gameTime)
     {
         var players = _contexts.Game.GetGroup(GameMatcher.Player);
         var entity = players.GetSingleEntity();
 
         _camera.Update(deltaTime, gameTime, entity.Position.X, entity.Position.Y);
 
-        target.Draw(_contexts.GameMap.GetBackgroundTileMap());
+        _contexts.GameMap.GetBackgroundTileMap().Draw(target, RenderStates.Default);
 
         var entities = _contexts.Game.GetEntities(GameMatcher.Animation);
         foreach (var objEntity in entities.OrderBy(c => c.Position.Y))
@@ -96,14 +96,14 @@ public class Game : BaseGame
             target.Draw(objEntity.Animation.GetSprite());
         }
 
-        target.Draw(_contexts.GameMap.GetForegroundTileMap());
+        _contexts.GameMap.GetForegroundTileMap().Draw(target, RenderStates.Default);
 
 #if DEBUG
         DrawCollisions(target);
 #endif
     }
 
-    private void DrawCollisions(RenderTarget target)
+    private void DrawCollisions(RenderTexture target)
     {
         foreach (var item in _contexts.GameMap.MapData.CollidersLayer.Colliders)
         {
