@@ -29,17 +29,17 @@ public abstract class BaseGame
 
         if (fullScreen)
         {
-            _window = new RenderWindow(new VideoMode(windowSize.X, windowSize.Y, 32), windowTitle, Styles.Fullscreen);
+            _window = new RenderWindow(new VideoMode(windowSize), windowTitle, Styles.None, State.Fullscreen);
 
-            _renderTexture = new RenderTexture(windowSize.X, windowSize.Y);
-            _renderSprite = new Sprite(_renderTexture.Texture, new IntRect(0, 0, (int)windowSize.X, (int)windowSize.Y));
+            _renderTexture = new RenderTexture(windowSize);
+            _renderSprite = new Sprite(_renderTexture.Texture, new IntRect(new Vector2i(0, 0), new Vector2i((int)windowSize.X, (int)windowSize.Y)));
         }
         else
         {
-            _window = new RenderWindow(new VideoMode(windowSize.X, windowSize.Y, 32), windowTitle, Styles.Default);
+            _window = new RenderWindow(new VideoMode(windowSize), windowTitle, Styles.Close | Styles.Titlebar, State.Windowed);
 
-            _renderTexture = new RenderTexture(windowSize.X, windowSize.Y);
-            _renderSprite = new Sprite(_renderTexture.Texture, new IntRect(0, 0, (int)windowSize.X, (int)windowSize.Y));
+            _renderTexture = new RenderTexture(windowSize);
+            _renderSprite = new Sprite(_renderTexture.Texture, new IntRect(new Vector2i(0, 0), new Vector2i((int)windowSize.X, (int)windowSize.Y)));
         }
 
         if (vsync)
@@ -54,7 +54,7 @@ public abstract class BaseGame
 
         // Set up events
         _window.Closed += (_, _) => _window.Close();
-        _window.Resized += (_, arg) => Resize(arg.Width, arg.Height);
+        _window.Resized += (_, arg) => Resize(arg.Size.X, arg.Size.Y);
 
         // Key
         _window.KeyPressed += KeyPressed;
@@ -144,13 +144,13 @@ public abstract class BaseGame
 
     protected abstract void UnloadContent();
 
-    protected abstract void Initialize(RenderTarget target, GameTime gameTime);
+    protected abstract void Initialize(RenderTexture target, GameTime gameTime);
 
     protected abstract void Deinitialize();
 
     protected abstract void Update(float deltaTime);
 
-    protected abstract void Render(RenderTarget target, float deltaTime, GameTime gameTime);
+    protected abstract void Render(RenderTexture target, float deltaTime, GameTime gameTime);
 
     protected abstract void Quit();
 

@@ -35,7 +35,7 @@ public static class MapLoader
 
     private static void UpdateData(MapData data)
         => data.MapRec =
-            new FloatRect(0, 0, data.TileSize.X * data.MapSize.X, data.TileSize.Y * data.MapSize.Y);
+            new FloatRect(new Vector2f(0, 0), new Vector2f(data.TileSize.X * data.MapSize.X, data.TileSize.Y * data.MapSize.Y));
 
     private static void LoadMapProperties(TmxMap map, MapData data)
     {
