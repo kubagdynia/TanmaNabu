@@ -1,6 +1,5 @@
-﻿using Entitas;
-using SFML.Graphics;
-using SFML.Window;
+﻿using System;
+using Entitas;
 using TanmaNabu.Core.Animation;
 using TanmaNabu.GameLogic.Game;
 
@@ -8,7 +7,7 @@ namespace TanmaNabu.GameLogic.Systems;
 
 public class InputSystem(Contexts contexts) : IExecuteSystem
 {
-    // Runs early every frame
+    // Runs every fixed-update step – reads from InputState snapshot captured once per render frame.
     public void Execute()
     {
         Zoom();
@@ -17,49 +16,21 @@ public class InputSystem(Contexts contexts) : IExecuteSystem
 
     private void PlayerMovement()
     {
-        if (Keyboard.IsKeyPressed(Keyboard.Key.Left) || Keyboard.IsKeyPressed(Keyboard.Key.A) ||
-            Keyboard.IsKeyPressed(Keyboard.Key.Right) || Keyboard.IsKeyPressed(Keyboard.Key.D) ||
-            Keyboard.IsKeyPressed(Keyboard.Key.Up) || Keyboard.IsKeyPressed(Keyboard.Key.W) ||
-            Keyboard.IsKeyPressed(Keyboard.Key.Down) || Keyboard.IsKeyPressed(Keyboard.Key.S))
-        {
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Left) || Keyboard.IsKeyPressed(Keyboard.Key.A))
-            {
-                ChangePlayerPosition(-1, 0);
-            }
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Right) || Keyboard.IsKeyPressed(Keyboard.Key.D))
-            {
-                ChangePlayerPosition(1, 0);
-            }
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Up) || Keyboard.IsKeyPressed(Keyboard.Key.W))
-            {
-                ChangePlayerPosition(0, -1);
-            }
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Down) || Keyboard.IsKeyPressed(Keyboard.Key.S))
-            {
-                ChangePlayerPosition(0, 1);
-            }
-        }
-        else
-        {
-            ChangePlayerPosition(0, 0);
-        }
+        var input = contexts.Game.InputState;
+        ChangePlayerPosition(input.MoveX, input.MoveY);
     }
 
     private void Zoom()
     {
-        if (Keyboard.IsKeyPressed(Keyboard.Key.PageUp))
-        {
-            contexts.GameMap.MapData.MapZoomFactor -= 0.01f;
-        }
+        var input = contexts.Game.InputState;
 
-        if (Keyboard.IsKeyPressed(Keyboard.Key.PageDown))
-        {
-            contexts.GameMap.MapData.MapZoomFactor += 0.01f;
-        }
-
-        if (Keyboard.IsKeyPressed(Keyboard.Key.Home))
+        if (input.ZoomReset)
         {
             contexts.GameMap.MapData.MapZoomFactor = 1;
+        }
+        else if (input.ZoomDelta != 0)
+        {
+            contexts.GameMap.MapData.MapZoomFactor += input.ZoomDelta;
         }
     }
 
@@ -67,54 +38,82 @@ public class InputSystem(Contexts contexts) : IExecuteSystem
     {
         var entity = contexts.Game.GetEntity(GameMatcher.Player);
 
-        if (entity.HasMovement)
+        // --- Animation ---
+        // Direction from the ORIGINAL input values (before scaling and collision check)
+        // so the animation does not freeze when the player hits a wall.
+        if (entity.HasAnimationType)
         {
-            if (x != 0 || y != 0)
+            var animType = x switch
             {
-                var entitySpeed = entity.Movement.Speed;
-
-                x *= contexts.GameTime.ElapsedTime.AsSeconds() * entitySpeed;
-                y *= contexts.GameTime.ElapsedTime.AsSeconds() * entitySpeed;
-
-                var spriteRect = entity.Animation.GetSpriteGlobalBounds();
-                var tileId = entity.Animation.GetCurrentTiledId();
-
-                if (entity.HasCollision)
+                < 0 => AnimationType.WalkLeft,
+                > 0 => AnimationType.WalkRight,
+                _ => y switch
                 {
-                    var spriteCollisionRect = entity.Collision.GetCollisionRectGlobalBounds(tileId, spriteRect, x, y);
-
-                    var collisions = contexts.GameMap.MapData.GetCollisionsNearby(spriteCollisionRect, contexts.GameMap.MapData.CollisionNearbyDistance);
-
-                    foreach (var collsionRect in collisions)
-                    {
-                        if (collsionRect.Intersects(spriteCollisionRect))
-                        {
-                            return;
-                        }
-                    }
+                    < 0 => AnimationType.WalkUp,
+                    > 0 => AnimationType.WalkDown,
+                    _ => AnimationType.Idle
                 }
+            };
 
-                entity.ReplacePosition(entity.Position.X + x, entity.Position.Y + y);
+            if (entity.AnimationType.AnimationType != animType)
+            {
+                entity.ReplaceAnimationType(animType);
             }
         }
 
-        if (!entity.HasAnimationType) return;
-        
-        var animType = x switch
+        // --- Movement ---
+        if (!entity.HasMovement || (x == 0 && y == 0))
         {
-            < 0 => AnimationType.WalkLeft,
-            > 0 => AnimationType.WalkRight,
-            _ => y switch
-            {
-                < 0 => AnimationType.WalkUp,
-                > 0 => AnimationType.WalkDown,
-                _ => AnimationType.Idle
-            }
-        };
+            return;
+        }
 
-        if (entity.AnimationType.AnimationType != animType)
+        var speed   = entity.Movement.Speed;
+        var scaledX = x * contexts.Game.DeltaTime * speed;
+        var scaledY = y * contexts.Game.DeltaTime * speed;
+
+        var spriteRect = entity.Animation.GetSpriteGlobalBounds();
+        var tileId     = entity.Animation.GetCurrentTiledId();
+
+        var newX = entity.Position.X;
+        var newY = entity.Position.Y;
+
+        if (entity.HasCollision)
         {
-            entity.ReplaceAnimationType(animType);
+            // Collision checked separately per axis – player slides along walls instead of getting stuck
+            if (scaledX != 0)
+            {
+                var rectX    = entity.Collision.GetCollisionRectGlobalBounds(tileId, spriteRect, scaledX, 0);
+                var colX     = contexts.GameMap.MapData.GetCollisionsNearby(rectX, contexts.GameMap.MapData.CollisionNearbyDistance);
+                var blockedX = false;
+                foreach (var col in colX)
+                {
+                    if (col.Intersects(rectX)) { blockedX = true; break; }
+                }
+                if (!blockedX) newX += scaledX;
+            }
+
+            if (scaledY != 0)
+            {
+                var rectY    = entity.Collision.GetCollisionRectGlobalBounds(tileId, spriteRect, 0, scaledY);
+                var colY     = contexts.GameMap.MapData.GetCollisionsNearby(rectY, contexts.GameMap.MapData.CollisionNearbyDistance);
+                var blockedY = false;
+                foreach (var col in colY)
+                {
+                    if (col.Intersects(rectY)) { blockedY = true; break; }
+                }
+                if (!blockedY) newY += scaledY;
+            }
+        }
+        else
+        {
+            newX += scaledX;
+            newY += scaledY;
+        }
+
+        if (MathF.Abs(newX - entity.Position.X) > float.Epsilon ||
+            MathF.Abs(newY - entity.Position.Y) > float.Epsilon)
+        {
+            entity.ReplacePosition(newX, newY);
         }
     }
 }

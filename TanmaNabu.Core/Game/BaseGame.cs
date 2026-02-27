@@ -78,39 +78,35 @@ public abstract class BaseGame
             Initialize(_renderTexture, _gameTime);
             try
             {
-                var totalTime = 0.0f;
+                float totalTime = 0.0f;
+
+                // Initialize the clock BEFORE the first frame.
+                _gameTime.Restart();
 
                 // Main game loop
                 while (_window.IsOpen)
                 {
-                    _gameTime.Restart();
-
-                    var deltaTime = _gameTime.ElapsedTime.AsSeconds();
+                    float deltaTime = _gameTime.ElapsedTime.AsSeconds();
 
                     if (deltaTime > 1)
                     {
                         deltaTime = 0;
                     }
 
-                    totalTime += deltaTime;
-                    var updateCount = 0;
+                    // Window events and input snapshot – once per render frame,
+                    // BEFORE the fixed-update loop, so every step uses the same input.
+                    _window.DispatchEvents();
+                    Joystick.Update();
+                    SampleInput();
 
-                    // While the total amount of time spend on the render step is
-                    // greater or equal to the update rate (1/x, in this game x = 60) and we have
-                    // not executed the update step 10 times then do the loop
-                    // If the counter hits 10 we break because it means that the
-                    // render step is lagging behind the update step
+                    totalTime += deltaTime;
+                    int updateCount = 0;
+
                     while (totalTime >= _updateRate && updateCount < UpdateLimit)
                     {
-                        _window.DispatchEvents();
-
-                        Joystick.Update();
-
                         Update(_updateRate);
 
-                        // Subtract the update frequency from the total time
                         totalTime -= _updateRate;
-                        // Increase the counter
                         updateCount++;
                     }
 
@@ -125,6 +121,10 @@ public abstract class BaseGame
                     // draw it to the window
                     _window.Draw(_renderSprite);
                     _window.Display();
+
+                    // Restart the clock at the END of the frame – ElapsedTime in the next frame will
+                    // correctly measure the time of the entire past frame.
+                    _gameTime.Restart();
                 }
             }
             finally
@@ -147,6 +147,12 @@ public abstract class BaseGame
     protected abstract void Initialize(RenderTexture target, GameTime gameTime);
 
     protected abstract void Deinitialize();
+
+    /// <summary>
+    /// Called once per render frame, before the fixed-update loop.
+    /// Use this to snapshot keyboard/controller state into the InputState structure.
+    /// </summary>
+    protected abstract void SampleInput();
 
     protected abstract void Update(float deltaTime);
 
@@ -175,9 +181,4 @@ public abstract class BaseGame
     protected abstract void JoystickButtonPressed(object sender, JoystickButtonEventArgs arg);
 
     protected abstract void JoystickMoved(object sender, JoystickMoveEventArgs arg);
-
-    protected float GetFps()
-    {
-        return (1000000.0f / _gameTime.ElapsedTime.AsMicroseconds());
-    }
 }

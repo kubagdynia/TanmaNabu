@@ -6,6 +6,9 @@ public sealed partial class GameContext : Context<GameEntity>
 {
     public float DeltaTime;
 
+    /// <summary>Input snapshot captured once per render frame – before the fixed-update loop.</summary>
+    public readonly InputState InputState = new();
+
     public GameContext()
         : base(
             GameComponentsLookup.TotalComponents,

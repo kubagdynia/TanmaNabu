@@ -1,74 +1,81 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 using System;
-using TanmaNabu.Core.Game;
 using TanmaNabu.GameLogic;
-using TanmaNabu.Core.Extensions;
 
 namespace TanmaNabu.States;
 
 public class Camera(RenderTexture renderTarget, Contexts contexts)
 {
-    private Vector2f _currentPosition = renderTarget.GetView().Center;
-    private float _currentZoomFactor;
+    // Lerp speed – camera reaches target in ~1/MoveSpeed fixed steps
+    private const float MoveSpeed = 5.0f;
 
-    private const float MoveSpeed = 0.000008f;
+    // View as a class field – eliminates GC allocation every frame
+    private readonly View _view = new();
 
-    public void Update(float deltaTime, GameTime gameTime, float positionX, float positionY)
+    // Two position states for interpolation in Render()
+    private Vector2f _previousPosition = renderTarget.GetView().Center;
+    private Vector2f _currentPosition  = renderTarget.GetView().Center;
+
+    /// <summary>
+    /// Called every fixed-update step (synchronised with player movement).
+    /// Advances the camera towards the player by one lerp step.
+    /// </summary>
+    public void Tick(float fixedStep, float positionX, float positionY)
     {
-        var lerpSpeed = Clamp(gameTime.ElapsedTime.AsMicroseconds() * MoveSpeed, 0, 1);
+        float lerpSpeed = Clamp(fixedStep * MoveSpeed, 0f, 1f);
 
-        var view = new View
-        {
-            Size = new Vector2f(renderTarget.Size.X, renderTarget.Size.Y),
-            Viewport = new FloatRect(new Vector2f(0f, 0f), new Vector2f(1.0f, 1.0f)),
-        };
-        view.Zoom(contexts.GameMap.MapData.MapZoomFactor);
+        var target = TargetCenter(positionX, positionY);
 
-        var targetCenter = TargetCenter(positionX, positionY);
+        // Save the previous position before updating
+        _previousPosition = _currentPosition;
 
-        var oldPosition = _currentPosition;
+        // Lerp on raw floats – no Math.Floor here to avoid accumulating rounding error
+        _currentPosition = Lerp(
+            new Vector2f(target.X, target.Y),
+            _currentPosition,
+            lerpSpeed);
+    }
 
-        _currentPosition = Lerp(new Vector2f(targetCenter.X, targetCenter.Y), _currentPosition, lerpSpeed);
+    /// <summary>
+    /// Called in Render() – interpolates between the previous and current position
+    /// using alpha (0..1) and applies the view.
+    /// </summary>
+    public void Apply(float alpha)
+    {
+        // Interpolate between the previous and current frame position
+        var interpolated = _previousPosition + (_currentPosition - _previousPosition) * alpha;
 
-        if (oldPosition.Equals(_currentPosition, 0.1f) && Math.Abs(_currentZoomFactor - contexts.GameMap.MapData.MapZoomFactor) < 0.01f)
-        {
-            return;
-        }
+        _view.Size = new Vector2f(
+            renderTarget.Size.X * contexts.GameMap.MapData.MapZoomFactor,
+            renderTarget.Size.Y * contexts.GameMap.MapData.MapZoomFactor);
+        _view.Viewport = new FloatRect(new Vector2f(0f, 0f), new Vector2f(1.0f, 1.0f));
 
-        _currentZoomFactor = contexts.GameMap.MapData.MapZoomFactor;
+        // Math.Floor only when setting View.Center (pixel-perfect rendering) –
+        // does not touch _currentPosition, so rounding error does not accumulate between frames
+        _view.Center = new Vector2f(
+            (float)Math.Floor(interpolated.X),
+            (float)Math.Floor(interpolated.Y));
 
-        // How to fix vertical artifact lines in a vertex array in SFML, WITH pixel perfect zoom/move?
-        // https://stackoverflow.com/questions/55997965/how-to-fix-vertical-artifact-lines-in-a-vertex-array-in-sfml-with-pixel-perfect
-        // https://www.sfml-dev.org/tutorials/2.5/graphics-draw.php#off-screen-drawing
-
-        _currentPosition.X = (float)Math.Floor(_currentPosition.X);
-        _currentPosition.Y = (float)Math.Floor(_currentPosition.Y);
-
-        view.Center = _currentPosition;
-
-        renderTarget.SetView(view);
+        renderTarget.SetView(_view);
     }
 
     private (float X, float Y) TargetCenter(float positionX, float positionY)
     {
-        var targetCenterX = Math.Max(
-            renderTarget.Size.X / 2.0f * contexts.GameMap.MapData.MapZoomFactor,
-            Math.Min(
-                contexts.GameMap.MapData.MapRec.Width * contexts.GameMap.MapData.TileWorldDimension -
-                renderTarget.Size.X / 2.0f * contexts.GameMap.MapData.MapZoomFactor, positionX));
+        float halfW = renderTarget.Size.X / 2.0f * contexts.GameMap.MapData.MapZoomFactor;
+        float halfH = renderTarget.Size.Y / 2.0f * contexts.GameMap.MapData.MapZoomFactor;
+        float mapW  = contexts.GameMap.MapData.MapRec.Width  * contexts.GameMap.MapData.TileWorldDimension;
+        float mapH  = contexts.GameMap.MapData.MapRec.Height * contexts.GameMap.MapData.TileWorldDimension;
 
-        var targetCenterY = Math.Max(renderTarget.Size.Y / 2.0f * contexts.GameMap.MapData.MapZoomFactor,
-            Math.Min(
-                contexts.GameMap.MapData.MapRec.Height * contexts.GameMap.MapData.TileWorldDimension -
-                renderTarget.Size.Y / 2.0f * contexts.GameMap.MapData.MapZoomFactor, positionY));
-        
-        return (targetCenterX, targetCenterY);
+        return (
+            Math.Max(halfW, Math.Min(mapW - halfW, positionX)),
+            Math.Max(halfH, Math.Min(mapH - halfH, positionY))
+        );
     }
 
     private static float Clamp(float value, float min, float max)
         => value < min ? min : value > max ? max : value;
 
-    private static Vector2f Lerp(Vector2f a, Vector2f b, float t) 
+    private static Vector2f Lerp(Vector2f a, Vector2f b, float t)
         => a * t + (1 - t) * b;
 }

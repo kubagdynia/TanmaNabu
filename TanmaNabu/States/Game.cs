@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using Entitas;
 using SFML.Graphics;
 using SFML.System;
@@ -10,6 +10,7 @@ using TanmaNabu.GameLogic;
 using TanmaNabu.GameLogic.Game;
 using TanmaNabu.GameLogic.Systems;
 using TanmaNabu.Core.Settings;
+using IntRect = TanmaNabu.Core.DataStructures.IntRect;
 
 namespace TanmaNabu.States;
 
@@ -19,9 +20,12 @@ public class Game : BaseGame
     private Systems _systems;
     private Camera _camera;
 
+    // Reusable list for depth-sorting entities – avoids LINQ OrderBy allocation every frame
+    private readonly List<GameEntity> _renderEntities = new();
+
     public Game()
-        : base(new Vector2u(1440, 810), "Tanma Nabu", Color.Black, 60, false, false) // window
-    //: base(new Vector2u(1920, 1080), "Tanma Nabu", Color.Black, 60, true, false) // full screen
+    //    : base(new Vector2u(1440, 810), "Tanma Nabu", Color.Black, 60, false, false) // window
+    : base(new Vector2u(1920, 1080), "Tanma Nabu", Color.Black, 60, true, false) // full screen
     {
 
     }
@@ -71,27 +75,52 @@ public class Game : BaseGame
         GameSettings.CleanUp();
     }
 
+    protected override void SampleInput()
+    {
+        var state = _contexts.Game.InputState;
+
+        // Movement
+        state.MoveX = 0f;
+        state.MoveY = 0f;
+        if (Keyboard.IsKeyPressed(Keyboard.Key.Left)  || Keyboard.IsKeyPressed(Keyboard.Key.A)) state.MoveX -= 1f;
+        if (Keyboard.IsKeyPressed(Keyboard.Key.Right) || Keyboard.IsKeyPressed(Keyboard.Key.D)) state.MoveX += 1f;
+        if (Keyboard.IsKeyPressed(Keyboard.Key.Up)    || Keyboard.IsKeyPressed(Keyboard.Key.W)) state.MoveY -= 1f;
+        if (Keyboard.IsKeyPressed(Keyboard.Key.Down)  || Keyboard.IsKeyPressed(Keyboard.Key.S)) state.MoveY += 1f;
+
+        // Zoom
+        state.ZoomReset = Keyboard.IsKeyPressed(Keyboard.Key.Home);
+        state.ZoomDelta = 0f;
+        if (!state.ZoomReset)
+        {
+            if (Keyboard.IsKeyPressed(Keyboard.Key.PageUp))   state.ZoomDelta = -0.01f;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.PageDown)) state.ZoomDelta =  0.01f;
+        }
+    }
+
     protected override void Update(float deltaTime)
     {
         _contexts.Game.DeltaTime = deltaTime;
         _contexts.GameMap.Update(deltaTime);
 
-        // Call every frame
         _systems.Execute();
         _systems.Cleanup();
+
+        // Camera updated in fixed-update, synchronised with player movement
+        var entity = _contexts.Game.GetGroup(GameMatcher.Player).GetSingleEntity();
+        _camera.Tick(deltaTime, entity.Position.X, entity.Position.Y);
     }
 
     protected override void Render(RenderTexture target, float deltaTime, GameTime gameTime)
     {
-        var players = _contexts.Game.GetGroup(GameMatcher.Player);
-        var entity = players.GetSingleEntity();
-
-        _camera.Update(deltaTime, gameTime, entity.Position.X, entity.Position.Y);
+        // Apply camera view with alpha interpolation (0..1) between fixed-update steps
+        _camera.Apply(deltaTime);
 
         _contexts.GameMap.GetBackgroundTileMap().Draw(target, RenderStates.Default);
 
-        var entities = _contexts.Game.GetEntities(GameMatcher.Animation);
-        foreach (var objEntity in entities.OrderBy(c => c.Position.Y))
+        _renderEntities.Clear();
+        _renderEntities.AddRange(_contexts.Game.GetEntities(GameMatcher.Animation));
+        _renderEntities.Sort(static (a, b) => a.Position.Y.CompareTo(b.Position.Y));
+        foreach (var objEntity in _renderEntities)
         {
             target.Draw(objEntity.Animation.GetSprite());
         }
@@ -103,21 +132,25 @@ public class Game : BaseGame
 #endif
     }
 
+#if DEBUG
+    // Reused across DrawCollisions calls – avoids per-collider allocation every frame
+    private readonly RectangleShape _debugRect = new()
+    {
+        OutlineColor    = new Color(255, 0, 0, 200),
+        OutlineThickness = 2,
+        FillColor       = new Color(255, 0, 0, 50)
+    };
+
     private void DrawCollisions(RenderTexture target)
     {
-        foreach (var item in _contexts.GameMap.MapData.CollidersLayer.Colliders)
+        foreach (IntRect item in _contexts.GameMap.MapData.CollidersLayer.Colliders)
         {
-            var colRectangle = new RectangleShape(new Vector2f(item.Width, item.Height))
-            {
-                Position = new Vector2f(item.Left, item.Top),
-                OutlineColor = new Color(255, 0, 0, 200),
-                OutlineThickness = 2,
-                FillColor = new Color(255, 0, 0, 50)
-            };
-
-            target.Draw(colRectangle);
+            _debugRect.Size     = new Vector2f(item.Width, item.Height);
+            _debugRect.Position = new Vector2f(item.Left, item.Top);
+            target.Draw(_debugRect);
         }
     }
+#endif
 
     protected override void KeyPressed(object sender, KeyEventArgs e)
     {

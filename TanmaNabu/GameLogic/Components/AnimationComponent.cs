@@ -15,8 +15,16 @@ namespace TanmaNabu.GameLogic.Components;
 public sealed class AnimationComponent : IComponent
 {
     private float _switchTime = 0.15f;
+    private float _totalTime  = 0;
 
-    private float _totalTime = 0;
+    // Index of the current frame within the active animation sequence
+    private int _currentFrameIndex = -1;
+
+    // Cached frame list for the current animation type
+    private List<AnimationFrame> _currentTypeFrames;
+
+    // All frames grouped by type – built once on initialisation, never reallocated
+    private readonly Dictionary<AnimationType, List<AnimationFrame>> _framesByType = new();
 
     private List<AnimationFrame> _frames;
 
@@ -58,29 +66,26 @@ public sealed class AnimationComponent : IComponent
     {
         _totalTime += deltaTime;
 
-        if (_totalTime >= _switchTime)
+        while (_totalTime >= _switchTime)
         {
-            _totalTime = 0;
+            // Carry over leftover time so frame timing stays accurate
+            _totalTime -= _switchTime;
 
-            // Get next animation frame
-            if (CurrentAnimationFrame == null)
-            {
-                CurrentAnimationFrame = Frames.FirstOrDefault(x => x.AnimationType == CurrentAnimationType);
-            }
-            else
-            {
-                CurrentAnimationFrame = Frames.FirstOrDefault(x => x.AnimationType == CurrentAnimationType && x.Id != CurrentAnimationFrame.Id);
-            }
+            var frames = _currentTypeFrames;
 
-            if (CurrentAnimationFrame == null)
+            if (frames == null || frames.Count == 0)
             {
+                // Fallback: no frames for this type
                 CurrentAnimationFrame = Frames.Skip(1).FirstOrDefault(x => x.AnimationType == AnimationType.WalkDown);
                 _switchTime = float.MaxValue;
+                SetSprite();
+                return;
             }
-            else
-            {
-                _switchTime = (float)CurrentAnimationFrame.Duration / 1000;
-            }
+
+            // _currentFrameIndex starts at -1 after a type change, so the first +1 lands on 0
+            _currentFrameIndex = (_currentFrameIndex + 1) % frames.Count;
+            CurrentAnimationFrame = frames[_currentFrameIndex];
+            _switchTime = (float)CurrentAnimationFrame.Duration / 1000;
 
             SetSprite();
         }
@@ -99,13 +104,22 @@ public sealed class AnimationComponent : IComponent
     public void UpdateAnimationType(AnimationType animationType)
     {
         if (CurrentAnimationType == animationType)
-        {
             return;
-        }
 
         CurrentAnimationType = animationType;
 
-        UpdateAnimation(_switchTime);
+        // O(1) lookup – no allocation
+        _framesByType.TryGetValue(CurrentAnimationType, out _currentTypeFrames);
+
+        _currentFrameIndex = -1;
+        _totalTime = 0;
+
+        if (_currentTypeFrames is { Count: > 0 })
+        {
+            CurrentAnimationFrame = _currentTypeFrames[0];
+            _switchTime = (float)CurrentAnimationFrame.Duration / 1000;
+            SetSprite();
+        }
     }
 
     public Sprite GetSprite() => Sprite;
@@ -193,25 +207,39 @@ public sealed class AnimationComponent : IComponent
 
         SetDefaultIdleFrame();
 
+        // Group all frames by animation type once – O(n) at load time, O(1) at runtime
+        _framesByType.Clear();
+        foreach (var frame in Frames)
+        {
+            if (!_framesByType.TryGetValue(frame.AnimationType, out var list))
+            {
+                list = new List<AnimationFrame>();
+                _framesByType[frame.AnimationType] = list;
+            }
+            list.Add(frame);
+        }
+
+        // Initialise the active frame list from the dictionary
+        _framesByType.TryGetValue(CurrentAnimationType, out _currentTypeFrames);
+
         return true;
     }
 
     private void SetDefaultIdleFrame()
     {
-        // Set default idle frame
         var idleFrame = Frames.FirstOrDefault(x => x.AnimationType == AnimationType.Idle);
 
-        // If idle frame is not set try to set first down walk frame
         if (idleFrame == null)
         {
             idleFrame = Frames.FirstOrDefault(x => x.AnimationType == AnimationType.WalkDown);
+            if (idleFrame != null) CurrentAnimationType = AnimationType.WalkDown;
         }
 
         if (idleFrame != null)
         {
             _switchTime = (float)idleFrame.Duration / 1000;
-
             CurrentAnimationFrame = idleFrame;
+            _currentFrameIndex = -1;
         }
 
         SetSprite();
