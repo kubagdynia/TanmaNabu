@@ -10,6 +10,7 @@ using TanmaNabu.GameLogic;
 using TanmaNabu.GameLogic.Game;
 using TanmaNabu.GameLogic.Systems;
 using TanmaNabu.Core.Settings;
+using IntRect = TanmaNabu.Core.DataStructures.IntRect;
 
 namespace TanmaNabu.States;
 
@@ -83,15 +84,17 @@ public class Game : BaseGame
 
     protected override void Render(RenderTexture target, float deltaTime, GameTime gameTime)
     {
-        var players = _contexts.Game.GetGroup(GameMatcher.Player);
-        var entity = players.GetSingleEntity();
-
-        _camera.Update(deltaTime, gameTime, entity.Position.X, entity.Position.Y);
+        IGroup<GameEntity> players = _contexts.Game.GetGroup(GameMatcher.Player);
+        GameEntity entity = players.GetSingleEntity();
+        
+        // deltaTime = alpha (0..1) - interpolation value between frames.
+        // FixedStep = fixed update step (1/60s) - used for camera lerp.
+        _camera.Update(deltaTime, FixedStep, entity.Position.X, entity.Position.Y);
 
         _contexts.GameMap.GetBackgroundTileMap().Draw(target, RenderStates.Default);
 
-        var entities = _contexts.Game.GetEntities(GameMatcher.Animation);
-        foreach (var objEntity in entities.OrderBy(c => c.Position.Y))
+        GameEntity[] entities = _contexts.Game.GetEntities(GameMatcher.Animation);
+        foreach (GameEntity objEntity in entities.OrderBy(c => c.Position.Y))
         {
             target.Draw(objEntity.Animation.GetSprite());
         }
@@ -105,9 +108,9 @@ public class Game : BaseGame
 
     private void DrawCollisions(RenderTexture target)
     {
-        foreach (var item in _contexts.GameMap.MapData.CollidersLayer.Colliders)
+        foreach (IntRect item in _contexts.GameMap.MapData.CollidersLayer.Colliders)
         {
-            var colRectangle = new RectangleShape(new Vector2f(item.Width, item.Height))
+            RectangleShape colRectangle = new RectangleShape(new Vector2f(item.Width, item.Height))
             {
                 Position = new Vector2f(item.Left, item.Top),
                 OutlineColor = new Color(255, 0, 0, 200),

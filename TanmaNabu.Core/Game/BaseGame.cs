@@ -12,10 +12,16 @@ public abstract class BaseGame
     private readonly float _updateRate;
     private readonly Color _clearColor;
 
+    /// <summary>Fixed update step in seconds (= 1 / framerateLimit).</summary>
+    protected float FixedStep => _updateRate;
+
     private readonly RenderWindow _window;
 
     private readonly RenderTexture _renderTexture;
     private readonly Sprite _renderSprite;
+
+    // Separate clock for measuring FPS (measures the entire frame including rendering)
+    private readonly Clock _fpsClock = new();
 
     private GameTime _gameTime;
 
@@ -78,14 +84,15 @@ public abstract class BaseGame
             Initialize(_renderTexture, _gameTime);
             try
             {
-                var totalTime = 0.0f;
+                float totalTime = 0.0f;
+
+                // Initialize the clock BEFORE the first frame.
+                _gameTime.Restart();
 
                 // Main game loop
                 while (_window.IsOpen)
                 {
-                    _gameTime.Restart();
-
-                    var deltaTime = _gameTime.ElapsedTime.AsSeconds();
+                    float deltaTime = _gameTime.ElapsedTime.AsSeconds();
 
                     if (deltaTime > 1)
                     {
@@ -93,7 +100,7 @@ public abstract class BaseGame
                     }
 
                     totalTime += deltaTime;
-                    var updateCount = 0;
+                    int updateCount = 0;
 
                     // While the total amount of time spend on the render step is
                     // greater or equal to the update rate (1/x, in this game x = 60) and we have
@@ -125,6 +132,10 @@ public abstract class BaseGame
                     // draw it to the window
                     _window.Draw(_renderSprite);
                     _window.Display();
+
+                    // Restart the clock at the END of the frame – ElapsedTime in the next frame will
+                    // correctly measure the time of the entire past frame.
+                    _gameTime.Restart();
                 }
             }
             finally
@@ -178,6 +189,7 @@ public abstract class BaseGame
 
     protected float GetFps()
     {
-        return (1000000.0f / _gameTime.ElapsedTime.AsMicroseconds());
+        long elapsed = _fpsClock.Restart().AsMicroseconds();
+        return elapsed > 0 ? 1000000.0f / elapsed : 0f;
     }
 }
