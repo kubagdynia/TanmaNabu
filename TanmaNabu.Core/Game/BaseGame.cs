@@ -12,16 +12,10 @@ public abstract class BaseGame
     private readonly float _updateRate;
     private readonly Color _clearColor;
 
-    /// <summary>Fixed update step in seconds (= 1 / framerateLimit).</summary>
-    protected float FixedStep => _updateRate;
-
     private readonly RenderWindow _window;
 
     private readonly RenderTexture _renderTexture;
     private readonly Sprite _renderSprite;
-
-    // Separate clock for measuring FPS (measures the entire frame including rendering)
-    private readonly Clock _fpsClock = new();
 
     private GameTime _gameTime;
 
@@ -99,25 +93,20 @@ public abstract class BaseGame
                         deltaTime = 0;
                     }
 
+                    // Window events and input snapshot – once per render frame,
+                    // BEFORE the fixed-update loop, so every step uses the same input.
+                    _window.DispatchEvents();
+                    Joystick.Update();
+                    SampleInput();
+
                     totalTime += deltaTime;
                     int updateCount = 0;
 
-                    // While the total amount of time spend on the render step is
-                    // greater or equal to the update rate (1/x, in this game x = 60) and we have
-                    // not executed the update step 10 times then do the loop
-                    // If the counter hits 10 we break because it means that the
-                    // render step is lagging behind the update step
                     while (totalTime >= _updateRate && updateCount < UpdateLimit)
                     {
-                        _window.DispatchEvents();
-
-                        Joystick.Update();
-
                         Update(_updateRate);
 
-                        // Subtract the update frequency from the total time
                         totalTime -= _updateRate;
-                        // Increase the counter
                         updateCount++;
                     }
 
@@ -159,6 +148,12 @@ public abstract class BaseGame
 
     protected abstract void Deinitialize();
 
+    /// <summary>
+    /// Called once per render frame, before the fixed-update loop.
+    /// Use this to snapshot keyboard/controller state into the InputState structure.
+    /// </summary>
+    protected abstract void SampleInput();
+
     protected abstract void Update(float deltaTime);
 
     protected abstract void Render(RenderTexture target, float deltaTime, GameTime gameTime);
@@ -186,10 +181,4 @@ public abstract class BaseGame
     protected abstract void JoystickButtonPressed(object sender, JoystickButtonEventArgs arg);
 
     protected abstract void JoystickMoved(object sender, JoystickMoveEventArgs arg);
-
-    protected float GetFps()
-    {
-        long elapsed = _fpsClock.Restart().AsMicroseconds();
-        return elapsed > 0 ? 1000000.0f / elapsed : 0f;
-    }
 }
